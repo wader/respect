@@ -22,23 +22,16 @@
 #import "NSString+Respect.h"
 
 @interface IgnoreConfig ()
-@property(nonatomic, assign, readwrite) ResourceLinter *linter;
+@property(nonatomic, weak, readwrite) ResourceLinter *linter;
 @property(nonatomic, copy, readwrite) NSString *file;
 @property(nonatomic, assign, readwrite) TextLocation textLocation;
 @property(nonatomic, copy, readwrite) NSString *type;
-@property(nonatomic, retain, readwrite) NSRegularExpression *re;
+@property(nonatomic, strong, readwrite) NSRegularExpression *re;
 @property(nonatomic, copy, readwrite) NSString *pattern;
-@property(nonatomic, retain, readwrite) NSError *error;
+@property(nonatomic, strong, readwrite) NSError *error;
 @end
 
 @implementation IgnoreConfig
-@synthesize linter = _linter;
-@synthesize file = _file;
-@synthesize textLocation = _textLocation;
-@synthesize type = _type;
-@synthesize re = _re;
-@synthesize pattern = _pattern;
-@synthesize error = _error;
 
 - (id)initWithLinter:(ResourceLinter *)linter
                 file:(NSString *)file
@@ -77,16 +70,6 @@
     }
     
     return self;
-}
-
-- (void)dealloc {
-    self.file = nil;
-    self.type = nil;
-    self.re = nil;
-    self.pattern = nil;
-    self.error = nil;
-    
-    [super dealloc];
 }
 
 - (BOOL)matchesString:(NSString *)string {

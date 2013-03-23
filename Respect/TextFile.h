@@ -18,8 +18,8 @@
 @interface TextFile : NSObject
 @property(nonatomic, copy, readonly) NSString *path;
 @property(nonatomic, copy, readonly) NSString *text;
-@property(nonatomic, retain, readonly) NSString *whitedoutCommentsText;
-@property(nonatomic, retain, readonly) NSArray *lineRanges;
+@property(nonatomic, strong, readonly) NSString *whitedoutCommentsText;
+@property(nonatomic, strong, readonly) NSArray *lineRanges;
 
 + (id)textFileWithText:(NSString *)text path:(NSString *)path;
 + (id)textFileWithContentOfFile:(NSString *)file;

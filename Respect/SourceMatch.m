@@ -24,15 +24,12 @@
 #import "NSString+Respect.h"
 
 @interface SourceMatch ()
-@property(nonatomic, retain, readwrite) ExpressionSignature *experssionSignature;
-@property(nonatomic, retain, readwrite) NSRegularExpression *re;
-@property(nonatomic, retain, readwrite) NSError *error;
+@property(nonatomic, strong, readwrite) ExpressionSignature *experssionSignature;
+@property(nonatomic, strong, readwrite) NSRegularExpression *re;
+@property(nonatomic, strong, readwrite) NSError *error;
 @end
 
 @implementation SourceMatch
-@synthesize experssionSignature = _experssionSignature;
-@synthesize re = _re;
-@synthesize error = _error;
 
 + (NSString *)name {
     return @"SourceMatch";
@@ -83,14 +80,6 @@
     }
     
     return self;
-}
-
-- (void)dealloc {
-    self.experssionSignature = nil;
-    self.re = nil;
-    self.error = nil;
-    
-    [super dealloc];
 }
 
 - (void)parseResourceReferencesInSourceFile:(TextFile *)textFile {

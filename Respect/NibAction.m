@@ -32,19 +32,13 @@
 // TODO: image suggest smartness?
 
 @interface NibAction ()
-@property(nonatomic, retain, readwrite) ImageNamedFinder *imageNamedFinder;
+@property(nonatomic, strong, readwrite) ImageNamedFinder *imageNamedFinder;
 @end
 
 @implementation NibAction
 
 + (NSString *)name {
     return @"Nib";
-}
-
-- (void)dealloc {
-    self.imageNamedFinder = nil;
-    
-    [super dealloc];
 }
 
 - (void)parseResourceReferencesInXib:(NSString *)path {
@@ -56,9 +50,8 @@
         return;
     }
     
-    NSXMLDocument *dom = [[[NSXMLDocument alloc]
-                           initWithData:xibContent options:0 error:NULL]
-                          autorelease];
+    NSXMLDocument *dom = [[NSXMLDocument alloc]
+                          initWithData:xibContent options:0 error:NULL];
     if (dom == nil) {
         [self.linter.lintErrors addObject:
          [LintError lintErrorWithFile:path
@@ -67,7 +60,7 @@
     }
     
     if (self.imageNamedFinder == nil) {
-        self.imageNamedFinder = [[[ImageNamedFinder alloc] init] autorelease];
+        self.imageNamedFinder = [[ImageNamedFinder alloc] init];
         
         NSOrderedSet *defaultOptions = [self.linter defaultConfigValueForName:[[ImageAction class] name]];
         if (defaultOptions != nil) {
@@ -84,13 +77,12 @@
                                   }];
         
         for (NSString *resourcePath in resourcePaths) {
-            ResourceReference *resourceRef = [[[ResourceReference alloc]
-                                               initWithResourcePath:resourcePath
-                                               referencePath:path
-                                               referenceLocation:MakeTextLineLocation(1)
-                                               missingResourceHint:
-                                               [self actionMissingResourceHint:resourcePath]]
-                                              autorelease];
+            ResourceReference *resourceRef = [[ResourceReference alloc]
+                                              initWithResourcePath:resourcePath
+                                              referencePath:path
+                                              referenceLocation:MakeTextLineLocation(1)
+                                              missingResourceHint:
+                                              [self actionMissingResourceHint:resourcePath]];
             [self.linter.resourceReferences addObject:resourceRef];
             
             BundleResource *bundleRes = [self.linter.bundleResources objectForKey:resourcePath];

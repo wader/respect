@@ -23,16 +23,12 @@
 #import <objc/runtime.h>
 
 @interface PBXUnarchiver ()
-@property(nonatomic, retain, readwrite) NSDictionary *objects;
-@property(nonatomic, retain, readwrite) NSString *rootObjectId;
-@property(nonatomic, retain, readwrite) NSMutableDictionary *objectIdMap;
+@property(nonatomic, strong, readwrite) NSDictionary *objects;
+@property(nonatomic, strong, readwrite) NSString *rootObjectId;
+@property(nonatomic, strong, readwrite) NSMutableDictionary *objectIdMap;
 @end
 
 @implementation PBXUnarchiver
-@synthesize allowedClasses = _allowedClasses;
-@synthesize objects = _objects;
-@synthesize rootObjectId = _rootObjectId;
-@synthesize objectIdMap = _objectIdMap;
 
 - (id)initWithFile:(NSString *)path {
     self = [super init];
@@ -50,15 +46,6 @@
     self.objectIdMap = [NSMutableDictionary dictionary];
     
     return self;
-}
-
-- (void)dealloc {
-    self.allowedClasses = nil;
-    self.objects = nil;
-    self.rootObjectId = nil;
-    self.objectIdMap = nil;
-    
-    [super dealloc];
 }
 
 - (id)decodeValue:(id)value {
@@ -126,7 +113,7 @@
         return nil;
     }
     
-    id objectInstance = [[[objectClass alloc] init] autorelease];
+    id objectInstance = [[objectClass alloc] init];
     
     for (NSString *key in objectDict) {
         if (class_getProperty(objectClass, [key UTF8String]) == NULL) {

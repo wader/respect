@@ -19,19 +19,16 @@
 #import "ExpressionSignatureToken.h"
 
 @implementation ExpressionSignatureArgument
-@synthesize type = _type;
 
 + (id<ExpressionSignature>)parseTokens:(PeekableEnumerator *)tokens
                                  error:(NSError **)error {
     ExpressionSignatureToken *token = [tokens nextObject];
     if (token.type == SIGNATURE_TOKEN_AT) {
-        return [[[ExpressionSignatureArgument alloc]
-                 initWithType:SIGNATURE_ARGUMENT_STRING]
-                autorelease];
+        return [[ExpressionSignatureArgument alloc]
+                initWithType:SIGNATURE_ARGUMENT_STRING];
     } else if (token.type == SIGNATURE_TOKEN_DOLLAR) {
-        return [[[ExpressionSignatureArgument alloc]
-                 initWithType:SIGNATURE_ARGUMENT_NAME]
-                autorelease];
+        return [[ExpressionSignatureArgument alloc]
+                initWithType:SIGNATURE_ARGUMENT_NAME];
     }
     
     return nil;

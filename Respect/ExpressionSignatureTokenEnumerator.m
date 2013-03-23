@@ -24,8 +24,6 @@
 @end
 
 @implementation ExpressionSignatureTokenEnumerator
-@synthesize signature = _signature;
-@synthesize index = _index;
 
 - (id)initWithSignature:(NSString *)signature {
     self = [super init];

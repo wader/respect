@@ -78,14 +78,12 @@ typedef enum {
 @end
 
 @implementation XCConfigParserToken
-@synthesize tokenType = _tokenType;
-@synthesize range = _range;
 @end
 
 static XCConfigParserToken *makeXCConfigParserToken(XCConfigParserTokenType tokenType,
                                                     NSUInteger location,
                                                     NSUInteger length) {
-    XCConfigParserToken *token = [[[XCConfigParserToken alloc] init] autorelease];
+    XCConfigParserToken *token = [[XCConfigParserToken alloc] init];
     token.tokenType = tokenType;
     token.range = NSMakeRange(location, length);
     
@@ -97,7 +95,6 @@ static XCConfigParserToken *makeXCConfigParserToken(XCConfigParserTokenType toke
 @end
 
 @implementation XCConfigParserStatement
-@synthesize range = _range;
 @end
 
 @interface XCConfigParserStatementPair : XCConfigParserStatement
@@ -106,8 +103,6 @@ static XCConfigParserToken *makeXCConfigParserToken(XCConfigParserTokenType toke
 @end
 
 @implementation XCConfigParserStatementPair
-@synthesize key = _key;
-@synthesize value = _value;
 @end
 
 @interface XCConfigParserStatementInclude : XCConfigParserStatement
@@ -115,7 +110,6 @@ static XCConfigParserToken *makeXCConfigParserToken(XCConfigParserTokenType toke
 @end
 
 @implementation XCConfigParserStatementInclude
-@synthesize path = _path;
 @end
 
 static NSUInteger lineNumberFromLocation(NSString *string, NSUInteger location) {
@@ -140,9 +134,7 @@ static NSError *makeParserError(NSString *string,
                                 NSString *format, ...) {
     va_list ap;
     va_start(ap, format);
-    NSString *description = [[[NSString alloc]
-                              initWithFormat:format arguments:ap]
-                             autorelease];
+    NSString *description = [[NSString alloc] initWithFormat:format arguments:ap];
     va_end(ap);
     
     return [NSError errorWithDomain:XCConfigParserErrorDomain
@@ -334,8 +326,7 @@ static NSError *makeParserError(NSString *string,
             
             // name = value
             
-            XCConfigParserStatementPair *pair = [[[XCConfigParserStatementPair alloc] init]
-                                                 autorelease];
+            XCConfigParserStatementPair *pair = [[XCConfigParserStatementPair alloc] init];
             pair.range = NSMakeRange(token1.range.location,
                                      NSMaxRange(token3.range) -
                                      token1.range.location);
@@ -362,8 +353,7 @@ static NSError *makeParserError(NSString *string,
                                         token1.range.location);
             
             if ([directive isEqualToString:@"#include"]) {
-                XCConfigParserStatementInclude *include = [[[XCConfigParserStatementInclude alloc] init]
-                                                           autorelease];
+                XCConfigParserStatementInclude *include = [[XCConfigParserStatementInclude alloc] init];
                 include.range = range;
                 include.path = argument;
                 [statements addObject:include];
@@ -449,7 +439,7 @@ static NSError *makeParserError(NSString *string,
     return [self _dictionaryFromString:string
                        maxIncludeDepth:XCConfigParserMaxIncludeDepth
                        includeBasePath:includeBasePath
-                                 error:error ?: &(NSError *){nil}];
+                                 error:error ?: &(NSError * __autoreleasing){nil}];
 }
 
 + (NSDictionary *)_dictionaryFromFile:(NSString *)file
@@ -497,7 +487,7 @@ static NSError *makeParserError(NSString *string,
                                error:(NSError **)error {
     return [self _dictionaryFromFile:file
                      maxIncludeDepth:XCConfigParserMaxIncludeDepth
-                               error:error ?: &(NSError *){nil}];
+                               error:error ?: &(NSError * __autoreleasing){nil}];
 }
 
 @end

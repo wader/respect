@@ -50,7 +50,7 @@
             [extWithDots addObject:[@"." stringByAppendingString:ext]];
         }
         
-        dotExtensions = [[NSArray arrayWithArray:extWithDots] retain];
+        dotExtensions = [NSArray arrayWithArray:extWithDots];
     });
     
     return dotExtensions;

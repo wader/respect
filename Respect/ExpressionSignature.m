@@ -43,9 +43,8 @@ NSString * const ExpressionSignatureErrorDomain = @"ExpressionSignatureErrorDoma
     va_list va;
     va_start(va, descriptionFormat);
     NSError *error = [self errorWithDescription:
-                      [[[NSString alloc] initWithFormat:descriptionFormat
-                                              arguments:va]
-                       autorelease]];
+                      [[NSString alloc] initWithFormat:descriptionFormat
+                                             arguments:va]];
     va_end(va);
     
     return error;
@@ -54,7 +53,7 @@ NSString * const ExpressionSignatureErrorDomain = @"ExpressionSignatureErrorDoma
 // TODO: capture group info? string unescape
 + (NSRegularExpression *)stringToRegEx:(NSString *)signature
                                  error:(NSError **)error {
-    error = error ?: &(NSError *){nil};
+    error = error ?: &(NSError * __autoreleasing){nil};
     
     ExpressionSignature *exp = [ExpressionSignature
                                 signatureFromString:signature
@@ -71,14 +70,12 @@ NSString * const ExpressionSignatureErrorDomain = @"ExpressionSignatureErrorDoma
 
 + (ExpressionSignature *)signatureFromString:(NSString *)signature
                                        error:(NSError **)error {
-    error = error ?: &(NSError *){nil};
+    error = error ?: &(NSError * __autoreleasing){nil};
     
-    PeekableEnumerator *peekableTokenEnumerator = [[[PeekableEnumerator alloc]
-                                                    initWithEnumerator:
-                                                    [[[ExpressionSignatureTokenEnumerator alloc]
-                                                      initWithSignature:signature]
-                                                     autorelease]]
-                                                   autorelease];
+    PeekableEnumerator *peekableTokenEnumerator = [[PeekableEnumerator alloc]
+                                                   initWithEnumerator:
+                                                   [[ExpressionSignatureTokenEnumerator alloc]
+                                                    initWithSignature:signature]];
     ExpressionSignature *exp = [self parseTokens:peekableTokenEnumerator
                                            error:error];
     if (exp == nil) {
@@ -97,7 +94,7 @@ NSString * const ExpressionSignatureErrorDomain = @"ExpressionSignatureErrorDoma
 
 + (id<ExpressionSignature>)parseTokens:(PeekableEnumerator *)tokens
                                  error:(NSError **)error {
-    error = error ?: &(NSError *){nil};
+    error = error ?: &(NSError * __autoreleasing){nil};
     
     ExpressionSignatureToken *token0 = [tokens peekObjectAtOffset:0];
     ExpressionSignatureToken *token1 = [tokens peekObjectAtOffset:1];

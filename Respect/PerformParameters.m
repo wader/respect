@@ -18,23 +18,19 @@
 #import "PerformParameters.h"
 
 @interface PerformParameters ()
-@property(nonatomic, retain, readwrite) NSArray *parameters;
+@property(nonatomic, strong, readwrite) NSArray *parameters;
 @property(nonatomic, copy, readwrite) NSString *path;
 @property(nonatomic, assign, readwrite) TextLocation textLocation;
 @end
 
 @implementation PerformParameters
-@synthesize parameters = _parameters;
-@synthesize path = _path;
-@synthesize textLocation = _textLocation;
 
 + (id)performParametersWithParameters:(NSArray *)parameters
                                  path:(NSString *)path
                          textLocation:(TextLocation)textLocation {
-    return [[[self alloc] initWithParameters:parameters
-                                        path:path
-                                textLocation:textLocation]
-            autorelease];
+    return [[self alloc] initWithParameters:parameters
+                                       path:path
+                               textLocation:textLocation];
 }
 
 - (id)initWithParameters:(NSArray *)parameters
@@ -50,13 +46,6 @@
     self.textLocation = textLocation;
     
     return self;
-}
-
-- (void)dealloc {
-    self.parameters = nil;
-    self.path = nil;
-    
-    [super dealloc];
 }
 
 @end

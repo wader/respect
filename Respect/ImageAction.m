@@ -22,13 +22,11 @@
 #import "NSArray+Respect.h"
 
 @interface ImageAction ()
-@property(nonatomic, retain, readwrite) ImageNamedFinder *imageNamedFinder;
-@property(nonatomic, retain, readwrite) NSOrderedSet *actionOptions;
+@property(nonatomic, strong, readwrite) ImageNamedFinder *imageNamedFinder;
+@property(nonatomic, strong, readwrite) NSOrderedSet *actionOptions;
 @end
 
 @implementation ImageAction
-@synthesize imageNamedFinder = _imageNamedFinder;
-@synthesize actionOptions = _actionOptions;
 
 + (NSString *)name {
     return @"Image";
@@ -54,16 +52,10 @@
     return options;
 }
 
-- (void)dealloc {
-    self.imageNamedFinder = nil;
-    
-    [super dealloc];
-}
-
 - (void)actionOptions:(NSOrderedSet *)options {
     NSOrderedSet *unknownOptions = [ImageNamedOptions unknownOptionsFromOptions:options];
     
-    NSMutableOrderedSet *imageOptions = [[options mutableCopy] autorelease];
+    NSMutableOrderedSet *imageOptions = [options mutableCopy];
     [imageOptions minusOrderedSet:unknownOptions];
     self.actionOptions = imageOptions;
     
@@ -72,7 +64,7 @@
 
 - (NSArray *)actionResourcePaths:(NSString *)resourcePath {
     if (self.imageNamedFinder == nil) {
-        self.imageNamedFinder = [[[ImageNamedFinder alloc] init] autorelease];
+        self.imageNamedFinder = [[ImageNamedFinder alloc] init];
         
         NSOrderedSet *defaultOptions = [self.linter defaultConfigValueForName:[[self class] name]];
         if (defaultOptions != nil) {

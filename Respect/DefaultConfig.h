@@ -24,8 +24,8 @@
 #import "ResourceLinter.h"
 
 @interface DefaultConfig : NSObject
-@property(nonatomic, retain, readonly) NSString *name;
-@property(nonatomic, retain, readonly) id configValue;
+@property(nonatomic, strong, readonly) NSString *name;
+@property(nonatomic, strong, readonly) id configValue;
 @property(nonatomic, assign, readonly) BOOL hasError;
 
 + (id)defaultWithLinter:(ResourceLinter *)linter

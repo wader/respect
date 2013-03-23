@@ -25,7 +25,7 @@
 + (NSRegularExpression *)regularExpressionWithPatternAndFlags:(NSString *)patternAndFlags
                                                       options:(NSRegularExpressionOptions)options
                                                         error:(NSError **)error {
-    error = error ?: &(NSError *){nil};
+    error = error ?: &(NSError * __autoreleasing){nil};
 
     NSRange start = [patternAndFlags rangeOfString:@"/" options:0];
     NSRange end = [patternAndFlags rangeOfString:@"/" options:NSBackwardsSearch];

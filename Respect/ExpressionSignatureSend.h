@@ -18,6 +18,6 @@
 #import "ExpressionSignature.h"
 
 @interface ExpressionSignatureSend : NSObject<ExpressionSignature>
-@property(nonatomic, retain, readwrite) id<ExpressionSignature> receiver;
-@property(nonatomic, retain, readwrite) NSArray *parameters;
+@property(nonatomic, strong, readwrite) id<ExpressionSignature> receiver;
+@property(nonatomic, strong, readwrite) NSArray *parameters;
 @end

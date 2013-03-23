@@ -23,9 +23,9 @@ extern NSString * const ImageNamedOptionsIpad;
 extern NSString * const ImageNamedOptionsIphone;
 
 @interface ImageNamedOptions : NSObject
-@property(nonatomic, retain, readonly) NSMutableOrderedSet *scales;
-@property(nonatomic, retain, readonly) NSMutableOrderedSet *devices;
-@property(nonatomic, retain, readonly) NSMutableOrderedSet *exts;
+@property(nonatomic, strong, readonly) NSMutableOrderedSet *scales;
+@property(nonatomic, strong, readonly) NSMutableOrderedSet *devices;
+@property(nonatomic, strong, readonly) NSMutableOrderedSet *exts;
 
 + (NSOrderedSet *)scaleOptions;
 + (NSOrderedSet *)deviceOptions;

@@ -20,24 +20,17 @@
 #import "NSString+Respect.h"
 
 @interface DefaultConfig ()
-@property(nonatomic, assign, readwrite) ResourceLinter *linter;
+@property(nonatomic, weak, readwrite) ResourceLinter *linter;
 @property(nonatomic, copy, readwrite) NSString *file;
 @property(nonatomic, assign, readwrite) TextLocation textLocation;
-@property(nonatomic, retain, readwrite) NSString *name;
+@property(nonatomic, strong, readwrite) NSString *name;
 @property(nonatomic, copy, readwrite) NSString *argument;
-@property(nonatomic, retain, readwrite) id configValue;
-@property(nonatomic, retain, readwrite) NSString *errorMessage;
+@property(nonatomic, strong, readwrite) id configValue;
+@property(nonatomic, strong, readwrite) NSString *errorMessage;
 @property(nonatomic, assign, readwrite) BOOL hasError;
 @end
 
 @implementation DefaultConfig
-@synthesize file = _file;
-@synthesize textLocation = _textLocation;
-@synthesize name = _name;
-@synthesize argument = _argument;
-@synthesize configValue = _configValue;
-@synthesize errorMessage = _errorMessage;
-@synthesize hasError = _hasError;
 
 + (id)defaultWithLinter:(ResourceLinter *)linter
                    file:(NSString *)file
@@ -46,14 +39,13 @@
          argumentString:(NSString *)argumentString
             configValue:(id)configValue
            errorMessage:(NSString *)errorMessage {
-    return [[[self alloc] initWithLinter:linter
-                                    file:file
-                            textLocation:textLocation
-                                    name:name
-                          argumentString:argumentString
-                             configValue:configValue
-                            errorMessage:errorMessage]
-            autorelease];
+    return [[self alloc] initWithLinter:linter
+                                   file:file
+                           textLocation:textLocation
+                                   name:name
+                         argumentString:argumentString
+                            configValue:configValue
+                           errorMessage:errorMessage];
 }
 
 - (id)initWithLinter:(ResourceLinter *)linter
@@ -85,16 +77,6 @@
     }
     
     return self;
-}
-
-- (void)dealloc {
-    self.file = nil;
-    self.name = nil;
-    self.argument = nil;
-    self.configValue = nil;
-    self.errorMessage = nil;
-    
-    [super dealloc];
 }
 
 - (NSArray *)configLines {

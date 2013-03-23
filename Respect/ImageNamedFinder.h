@@ -18,8 +18,8 @@
 #import "ImageNamedOptions.h"
 
 @interface ImageNamedFinder : NSObject
-@property(nonatomic, retain, readonly) ImageNamedOptions *options;
-@property(nonatomic, retain, readonly) ImageNamedOptions *wildcardOptions;
+@property(nonatomic, strong, readonly) ImageNamedOptions *options;
+@property(nonatomic, strong, readonly) ImageNamedOptions *wildcardOptions;
 
 - (NSArray *)pathsForName:(NSString *)name
      usingFileExistsBlock:(BOOL (^)(NSString *path))fileExistsBlock;
