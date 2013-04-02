@@ -27,6 +27,10 @@
 		0933B0EB15B7091E004D3F01 /* ExpressionSignatureTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 0933B0EA15B7091D004D3F01 /* ExpressionSignatureTest.m */; };
 		093B7A36163450C700F3C250 /* ImageNamedFinder.m in Sources */ = {isa = PBXBuildFile; fileRef = 093B7A35163450C600F3C250 /* ImageNamedFinder.m */; };
 		093B7A37163450C700F3C250 /* ImageNamedFinder.m in Sources */ = {isa = PBXBuildFile; fileRef = 093B7A35163450C600F3C250 /* ImageNamedFinder.m */; };
+		093E8992170B2D6A0086CD66 /* PCRegularExpression.m in Sources */ = {isa = PBXBuildFile; fileRef = 093E8991170B2D6A0086CD66 /* PCRegularExpression.m */; };
+		093E8993170B2D6A0086CD66 /* PCRegularExpression.m in Sources */ = {isa = PBXBuildFile; fileRef = 093E8991170B2D6A0086CD66 /* PCRegularExpression.m */; };
+		093E8995170B2DA20086CD66 /* libpcre.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 093E8994170B2DA20086CD66 /* libpcre.dylib */; };
+		093E8996170B2DA90086CD66 /* libpcre.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 093E8994170B2DA20086CD66 /* libpcre.dylib */; };
 		09504EFD159C61EB0050594A /* ResourceLinter.m in Sources */ = {isa = PBXBuildFile; fileRef = 09504EF7159C61EB0050594A /* ResourceLinter.m */; };
 		09504EFE159C61EB0050594A /* respect.m in Sources */ = {isa = PBXBuildFile; fileRef = 09504EF9159C61EB0050594A /* respect.m */; };
 		09504F02159C62390050594A /* NSString+Respect.m in Sources */ = {isa = PBXBuildFile; fileRef = 09504F01159C62390050594A /* NSString+Respect.m */; };
@@ -177,6 +181,10 @@
 		0933B0EA15B7091D004D3F01 /* ExpressionSignatureTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ExpressionSignatureTest.m; sourceTree = "<group>"; };
 		093B7A34163450C500F3C250 /* ImageNamedFinder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageNamedFinder.h; sourceTree = "<group>"; };
 		093B7A35163450C600F3C250 /* ImageNamedFinder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImageNamedFinder.m; sourceTree = "<group>"; };
+		093E898F170B2D6A0086CD66 /* pcre.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = pcre.h; path = PCRegularExpression/pcre.h; sourceTree = SOURCE_ROOT; };
+		093E8990170B2D6A0086CD66 /* PCRegularExpression.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PCRegularExpression.h; path = PCRegularExpression/PCRegularExpression.h; sourceTree = SOURCE_ROOT; };
+		093E8991170B2D6A0086CD66 /* PCRegularExpression.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PCRegularExpression.m; path = PCRegularExpression/PCRegularExpression.m; sourceTree = SOURCE_ROOT; };
+		093E8994170B2DA20086CD66 /* libpcre.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libpcre.dylib; path = usr/lib/libpcre.dylib; sourceTree = SDKROOT; };
 		09504EE4159C61710050594A /* Respect */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; name = Respect; path = respect; sourceTree = BUILT_PRODUCTS_DIR; };
 		09504EF6159C61EB0050594A /* ResourceLinter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ResourceLinter.h; sourceTree = "<group>"; };
 		09504EF7159C61EB0050594A /* ResourceLinter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ResourceLinter.m; sourceTree = "<group>"; };
@@ -300,6 +308,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				093E8996170B2DA90086CD66 /* libpcre.dylib in Frameworks */,
 				CDBD3DFB15B8865E0031461F /* Foundation.framework in Frameworks */,
 				CDBD3DFD15B8867E0031461F /* SenTestingKit.framework in Frameworks */,
 			);
@@ -309,6 +318,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				093E8995170B2DA20086CD66 /* libpcre.dylib in Frameworks */,
 				09504F04159C64750050594A /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -354,9 +364,20 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
+		093E898E170B2D580086CD66 /* PCRegularExpression */ = {
+			isa = PBXGroup;
+			children = (
+				093E898F170B2D6A0086CD66 /* pcre.h */,
+				093E8990170B2D6A0086CD66 /* PCRegularExpression.h */,
+				093E8991170B2D6A0086CD66 /* PCRegularExpression.m */,
+			);
+			name = PCRegularExpression;
+			sourceTree = "<group>";
+		};
 		09504ED9159C61710050594A = {
 			isa = PBXGroup;
 			children = (
+				093E8994170B2DA20086CD66 /* libpcre.dylib */,
 				09504EEA159C61710050594A /* Respect */,
 				0926EC1315B0338800100D38 /* RespectTest */,
 				09504EE7159C61710050594A /* Frameworks */,
@@ -385,6 +406,7 @@
 		09504EEA159C61710050594A /* Respect */ = {
 			isa = PBXGroup;
 			children = (
+				093E898E170B2D580086CD66 /* PCRegularExpression */,
 				CD10C5DD16E93357004FED06 /* NSRegularExpression+extras */,
 				CDF5CB2E16D4078400B2D6A9 /* PBXProject */,
 				CDF5CB2D16D4073A00B2D6A9 /* Class extensions */,
@@ -763,6 +785,7 @@
 				090D4C7E16FF38DF005A67A4 /* NSString+lineNumber.m in Sources */,
 				09E7E0051753850100FE18D2 /* XCConfigParser.m in Sources */,
 				09B0945E175BC89E0062E8ED /* XCConfigParserTest.m in Sources */,
+				093E8993170B2D6A0086CD66 /* PCRegularExpression.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -818,6 +841,7 @@
 				0929BC8716EFBDAE000F55F4 /* NSString+withFnmatch.m in Sources */,
 				090D4C7D16FF38DF005A67A4 /* NSString+lineNumber.m in Sources */,
 				09DA235D174FAB9E00D54BD8 /* XCConfigParser.m in Sources */,
+				093E8992170B2D6A0086CD66 /* PCRegularExpression.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

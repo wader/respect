@@ -21,6 +21,12 @@
 @property(nonatomic, retain, readonly) NSString *whitedoutCommentsText;
 @property(nonatomic, retain, readonly) NSArray *lineRanges;
 
+@property(nonatomic, assign, readonly) const char *textUtf8;
+@property(nonatomic, assign, readonly) NSUInteger textUtf8ByteLength;
+
+@property(nonatomic, assign, readonly) const char *whitedoutCommentsTextUtf8;
+@property(nonatomic, assign, readonly) NSUInteger whitedoutCommentsTextUtf8ByteLength;
+
 + (id)textFileWithText:(NSString *)text path:(NSString *)path;
 + (id)textFileWithContentOfFile:(NSString *)file;
 

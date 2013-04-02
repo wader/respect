@@ -19,7 +19,7 @@
 // malformed regex
 // @LintSourceMatch: /*?/
 // @LintFile: $1
-// @ExpectedConfigError: TestError/main.m: Matcher error: The value “*?” is invalid.
+// @ExpectedConfigError: TestError/main.m: Matcher error: nothing to repeat at offset 0
 
 // malformed action arguments
 // @LintSourceMatch: [a b:@]
