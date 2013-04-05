@@ -1,12 +1,12 @@
 require 'formula'
 
 class Respect < Formula
-  head 'https://github.com/path/to/respect.git', :branch => 'master'
-  homepage 'https://github.com/path/to/respect'
+  head 'https://github.com/wader/respect.git', :branch => 'master'
+  homepage 'https://github.com/wader/respect'
 
   def install
     system "xcodebuild", "-project", "Respect.xcodeproj",
-                         "-target", "Respect",
+                         "-target", "respect",
                          "-configuration", "Release",
                          "install",
                          "SYMROOT=build",
