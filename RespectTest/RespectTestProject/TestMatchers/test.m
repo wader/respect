@@ -75,6 +75,13 @@ void test4(char *a, NSString *b) {
 #define IMAGE_a_b
 #define image_a_c
 
+#define OBJC_STRING @"objc_string"
+
+// @LintSourceMatch: /OBJC_STRING @"([^"]*)"/
+// @LintFile: $1
+// @ExpectedMissing: objc_string
+
+
 int main(int argc, char *argv[]) {
     return 0;
 }
