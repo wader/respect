@@ -10,5 +10,7 @@
 // @ExpectedMissing: recursive
 // @ExpectedMissing: target
 
+// @ExpectedMissing: prefixheader
+
 int main(int argc, char *argv[]) {
 }

@@ -151,6 +151,7 @@
 		092C1C7416D2769400ABF32C /* missing_file */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = missing_file; sourceTree = "<group>"; };
 		092C1C7516D2769400ABF32C /* missing_folder */ = {isa = PBXFileReference; lastKnownFileType = folder; path = missing_folder; sourceTree = "<group>"; };
 		092C1C7E16D2905500ABF32C /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = "en.lproj/test~ipad.xib"; sourceTree = "<group>"; };
+		0936BA84171317BE00135AE6 /* prefixheader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = prefixheader.h; sourceTree = "<group>"; };
 		093B79CE1631BB7300F3C250 /* image.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = image.png; sourceTree = "<group>"; };
 		093B79F11631DB6700F3C250 /* image@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "image@2x.png"; sourceTree = "<group>"; };
 		093B79F21631DB6700F3C250 /* image@2x~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "image@2x~ipad.png"; sourceTree = "<group>"; };
@@ -619,6 +620,7 @@
 			children = (
 				CDEBA31E166BEC5C0063BA64 /* TestBuildConfig-Info.plist */,
 				CDEBA322166BEC5C0063BA64 /* main.m */,
+				0936BA84171317BE00135AE6 /* prefixheader.h */,
 			);
 			path = TestBuildConfig;
 			sourceTree = "<group>";
@@ -1572,6 +1574,8 @@
 			buildSettings = {
 				CLANG_ENABLE_OBJC_ARC = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = TestBuildConfig/prefixheader.h;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SOURCE_ROOT)/$(TARGET_NAME)/target",
@@ -1588,6 +1592,8 @@
 			buildSettings = {
 				CLANG_ENABLE_OBJC_ARC = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = TestBuildConfig/prefixheader.h;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SOURCE_ROOT)/$(TARGET_NAME)/target",
