@@ -32,7 +32,6 @@
 @property(nonatomic, retain, readwrite) NSMutableDictionary *resources;
 @property(nonatomic, retain, readwrite) NSMutableArray *lintWarnings;
 @property(nonatomic, retain, readwrite) NSMutableArray *lintErrors;
-@property(nonatomic, retain, readwrite) NSArray *headerSearchPaths;
 
 - (void)parseAndAddImportAndIncludesInTextFile:(TextFile *)textFile;
 @end
@@ -45,7 +44,6 @@
 @synthesize resources = _resources;
 @synthesize lintWarnings = _lintWarnings;
 @synthesize lintErrors = _lintErrors;
-@synthesize headerSearchPaths = _headerSearchPaths;
 
 - (id)initWithPBXProject:(PBXProject *)pbxProject
               targetName:(NSString *)targetName
@@ -70,9 +68,9 @@
                                            buildFallbackEnvironmentWithTarget:self.nativeTarget
                                            buildConfiguration:self.buildConfiguration];
     
-    self.headerSearchPaths = [self.buildConfiguration
-                              resolveConfigPathsNamed:@"HEADER_SEARCH_PATHS"
-                              usingWorkingDirectory:[self sourceRoot]];
+    NSArray *headerSearchPaths = [self.buildConfiguration
+                                  resolveConfigPathsNamed:@"HEADER_SEARCH_PATHS"
+                                  usingWorkingDirectory:[self sourceRoot]];
     
     // add precompiled header as source if found
     NSString *precompiledHeaderPath = [self.buildConfiguration
@@ -105,7 +103,8 @@
         // TODO: copy phase?
         
         if ([buildPhase isKindOfClass:[PBXSourcesBuildPhase class]]) {
-            [self addSourcesBuildPhase:buildPhase];
+            [self addSourcesBuildPhase:buildPhase
+                     headerSearchPaths:headerSearchPaths];
         } else if ([buildPhase isKindOfClass:[PBXResourcesBuildPhase class]]) {
             [self addResourcesBuildPhase:buildPhase];
         }
@@ -126,7 +125,8 @@
     [super dealloc];
 }
 
-- (void)addSourcesBuildPhase:(PBXSourcesBuildPhase *)sourcesBuildPhase {
+- (void)addSourcesBuildPhase:(PBXSourcesBuildPhase *)sourcesBuildPhase
+           headerSearchPaths:(NSArray *)headerSearchPaths {
     for (PBXBuildFile *buildFile in sourcesBuildPhase.files) {
         // TODO: can there be variant groups in sources build?
         if (![buildFile.fileRef isKindOfClass:[PBXFileReference class]]) {
@@ -153,7 +153,8 @@
         }
         
         [self.sourceTextFiles setObject:sourceTextFile forKey:buildPath];
-        [self parseAndAddImportAndIncludesInTextFile:sourceTextFile];
+        [self parseAndAddImportAndIncludesInTextFile:sourceTextFile
+                                   headerSearchPaths:headerSearchPaths];
     }
 }
 
@@ -317,6 +318,7 @@
 }
 
 - (void)_parseAndAddImportAndIncludesInTextFile:(TextFile *)textFile
+                              headerSearchPaths:(NSArray *)headerSearchPaths
                                        maxDepth:(NSUInteger)maxDepth {
     static NSRegularExpression *re = nil;
     static dispatch_once_t onceToken;
@@ -354,7 +356,7 @@
          if (includeTextFile == nil) {
              // TODO: refactor code. but keep in mind that we might dont want to
              // refactor by building a an array with all search paths for each iteration
-             for (NSString *headerSearchPath in self.headerSearchPaths) {
+             for (NSString *headerSearchPath in headerSearchPaths) {
                  absIncludePath = [includePath respect_stringByResolvingPathRealtiveTo:headerSearchPath];
                  
                  // already added
@@ -384,12 +386,16 @@
          
          [self.sourceTextFiles setObject:includeTextFile forKey:absIncludePath];
          [self _parseAndAddImportAndIncludesInTextFile:includeTextFile
+                                     headerSearchPaths:headerSearchPaths
                                               maxDepth:maxDepth-1];
      }];
 }
 
-- (void)parseAndAddImportAndIncludesInTextFile:(TextFile *)textFile {
-    [self _parseAndAddImportAndIncludesInTextFile:textFile maxDepth:20];
+- (void)parseAndAddImportAndIncludesInTextFile:(TextFile *)textFile
+                             headerSearchPaths:(NSArray *)headerSearchPaths {
+    [self _parseAndAddImportAndIncludesInTextFile:textFile
+                                headerSearchPaths:headerSearchPaths
+                                         maxDepth:20];
 }
 
 // Spotify feature framework specific code below
@@ -410,14 +416,35 @@
                                                 nativeTargetNamed:featureNativeTargetName];
         XCBuildConfiguration *featureBuildConfiguration = [featureNativeTarget
                                                            configurationNamed:self.buildConfiguration.name];
-        
         featurePbxProject.fallbackEnvironment = [featurePbxProject
                                                  buildFallbackEnvironmentWithTarget:featureNativeTarget
                                                  buildConfiguration:featureBuildConfiguration];
+        NSArray *headerSearchPaths = [featureBuildConfiguration
+                                      resolveConfigPathsNamed:@"HEADER_SEARCH_PATHS"
+                                      usingWorkingDirectory:[featurePbxProject sourceRoot]];
+        
+        // add precompiled header as source if found
+        NSString *precompiledHeaderPath = [featureBuildConfiguration
+                                           resolveConfigValueNamed:@"GCC_PREFIX_HEADER"];
+        if (precompiledHeaderPath != nil) {
+            NSString *absPrecompiledHeaderPath = [[featurePbxProject sourceRoot]
+                                                  stringByAppendingPathComponent:precompiledHeaderPath];
+            TextFile *headerTextFile = [TextFile textFileWithContentOfFile:absPrecompiledHeaderPath];
+            if (headerTextFile != nil) {
+                [self.sourceTextFiles setObject:headerTextFile
+                                         forKey:absPrecompiledHeaderPath];
+            } else {
+                [self.lintErrors addObject:
+                 [LintError lintErrorWithFile:absPrecompiledHeaderPath
+                                     location:MakeTextLineLocation(1)
+                                      message:@"Failed to read precompiled header"]];
+            }
+        }
         
         for (id buildPhase in featureNativeTarget.buildPhases) {
             if ([buildPhase isKindOfClass:[PBXSourcesBuildPhase class]]) {
-                [self addSourcesBuildPhase:buildPhase];
+                [self addSourcesBuildPhase:buildPhase
+                         headerSearchPaths:headerSearchPaths];
             }
         }
     }
