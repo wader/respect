@@ -61,6 +61,8 @@ main
 
 Add only-@2x support to LintImage somehow (the case when iOS downscales the @1x for you)
 
+Add a allifany codition? if some file exist then all must exist
+
 Support shared schemas somehow?
 
 Override defaults, use a signature "ident" to override?
@@ -75,7 +77,9 @@ File size stats?
 
 Combined matchers
 
-Cache or PCRE for speed
+Cache or PCRE, re2 for speed
+
+Move hardcoded build rules to config files? xib -> nib etc
 
 Objective-C tidy
 
