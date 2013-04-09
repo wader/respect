@@ -33,7 +33,9 @@
 @property(nonatomic, retain, readwrite) NSMutableArray *lintWarnings;
 @property(nonatomic, retain, readwrite) NSMutableArray *lintErrors;
 
-- (void)parseAndAddImportAndIncludesInTextFile:(TextFile *)textFile;
+- (void)parseAndAddImportAndIncludesInTextFile:(TextFile *)textFile
+                             headerSearchPaths:(NSArray *)headerSearchPaths;
+
 @end
 
 @implementation ResourceLinterXcodeProjectSource
