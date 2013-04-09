@@ -69,5 +69,8 @@
 // @ExpectedWarning: TestError/b/collision: Bundle path "collision" collides with TestError/a/collision
 // @ExpectedUnused: collision
 
+// @ExpectedWarning: TestError/multiple: Bundle path "multiple" copied multiple times
+// @ExpectedUnused: multiple
+
 int main(int argc, char *argv[]) {
 }

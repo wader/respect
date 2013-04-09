@@ -231,12 +231,22 @@
         if (collisionBuildPath != nil) {
             NSString *relativeCollisionPath = [collisionBuildPath
                                                respect_stringRelativeToPathPrefix:self.sourceRoot];
-            [self.lintWarnings addObject:
-             [LintWarning lintWarningWithFile:buildPath
-                                      message:[NSString stringWithFormat:
-                                               @"Bundle path \"%@\" collides with %@",
-                                               resourcePath, relativeCollisionPath]]];
-            return;
+            
+            if ([buildPath isEqualToString:collisionBuildPath]) {
+                [self.lintWarnings addObject:
+                 [LintWarning lintWarningWithFile:buildPath
+                                          message:[NSString stringWithFormat:
+                                                   @"Bundle path \"%@\" copied multiple times",
+                                                   resourcePath]]];
+            } else {
+                [self.lintWarnings addObject:
+                 [LintWarning lintWarningWithFile:buildPath
+                                          message:[NSString stringWithFormat:
+                                                   @"Bundle path \"%@\" collides with %@",
+                                                   resourcePath, relativeCollisionPath]]];
+            }
+            
+            continue;
         }
         
         [self.resources setObject:buildPath forKey:resourcePath];

@@ -38,6 +38,7 @@
 		092C1C7616D2769400ABF32C /* missing_file in Resources */ = {isa = PBXBuildFile; fileRef = 092C1C7416D2769400ABF32C /* missing_file */; };
 		092C1C7716D2769400ABF32C /* missing_folder in Resources */ = {isa = PBXBuildFile; fileRef = 092C1C7516D2769400ABF32C /* missing_folder */; };
 		092C1C7D16D2905500ABF32C /* test~ipad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 092C1C7F16D2905500ABF32C /* test~ipad.xib */; };
+		0936BAA517143B2800135AE6 /* multiple in Resources */ = {isa = PBXBuildFile; fileRef = 0936BAA417143B2700135AE6 /* multiple */; };
 		093B79CF1631BB7300F3C250 /* image.png in Resources */ = {isa = PBXBuildFile; fileRef = 093B79CE1631BB7300F3C250 /* image.png */; };
 		093B79F61631DB6700F3C250 /* image@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 093B79F11631DB6700F3C250 /* image@2x.png */; };
 		093B79F71631DB6700F3C250 /* image@2x~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = 093B79F21631DB6700F3C250 /* image@2x~ipad.png */; };
@@ -152,6 +153,8 @@
 		092C1C7516D2769400ABF32C /* missing_folder */ = {isa = PBXFileReference; lastKnownFileType = folder; path = missing_folder; sourceTree = "<group>"; };
 		092C1C7E16D2905500ABF32C /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = "en.lproj/test~ipad.xib"; sourceTree = "<group>"; };
 		0936BA84171317BE00135AE6 /* prefixheader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = prefixheader.h; sourceTree = "<group>"; };
+		0936BAA417143B2700135AE6 /* multiple */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = multiple; sourceTree = "<group>"; };
+		0936BAA617143B9A00135AE6 /* multiple */ = {isa = PBXFileReference; lastKnownFileType = text; name = multiple; path = TestError/multiple; sourceTree = "<group>"; };
 		093B79CE1631BB7300F3C250 /* image.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = image.png; sourceTree = "<group>"; };
 		093B79F11631DB6700F3C250 /* image@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "image@2x.png"; sourceTree = "<group>"; };
 		093B79F21631DB6700F3C250 /* image@2x~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "image@2x~ipad.png"; sourceTree = "<group>"; };
@@ -374,6 +377,7 @@
 		09190733162D9AB100199984 = {
 			isa = PBXGroup;
 			children = (
+				0936BAA617143B9A00135AE6 /* multiple */,
 				09190748162D9AB100199984 /* RespectTestProject */,
 				091907B5162D9C8D00199984 /* TestConditions */,
 				091907D3162D9C9800199984 /* TestMatchers */,
@@ -573,6 +577,7 @@
 				CD6D43A11673824300E3945A /* TestError-Info.plist */,
 				CD6D43A51673824300E3945A /* main.m */,
 				CD6D441C16740F3400E3945A /* default.m */,
+				0936BAA417143B2700135AE6 /* multiple */,
 			);
 			path = TestError;
 			sourceTree = "<group>";
@@ -1015,6 +1020,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0936BAA517143B2800135AE6 /* multiple in Resources */,
+				0936BAA517143B2800135AE6 /* multiple in Resources */,
 				09C5C38B16D572B9003A611B /* collision in Resources */,
 				09C5C38D16D572C8003A611B /* collision in Resources */,
 			);
