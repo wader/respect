@@ -35,7 +35,7 @@
     NSMutableArray *lineRanges = [NSMutableArray array];
     NSRange searchRange = NSMakeRange(0, [self length]);
     
-    // about twice as fast as using NSStringEnumerationByLines/enumerateLinesUsingBlock
+    // about twice as fast as using NSStringEnumerationByLines/enumerateSubstringsInRange
     for (;;) {
         NSRange lineEndRange = [self rangeOfCharacterFromSet:newlineCharacterSet
                                                      options:NSLiteralSearch
