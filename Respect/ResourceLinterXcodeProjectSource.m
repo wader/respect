@@ -499,7 +499,7 @@
     }
     
     for (NSString *featureSubpath in featuresSubpaths) {
-        if (![[featureSubpath pathExtension] isEqualToString:@"xcodeproj"]) {
+        if (![[featureSubpath lastPathComponent] hasSuffix:@"Feature.xcodeproj"]) {
             continue;
         }
         
