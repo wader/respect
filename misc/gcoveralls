@@ -1,0 +1,176 @@
+#!/usr/bin/env ruby
+
+require "open3"
+require "pathname"
+require "tmpdir"
+require 'tempfile'
+require "json"
+
+def xcodebuild_build_settings(target, objroot)
+  settings = {}
+
+  # format:
+  # NAME = VALUE
+  _in, out, _err = Open3.popen3("xcodebuild -target \"#{target}\" -showBuildSettings \"OBJROOT=#{objroot}\"")
+  while not out.eof? do
+    case out.readline
+    when /^\s*(.*) = (.*)$/ then settings[$1] = $2
+    end
+  end
+
+  settings
+end
+
+def git_commit_info(rev)
+  Hash[[[:id, "%H"],
+        [:author_name, "%an"],
+        [:author_email, "%ae"],
+        [:committer_name, "%cn"],
+        [:committer_email, "%ce"],
+        [:message, "%s"]].map do |key, format|
+          cmd = "git --no-pager show -s --format=\"#{format}\" \"#{rev}\""
+          _in, out, _err = Open3.popen3(cmd)
+          [key, out.read.strip]
+        end]
+end
+
+def git_branch_for_name(name)
+  cmd = "git rev-parse --abbrev-ref \"#{name}\""
+  _in, out, _err = Open3.popen3(cmd)
+  out.read.strip
+end
+
+def git_remotes
+  remotes = {}
+
+  cmd = "git remote -v"
+  _in, out, _err = Open3.popen3(cmd)
+  while not out.eof? do
+    case out.readline
+    when /^(.+)\t([^ ]+) \(fetch\)/
+      next if $1 == "kerne"
+      remotes[$1] = $2
+    end
+  end
+
+  remotes
+end
+
+def parse_gcov(gcov_string)
+  coverage = []
+  source_lines = []
+  headers = {}
+
+  gcov_string.lines.each do |line|
+    case line
+    # format:
+    #        -:    0:Key:Value has line number 0
+    #        8:    1:executed line
+    #    #####:    2:non-executed line
+    #        -:    3:whitespace/comment line etc
+    when /^\s*(-|\d+|#####):\s*(\d+):(.*)$/
+      linenumber = $2.to_i
+
+      if linenumber == 0
+        keyvalue = $3
+        key, value = keyvalue.split(":", 2)
+        headers[key] = value
+      else
+        times = $1
+        source_line = $3
+
+        coverage.push(
+          case times
+          when "-" then nil
+          when "#####" then 0
+          when /\d+/ then times.to_i
+          end
+        )
+
+        source_lines.push(source_line)
+      end
+    end
+
+  end
+
+  {:headers => headers,
+   :coverage => coverage,
+   :source_lines => source_lines}
+end
+
+def gcov(object_dir, source_paths)
+  gcovs = []
+
+  # run gcov in temp directory
+  Dir.mktmpdir do |dir|
+    Dir.chdir(dir) do
+      # TODO: escape
+      cmd = "gcov -p -o \"#{object_dir}\" #{source_paths.collect {|a| "\"#{a}\"" }.join(" ")}"
+      _in, out, _err = Open3.popen3(cmd)
+      while not out.eof? do
+        # TODO: check for error?
+        out.readline
+      end
+
+      Dir.glob("*") do |file|
+        gcovs.push(parse_gcov(open(file).read()))
+      end
+    end
+  end
+
+  gcovs
+end
+
+def coveralls_data(gcovs, source_root)
+  gcovs.select! {|gcov| gcov[:headers]["Source"].start_with? source_root}
+  source_root = source_root[0..-2] if source_root.end_with? "/"
+
+  data = {
+    :git => {
+      :head => git_commit_info("HEAD"),
+      :branch => (ENV["TRAVIS_BRANCH"] or git_branch_for_name("HEAD")),
+      :remotes => git_remotes.map do |name, url|
+        {:name => name,
+         :url => url}
+      end
+    },
+    :source_files => gcovs.map do |gcov|
+      {:name => gcov[:headers]["Source"][source_root.length+1..-1],
+       :source => gcov[:source_lines].join("\n"),
+       :coverage => gcov[:coverage]}
+    end
+  }
+
+  #data[:repo_token] = ""
+
+  travis_job_id = ENV["TRAVIS_JOB_ID"]
+  if travis_job_id
+    data[:service_name] = "travis-ci"
+    data[:service_job_id] = travis_job_id
+  else
+    data[:service_name] = "test"
+  end
+
+  data
+end
+
+# TODO: use ruby http
+def coveralls_submit(coveralls_data)
+  t = Tempfile.new("coveralls")
+  t.write(JSON.generate(coveralls_data))
+  t.close
+  puts coveralls_data
+  `curl -F json_file=@#{t.path} https://coveralls.io/api/v1/jobs`
+end
+
+Encoding.default_external = Encoding::UTF_8
+Encoding.default_internal = Encoding::UTF_8
+
+#srcroot = settings["SRCROOT"]
+
+settings = xcodebuild_build_settings(ARGV[0], ARGV[1])
+source_paths = Dir["**/*.{m,c,cpp,c++,mm}"]
+gcov_data_path = File.join(settings["OBJECT_FILE_DIR_normal"], settings["CURRENT_ARCH"])
+
+coveralls_submit(coveralls_data(gcov(gcov_data_path, source_paths), Dir.getwd))
+
