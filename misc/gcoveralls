@@ -159,7 +159,7 @@ def coveralls_submit(coveralls_data)
   t = Tempfile.new("coveralls")
   t.write(JSON.generate(coveralls_data))
   t.close
-  #puts coveralls_data
+  puts coveralls_data
   `curl -F json_file=@#{t.path} https://coveralls.io/api/v1/jobs`
 end
 
