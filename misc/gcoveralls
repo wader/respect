@@ -128,7 +128,7 @@ def coveralls_data(gcovs, source_root)
   data = {
     :git => {
       :head => git_commit_info("HEAD"),
-      :branch => ENV["TRAVIS_BRANCH"] or git_branch_for_name("HEAD"),
+      :branch => (ENV["TRAVIS_BRANCH"] or git_branch_for_name("HEAD")),
       :remotes => git_remotes.map do |name, url|
         {:name => name,
          :url => url}
