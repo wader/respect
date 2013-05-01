@@ -2,8 +2,10 @@
 
 # based on require_clean_work_tree from git dist
 is_clean_work_tree() {
-    # Update the index
-    git update-index -q --ignore-submodules --refresh
+    # Update the index, fails if in rebase etc
+    if ! git update-index -q --ignore-submodules --refresh > /dev/null ; then
+        return 1
+    fi
 
     # Disallow unstaged changes in the working tree
     if ! git diff-files --quiet --ignore-submodules -- ; then
