@@ -459,9 +459,13 @@ Escaping is also supported if you need to have literal quotes.
 
 See the [CONTRIBUTING.md](CONTRIBUTING.md) file.
 
-Thanks to [Travis CI](http://travis-ci.org) there is automatic build and unit tests running. Current status is:
+Thanks to [Travis CI](http://travis-ci.org) and
+[Coveralls](https://coveralls.io) there are automatic builds, unit tests and
+code coverage reports. Current status for master branch:
 
-[![Build Status](https://travis-ci.org/wader/respect.png)](https://travis-ci.org/wader/respect)
+[![Build Status](https://travis-ci.org/wader/respect.png?branch=master)](https://travis-ci.org/wader/respect)
+[![Coverage Status](https://coveralls.io/repos/wader/respect/badge.png?branch=master)](https://coveralls.io/r/wader/respect)
+
 
 ## Notes and known issues
 
