@@ -474,7 +474,9 @@
                                    stringByAppendingPathComponent:bundleSubpath];
             
             BOOL isDir = NO;
-            if (![[NSFileManager defaultManager] fileExistsAtPath:buildPath
+            // skip dot files and directories
+            if ([[bundleSubpath lastPathComponent] hasPrefix:@"."] ||
+                ![[NSFileManager defaultManager] fileExistsAtPath:buildPath
                                                       isDirectory:&isDir] ||
                 isDir) {
                 continue;
