@@ -1,0 +1,7 @@
+// key preferens
+// EXPECT: key=value2
+
+key = value
+#include "xcconfig_test3_1.xcconfig"
+
+

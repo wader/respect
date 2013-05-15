@@ -1,0 +1,4 @@
+// EXPECT: Parse error
+
+#include "xcconfig_test10_1.xcconfig"
+

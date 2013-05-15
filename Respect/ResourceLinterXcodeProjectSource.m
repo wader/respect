@@ -48,27 +48,20 @@
 @synthesize lintErrors = _lintErrors;
 
 - (id)initWithPBXProject:(PBXProject *)pbxProject
-              targetName:(NSString *)targetName
-       configurationName:(NSString *)configurationName {
+            nativeTarget:(PBXNativeTarget *)nativeTarget
+      buildConfiguration:(XCBuildConfiguration *)buildConfiguration {
     self = [super init];
     if (self == nil) {
         return nil;
     }
     
     self.pbxProject = pbxProject;
-    self.nativeTarget = [pbxProject nativeTargetNamed:targetName];
-    self.buildConfiguration = [self.nativeTarget configurationNamed:configurationName];
+    self.nativeTarget = nativeTarget;
+    self.buildConfiguration = buildConfiguration;
     self.sourceTextFiles = [NSMutableDictionary dictionary];
     self.resources = [NSMutableDictionary dictionary];
     self.lintWarnings = [NSMutableArray array];
     self.lintErrors = [NSMutableArray array];
-    
-    // fallback environmentis used if a variable find't be found in the normal
-    // environment which normally is based on the current process environment.
-    // this it to support running from CLI where Xcode has not exported things for us.
-    self.pbxProject.fallbackEnvironment = [pbxProject
-                                           buildFallbackEnvironmentWithTarget:self.nativeTarget
-                                           buildConfiguration:self.buildConfiguration];
     
     NSArray *headerSearchPaths = [self.buildConfiguration
                                   resolveConfigPathsNamed:@"HEADER_SEARCH_PATHS"
@@ -413,51 +406,70 @@
 // Spotify feature framework specific code below
 
 - (void)addSpotifyFeatureProjectWithPath:(NSString *)featureProjectPath {
+    NSError *error = nil;
     PBXProject *featurePbxProject = [PBXProject pbxProjectFromPath:featureProjectPath
-                                                       environment:nil];
+                                                             error:&error];
     if (featurePbxProject == nil) {
         [self.lintErrors addObject:
          [LintError lintErrorWithFile:featureProjectPath
                              location:MakeTextLineLocation(1)
-                              message:@"Failed to open Spotify feature project"]];
+                              message:[NSString stringWithFormat:
+                                       @"Failed to open Spotify feature project (%@)",
+                                       [error localizedDescription]]]];
         return;
     }
     
-    for (NSString *featureNativeTargetName in [featurePbxProject nativeTargetNames]) {
-        PBXNativeTarget *featureNativeTarget = [featurePbxProject
-                                                nativeTargetNamed:featureNativeTargetName];
-        XCBuildConfiguration *featureBuildConfiguration = [featureNativeTarget
-                                                           configurationNamed:self.buildConfiguration.name];
-        featurePbxProject.fallbackEnvironment = [featurePbxProject
-                                                 buildFallbackEnvironmentWithTarget:featureNativeTarget
-                                                 buildConfiguration:featureBuildConfiguration];
-        NSArray *headerSearchPaths = [featureBuildConfiguration
-                                      resolveConfigPathsNamed:@"HEADER_SEARCH_PATHS"
-                                      usingWorkingDirectory:[featurePbxProject sourceRoot]];
-        
-        // add precompiled header as source if found
-        NSString *precompiledHeaderPath = [featureBuildConfiguration
-                                           resolveConfigValueNamed:@"GCC_PREFIX_HEADER"];
-        if (precompiledHeaderPath != nil) {
-            NSString *absPrecompiledHeaderPath = [[featurePbxProject sourceRoot]
-                                                  stringByAppendingPathComponent:precompiledHeaderPath];
-            TextFile *headerTextFile = [TextFile textFileWithContentOfFile:absPrecompiledHeaderPath];
-            if (headerTextFile != nil) {
-                [self.sourceTextFiles setObject:headerTextFile
-                                         forKey:absPrecompiledHeaderPath];
-            } else {
-                [self.lintErrors addObject:
-                 [LintError lintErrorWithFile:absPrecompiledHeaderPath
-                                     location:MakeTextLineLocation(1)
-                                      message:@"Failed to read precompiled header"]];
-            }
+    NSArray *featureNativeTargets = [featurePbxProject nativeTargets];
+    if ([featureNativeTargets count] == 0) {
+        [self.lintErrors addObject:
+         [LintError lintErrorWithFile:featureProjectPath
+                             location:MakeTextLineLocation(1)
+                              message:@"No native tagets found in Spotify feature project"]];
+        return;
+    }
+    
+    PBXNativeTarget *featureNativeTarget = [featureNativeTargets objectAtIndex:0];
+    XCBuildConfiguration *featureBuildConfiguration = [featureNativeTarget
+                                                       configurationNamed:self.buildConfiguration.name];
+    if (![featurePbxProject prepareWithEnvironment:nil
+                                      nativeTarget:featureNativeTarget
+                                buildConfiguration:featureBuildConfiguration
+                                             error:&error]) {
+        [self.lintErrors addObject:
+         [LintError lintErrorWithFile:featureProjectPath
+                             location:MakeTextLineLocation(1)
+                              message:[NSString stringWithFormat:
+                                       @"Failed to open Spotify feature project (%@)",
+                                       [error localizedDescription]]]];
+        return;
+    }
+    
+    NSArray *headerSearchPaths = [featureBuildConfiguration
+                                  resolveConfigPathsNamed:@"HEADER_SEARCH_PATHS"
+                                  usingWorkingDirectory:[featurePbxProject sourceRoot]];
+    
+    // add precompiled header as source if found
+    NSString *precompiledHeaderPath = [featureBuildConfiguration
+                                       resolveConfigValueNamed:@"GCC_PREFIX_HEADER"];
+    if (precompiledHeaderPath != nil) {
+        NSString *absPrecompiledHeaderPath = [[featurePbxProject sourceRoot]
+                                              stringByAppendingPathComponent:precompiledHeaderPath];
+        TextFile *headerTextFile = [TextFile textFileWithContentOfFile:absPrecompiledHeaderPath];
+        if (headerTextFile != nil) {
+            [self.sourceTextFiles setObject:headerTextFile
+                                     forKey:absPrecompiledHeaderPath];
+        } else {
+            [self.lintErrors addObject:
+             [LintError lintErrorWithFile:absPrecompiledHeaderPath
+                                 location:MakeTextLineLocation(1)
+                                  message:@"Failed to read precompiled header"]];
         }
-        
-        for (id buildPhase in featureNativeTarget.buildPhases) {
-            if ([buildPhase isKindOfClass:[PBXSourcesBuildPhase class]]) {
-                [self addSourcesBuildPhase:buildPhase
-                         headerSearchPaths:headerSearchPaths];
-            }
+    }
+    
+    for (id buildPhase in featureNativeTarget.buildPhases) {
+        if ([buildPhase isKindOfClass:[PBXSourcesBuildPhase class]]) {
+            [self addSourcesBuildPhase:buildPhase
+                     headerSearchPaths:headerSearchPaths];
         }
     }
     

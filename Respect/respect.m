@@ -32,7 +32,7 @@ static void fprintf_nsstring(FILE *stream, NSString *format, va_list va) {
              cStringUsingEncoding:NSUTF8StringEncoding]);
 }
 
-static void error(NSString *format, ...) {
+static void print_error(NSString *format, ...) {
     va_list va;
     va_start(va, format);
     fprintf_nsstring(stderr, format, va);
@@ -130,44 +130,59 @@ int main(int argc,  char *const argv[]) {
                                                encoding:NSUTF8StringEncoding];
     }
     
+    NSError *error = nil;
     PBXProject *pbxProject = [PBXProject pbxProjectFromPath:xcodeProjectPath
-                                                environment:env];
+                                                      error:&error];
     if (pbxProject == nil) {
-        error(@"Failed to read %@", xcodeProjectPath);
+        print_error(@"Failed to read %@: %@", xcodeProjectPath, [error localizedDescription]);
         return EXIT_FAILURE;
     }
     
     NSArray *nativeTargetNames = [pbxProject nativeTargetNames];
     if (targetName == nil) {
         if ([nativeTargetNames count] == 0) {
-            error(@"No native targets found in project file.");
+            print_error(@"No native targets found in project file.");
             return EXIT_FAILURE;
         }
         
         targetName = [nativeTargetNames objectAtIndex:0];
     } else {
         if (![nativeTargetNames containsObject:targetName]) {
-            error(@"No native target named \"%@\" found.", targetName);
-            error(@"Suggested targets: %@",
-                  [nativeTargetNames componentsJoinedByString:@", "]);
+            print_error(@"No native target named \"%@\" found.", targetName);
+            print_error(@"Suggested targets: %@",
+                        [nativeTargetNames componentsJoinedByString:@", "]);
             return EXIT_FAILURE;
         }
     }
     
-    PBXNativeTarget *target = [pbxProject nativeTargetNamed:targetName];
-    NSArray *configurationNames = [target configurationNames];
-    if (![configurationNames containsObject:configurationName]) {
-        error(@"No configuration named \"%@\" found for native target \"%@\".",
-              configurationName, targetName);
-        error(@"Suggested configurations: %@",
-              [configurationNames componentsJoinedByString:@", "]);
+    PBXNativeTarget *nativeTarget = [pbxProject nativeTargetNamed:targetName];
+    XCBuildConfiguration *buildConfiguration = [nativeTarget configurationNamed:configurationName];
+    if (buildConfiguration == nil) {
+        NSArray *configurationNames = [nativeTarget configurationNames];
+        print_error(@"No configuration named \"%@\" found for native target \"%@\".",
+                    configurationName, targetName);
+        print_error(@"Suggested configurations: %@",
+                    [configurationNames componentsJoinedByString:@", "]);
+        return EXIT_FAILURE;
+    }
+    
+    
+    // prepare sets up fallback build environment used if a variable can't be found in
+    // the normal environment which normally is based on the current process environment.
+    // this it to support running from CLI where Xcode has not exported things for us.
+    // prepare also takes care of loading xcconfig files.
+    if (![pbxProject prepareWithEnvironment:env
+                               nativeTarget:nativeTarget
+                         buildConfiguration:buildConfiguration
+                                      error:&error]) {
+        print_error(@"%@: %@", xcodeProjectPath, [error localizedDescription]);
         return EXIT_FAILURE;
     }
     
     ResourceLinterXcodeProjectSource *projectSource = [[[ResourceLinterXcodeProjectSource alloc]
                                                         initWithPBXProject:pbxProject
-                                                        targetName:targetName
-                                                        configurationName:configurationName]
+                                                        nativeTarget:nativeTarget
+                                                        buildConfiguration:buildConfiguration]
                                                        autorelease];
     if (spFeaturesPath != nil) {
         [projectSource addSpotifyFeaturesAtPath:spFeaturesPath];

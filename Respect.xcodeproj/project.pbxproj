@@ -57,8 +57,25 @@
 		09A6FE90160A025A00F29372 /* AbstractAction.m in Sources */ = {isa = PBXBuildFile; fileRef = 09A6FE8E160A025900F29372 /* AbstractAction.m */; };
 		09A6FE97160A63F200F29372 /* WarningAction.m in Sources */ = {isa = PBXBuildFile; fileRef = 09A6FE96160A63F000F29372 /* WarningAction.m */; };
 		09A6FE98160A63F200F29372 /* WarningAction.m in Sources */ = {isa = PBXBuildFile; fileRef = 09A6FE96160A63F000F29372 /* WarningAction.m */; };
+		09B0945E175BC89E0062E8ED /* XCConfigParserTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 09B0945D175BC89E0062E8ED /* XCConfigParserTest.m */; };
+		09B0946B175BCC840062E8ED /* xcconfig_test8.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 09B09460175BCC840062E8ED /* xcconfig_test8.xcconfig */; };
+		09B0946C175BCC840062E8ED /* xcconfig_test7.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 09B09461175BCC840062E8ED /* xcconfig_test7.xcconfig */; };
+		09B0946D175BCC840062E8ED /* xcconfig_test6.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 09B09462175BCC840062E8ED /* xcconfig_test6.xcconfig */; };
+		09B0946E175BCC840062E8ED /* xcconfig_test5.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 09B09463175BCC840062E8ED /* xcconfig_test5.xcconfig */; };
+		09B0946F175BCC840062E8ED /* xcconfig_test4.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 09B09464175BCC840062E8ED /* xcconfig_test4.xcconfig */; };
+		09B09470175BCC840062E8ED /* xcconfig_test3.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 09B09465175BCC840062E8ED /* xcconfig_test3.xcconfig */; };
+		09B09471175BCC840062E8ED /* xcconfig_test1.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 09B09466175BCC840062E8ED /* xcconfig_test1.xcconfig */; };
+		09B09472175BCC840062E8ED /* xcconfig_test2.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 09B09467175BCC840062E8ED /* xcconfig_test2.xcconfig */; };
+		09B09473175BCC840062E8ED /* xcconfig_test3_1.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 09B09468175BCC840062E8ED /* xcconfig_test3_1.xcconfig */; };
+		09B09474175BCC840062E8ED /* xcconfig_test2_2.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 09B09469175BCC840062E8ED /* xcconfig_test2_2.xcconfig */; };
+		09B09475175BCC840062E8ED /* xcconfig_test2_1.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 09B0946A175BCC840062E8ED /* xcconfig_test2_1.xcconfig */; };
+		09B09477175BF00A0062E8ED /* xcconfig_test9.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 09B09476175BF0090062E8ED /* xcconfig_test9.xcconfig */; };
+		09B0947A175BF0C30062E8ED /* xcconfig_test10.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 09B09478175BF0C10062E8ED /* xcconfig_test10.xcconfig */; };
+		09B0947B175BF0C30062E8ED /* xcconfig_test10_1.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 09B09479175BF0C10062E8ED /* xcconfig_test10_1.xcconfig */; };
 		09C5C33E16D3CEA4003A611B /* PerformParameters.m in Sources */ = {isa = PBXBuildFile; fileRef = 09C5C33D16D3CEA4003A611B /* PerformParameters.m */; };
 		09C5C33F16D3D1EF003A611B /* PerformParameters.m in Sources */ = {isa = PBXBuildFile; fileRef = 09C5C33D16D3CEA4003A611B /* PerformParameters.m */; };
+		09DA235D174FAB9E00D54BD8 /* XCConfigParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 09DA235B174FAB9E00D54BD8 /* XCConfigParser.m */; };
+		09E7E0051753850100FE18D2 /* XCConfigParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 09DA235B174FAB9E00D54BD8 /* XCConfigParser.m */; };
 		09EAA99B15FE41A000EF7F6F /* NSRegularExpression+lineNumberTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 09EAA99A15FE419F00EF7F6F /* NSRegularExpression+lineNumberTest.m */; };
 		09EE594415AB031D00826871 /* ExpressionSignature.m in Sources */ = {isa = PBXBuildFile; fileRef = 09EE594315AB031C00826871 /* ExpressionSignature.m */; };
 		09F841D415AEE9CB004F9CF9 /* PeekableEnumerator.m in Sources */ = {isa = PBXBuildFile; fileRef = 09F841D315AEE9CB004F9CF9 /* PeekableEnumerator.m */; };
@@ -186,8 +203,26 @@
 		09A6FE8E160A025900F29372 /* AbstractAction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AbstractAction.m; sourceTree = "<group>"; };
 		09A6FE95160A63EF00F29372 /* WarningAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WarningAction.h; sourceTree = "<group>"; };
 		09A6FE96160A63F000F29372 /* WarningAction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WarningAction.m; sourceTree = "<group>"; };
+		09B0945C175BC89D0062E8ED /* XCConfigParserTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XCConfigParserTest.h; sourceTree = "<group>"; };
+		09B0945D175BC89E0062E8ED /* XCConfigParserTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XCConfigParserTest.m; sourceTree = "<group>"; };
+		09B09460175BCC840062E8ED /* xcconfig_test8.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = xcconfig_test8.xcconfig; sourceTree = "<group>"; };
+		09B09461175BCC840062E8ED /* xcconfig_test7.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = xcconfig_test7.xcconfig; sourceTree = "<group>"; };
+		09B09462175BCC840062E8ED /* xcconfig_test6.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = xcconfig_test6.xcconfig; sourceTree = "<group>"; };
+		09B09463175BCC840062E8ED /* xcconfig_test5.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = xcconfig_test5.xcconfig; sourceTree = "<group>"; };
+		09B09464175BCC840062E8ED /* xcconfig_test4.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = xcconfig_test4.xcconfig; sourceTree = "<group>"; };
+		09B09465175BCC840062E8ED /* xcconfig_test3.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = xcconfig_test3.xcconfig; sourceTree = "<group>"; };
+		09B09466175BCC840062E8ED /* xcconfig_test1.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = xcconfig_test1.xcconfig; sourceTree = "<group>"; };
+		09B09467175BCC840062E8ED /* xcconfig_test2.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = xcconfig_test2.xcconfig; sourceTree = "<group>"; };
+		09B09468175BCC840062E8ED /* xcconfig_test3_1.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = xcconfig_test3_1.xcconfig; sourceTree = "<group>"; };
+		09B09469175BCC840062E8ED /* xcconfig_test2_2.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = xcconfig_test2_2.xcconfig; sourceTree = "<group>"; };
+		09B0946A175BCC840062E8ED /* xcconfig_test2_1.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = xcconfig_test2_1.xcconfig; sourceTree = "<group>"; };
+		09B09476175BF0090062E8ED /* xcconfig_test9.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = xcconfig_test9.xcconfig; sourceTree = "<group>"; };
+		09B09478175BF0C10062E8ED /* xcconfig_test10.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = xcconfig_test10.xcconfig; sourceTree = "<group>"; };
+		09B09479175BF0C10062E8ED /* xcconfig_test10_1.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = xcconfig_test10_1.xcconfig; sourceTree = "<group>"; };
 		09C5C33C16D3CEA3003A611B /* PerformParameters.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PerformParameters.h; sourceTree = "<group>"; };
 		09C5C33D16D3CEA4003A611B /* PerformParameters.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PerformParameters.m; sourceTree = "<group>"; };
+		09DA235B174FAB9E00D54BD8 /* XCConfigParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = XCConfigParser.m; path = PBXProject/XCConfigParser.m; sourceTree = SOURCE_ROOT; };
+		09DA235C174FAB9E00D54BD8 /* XCConfigParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = XCConfigParser.h; path = PBXProject/XCConfigParser.h; sourceTree = SOURCE_ROOT; };
 		09EAA99915FE419F00EF7F6F /* NSRegularExpression+lineNumberTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSRegularExpression+lineNumberTest.h"; sourceTree = "<group>"; };
 		09EAA99A15FE419F00EF7F6F /* NSRegularExpression+lineNumberTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSRegularExpression+lineNumberTest.m"; sourceTree = "<group>"; };
 		09EE594215AB031B00826871 /* ExpressionSignature.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExpressionSignature.h; sourceTree = "<group>"; };
@@ -292,6 +327,9 @@
 				CD08089715F7E39800B5CACD /* PBXProjectTest.m */,
 				0926EC1915B0338800100D38 /* RespectTest.h */,
 				0926EC1A15B0338800100D38 /* RespectTest.m */,
+				09B0945C175BC89D0062E8ED /* XCConfigParserTest.h */,
+				09B0945D175BC89E0062E8ED /* XCConfigParserTest.m */,
+				09B0945F175BC8C30062E8ED /* XCConfigParserTest */,
 				0926EC1415B0338800100D38 /* Supporting Files */,
 			);
 			path = RespectTest;
@@ -380,6 +418,27 @@
 			path = Respect;
 			sourceTree = "<group>";
 		};
+		09B0945F175BC8C30062E8ED /* XCConfigParserTest */ = {
+			isa = PBXGroup;
+			children = (
+				09B09478175BF0C10062E8ED /* xcconfig_test10.xcconfig */,
+				09B09479175BF0C10062E8ED /* xcconfig_test10_1.xcconfig */,
+				09B09476175BF0090062E8ED /* xcconfig_test9.xcconfig */,
+				09B09460175BCC840062E8ED /* xcconfig_test8.xcconfig */,
+				09B09461175BCC840062E8ED /* xcconfig_test7.xcconfig */,
+				09B09462175BCC840062E8ED /* xcconfig_test6.xcconfig */,
+				09B09463175BCC840062E8ED /* xcconfig_test5.xcconfig */,
+				09B09464175BCC840062E8ED /* xcconfig_test4.xcconfig */,
+				09B09465175BCC840062E8ED /* xcconfig_test3.xcconfig */,
+				09B09468175BCC840062E8ED /* xcconfig_test3_1.xcconfig */,
+				09B09466175BCC840062E8ED /* xcconfig_test1.xcconfig */,
+				09B09467175BCC840062E8ED /* xcconfig_test2.xcconfig */,
+				09B0946A175BCC840062E8ED /* xcconfig_test2_1.xcconfig */,
+				09B09469175BCC840062E8ED /* xcconfig_test2_2.xcconfig */,
+			);
+			name = XCConfigParserTest;
+			sourceTree = "<group>";
+		};
 		CD10C5DD16E93357004FED06 /* NSRegularExpression+extras */ = {
 			isa = PBXGroup;
 			children = (
@@ -440,6 +499,8 @@
 				CD10C5D316E9331E004FED06 /* NSString+PBXProject.m */,
 				CD10C5D616E9331E004FED06 /* PBXUnarchiver.h */,
 				CD10C5D416E9331E004FED06 /* PBXUnarchiver.m */,
+				09DA235B174FAB9E00D54BD8 /* XCConfigParser.m */,
+				09DA235C174FAB9E00D54BD8 /* XCConfigParser.h */,
 			);
 			name = PBXProject;
 			sourceTree = "<group>";
@@ -550,6 +611,20 @@
 			buildActionMask = 2147483647;
 			files = (
 				0926EC1815B0338800100D38 /* InfoPlist.strings in Resources */,
+				09B0946B175BCC840062E8ED /* xcconfig_test8.xcconfig in Resources */,
+				09B0946C175BCC840062E8ED /* xcconfig_test7.xcconfig in Resources */,
+				09B0946D175BCC840062E8ED /* xcconfig_test6.xcconfig in Resources */,
+				09B0946E175BCC840062E8ED /* xcconfig_test5.xcconfig in Resources */,
+				09B0946F175BCC840062E8ED /* xcconfig_test4.xcconfig in Resources */,
+				09B09470175BCC840062E8ED /* xcconfig_test3.xcconfig in Resources */,
+				09B09471175BCC840062E8ED /* xcconfig_test1.xcconfig in Resources */,
+				09B09472175BCC840062E8ED /* xcconfig_test2.xcconfig in Resources */,
+				09B09473175BCC840062E8ED /* xcconfig_test3_1.xcconfig in Resources */,
+				09B09474175BCC840062E8ED /* xcconfig_test2_2.xcconfig in Resources */,
+				09B09475175BCC840062E8ED /* xcconfig_test2_1.xcconfig in Resources */,
+				09B09477175BF00A0062E8ED /* xcconfig_test9.xcconfig in Resources */,
+				09B0947A175BF0C30062E8ED /* xcconfig_test10.xcconfig in Resources */,
+				09B0947B175BF0C30062E8ED /* xcconfig_test10_1.xcconfig in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -675,6 +750,8 @@
 				CD10C5E916E93393004FED06 /* NSRegularExpression+withFnmatch.m in Sources */,
 				0929BCC216F28EF7000F55F4 /* NSString+withFnmatch.m in Sources */,
 				090D4C7E16FF38DF005A67A4 /* NSString+lineNumber.m in Sources */,
+				09E7E0051753850100FE18D2 /* XCConfigParser.m in Sources */,
+				09B0945E175BC89E0062E8ED /* XCConfigParserTest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -729,6 +806,7 @@
 				CD10C5E616E93389004FED06 /* NSRegularExpression+withFnmatch.m in Sources */,
 				0929BC8716EFBDAE000F55F4 /* NSString+withFnmatch.m in Sources */,
 				090D4C7D16FF38DF005A67A4 /* NSString+lineNumber.m in Sources */,
+				09DA235D174FAB9E00D54BD8 /* XCConfigParser.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

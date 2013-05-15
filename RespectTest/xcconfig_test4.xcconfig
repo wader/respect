@@ -1,0 +1,7 @@
+// recursive include (Xcode ignores it)
+// EXPECT: key=value
+
+key = value
+
+#include "xcconfig_test4.xcconfig"
+

@@ -31,20 +31,27 @@
 
 static BOOL test(NSString *path) {
     BOOL success = YES;
-    PBXProject *pbxProject = [PBXProject pbxProjectFromPath:path environment:nil];
+    PBXProject *pbxProject = [PBXProject pbxProjectFromPath:path error:nil];
     
     for (PBXNativeTarget *nativeTarget in pbxProject.targets) {
         if (![nativeTarget.name hasPrefix:@"Test"]) {
             continue;
         }
         
+        XCBuildConfiguration *buildConfiguration = [nativeTarget.buildConfigurationList.buildConfigurations
+                                                    objectAtIndex:0];
+        
+        [pbxProject prepareWithEnvironment:nil
+                              nativeTarget:nativeTarget
+                        buildConfiguration:buildConfiguration
+                                     error:nil];
+        
         [SenTestLog testLogWithFormat:@"Testing target %@\n", nativeTarget.name];
         
         id<ResourceLinterSource> linterSource = [[[ResourceLinterXcodeProjectSource alloc]
                                                   initWithPBXProject:pbxProject
-                                                  targetName:nativeTarget.name
-                                                  configurationName:[[nativeTarget configurationNames]
-                                                                     objectAtIndex:0]]
+                                                  nativeTarget:nativeTarget
+                                                  buildConfiguration:buildConfiguration]
                                                  autorelease];
         ResourceLinter *linter = [[[ResourceLinter alloc]
                                    initWithResourceLinterSource:linterSource

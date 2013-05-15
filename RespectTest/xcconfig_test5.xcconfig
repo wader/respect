@@ -1,0 +1,4 @@
+// EXPECT: no such file
+
+#include "xcconfig_test5_not_found.xcconfig"
+

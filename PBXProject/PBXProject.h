@@ -87,6 +87,8 @@
 
 #import <Foundation/Foundation.h>
 
+NSString * const PBXProjectErrorDomain;
+
 @class PBXProject;
 
 // abstract class, does not exist in PBX files
@@ -123,9 +125,11 @@
 
 @interface XCBuildConfiguration : NSObject
 @property(nonatomic, retain, readonly) NSString *name;
+@property(nonatomic, retain, readonly) PBXFileReference *baseConfigurationReference;
 @property(nonatomic, retain, readonly) NSDictionary *buildSettings;
 @property(nonatomic, assign, readonly) XCBuildConfiguration *parent;
 @property(nonatomic, assign, readonly) PBXProject *project;
+
 - (id)resolveConfigValueNamed:(NSString *)configName;
 - (NSArray *)resolveConfigPathsNamed:(NSString *)configName
                usingWorkingDirectory:(NSString *)workingDirectory;
@@ -169,10 +173,13 @@
 @property(nonatomic, retain, readonly) NSDictionary *environment;
 @property(nonatomic, retain, readonly) NSString *pbxFilePath;
 
-@property(nonatomic, retain, readwrite) NSDictionary *fallbackEnvironment;
-
 + (PBXProject *)pbxProjectFromPath:(NSString *)path
-                       environment:(NSDictionary *)environment;
+                             error:(NSError **)error;
+
+- (BOOL)prepareWithEnvironment:(NSDictionary *)environment
+                  nativeTarget:(PBXNativeTarget *)nativeTarget
+            buildConfiguration:(XCBuildConfiguration *)buildConfiguration
+                         error:(NSError **)error;
 
 - (NSString *)lookupEnvironmentName:(NSString *)name;
 - (NSString *)pathForSourceTree:(NSString *)sourceTree;
@@ -180,7 +187,7 @@
 - (NSString *)projectPath;
 - (NSString *)sourceRoot;
 - (NSArray *)nativeTargetNames;
+- (NSArray *)nativeTargets;
 - (PBXNativeTarget *)nativeTargetNamed:(NSString *)targetName;
-- (NSDictionary *)buildFallbackEnvironmentWithTarget:(PBXNativeTarget *)target
-                                  buildConfiguration:(XCBuildConfiguration *)buildConfiguration;
+
 @end

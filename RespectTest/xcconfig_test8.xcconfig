@@ -1,0 +1,3 @@
+// EXPECT: Parse error
+
+key key

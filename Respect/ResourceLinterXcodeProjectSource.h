@@ -20,8 +20,8 @@
 
 @interface ResourceLinterXcodeProjectSource : NSObject <ResourceLinterSource>
 - (id)initWithPBXProject:(PBXProject *)pbxProject
-              targetName:(NSString *)targetName
-       configurationName:(NSString *)configurationName;
+            nativeTarget:(PBXNativeTarget *)nativeTarget
+      buildConfiguration:(XCBuildConfiguration *)buildConfiguration;
 
 - (void)addSpotifyFeaturesAtPath:(NSString *)featuresPath;
 @end

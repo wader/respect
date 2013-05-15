@@ -1,0 +1,11 @@
+// syntax tests
+// EXPECT: key1=value1
+// EXPECT: key2=value2
+// EXPECT: key3=value3
+// EXPECT: key4=value4
+
+// comment
+key1 = value1 // comment
+#include "xcconfig_test2_1.xcconfig" // comment
+  key3=value3//comment
+  #include"xcconfig_test2_2.xcconfig"//comment

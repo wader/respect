@@ -25,7 +25,7 @@
                               pbxProjectFromPath:
                               [[[NSFileManager defaultManager] currentDirectoryPath]
                                stringByAppendingPathComponent:@"RespectTest/RespectTestProject/RespectTestProject.xcodeproj"]
-                              environment:nil];
+                              error:nil];
     
     NSArray *expectedTagets = [NSArray arrayWithObjects:
                                @"RespectTestProject",
@@ -42,6 +42,7 @@
                                @"TestFolderReference",
                                @"TestXib",
                                @"TestImageDefault",
+                               @"TestXCConfig",
                                nil];
     NSArray *expectedConfigurations = [NSArray arrayWithObjects:@"Debug", @"Release", nil];
     

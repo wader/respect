@@ -1,0 +1,4 @@
+// simplest possible test
+// EXPECT: key=value
+
+key = value
