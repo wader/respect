@@ -27,8 +27,15 @@
 require "open3"
 require "pathname"
 require "tmpdir"
-require 'tempfile'
+require "tempfile"
+require 'net/https'
 require "json"
+require "cgi"
+require "uri"
+
+# TODO:
+# cli mode to output stats
+# repo token support
 
 def xcodebuild_build_settings(target, objroot)
   settings = {}
@@ -52,23 +59,23 @@ def git_commit_info(rev)
         [:committer_name, "%cn"],
         [:committer_email, "%ce"],
         [:message, "%s"]].map do |key, format|
-          cmd = "git --no-pager show -s --format=\"#{format}\" \"#{rev}\""
-          _in, out, _err = Open3.popen3(cmd)
+          cmd = ["git", "--no-pager", "show", "-s", "--format=#{format}", rev]
+          _in, out, _err = Open3.popen3(*cmd)
           [key, out.read.strip]
         end]
 end
 
 def git_branch_for_name(name)
-  cmd = "git rev-parse --abbrev-ref \"#{name}\""
-  _in, out, _err = Open3.popen3(cmd)
+  cmd = ["git", "rev-parse", "--abbrev-ref", name]
+  _in, out, _err = Open3.popen3(*cmd)
   out.read.strip
 end
 
 def git_remotes
   remotes = {}
 
-  cmd = "git remote -v"
-  _in, out, _err = Open3.popen3(cmd)
+  cmd = ["git", "remote", "-v"]
+  _in, out, _err = Open3.popen3(*cmd)
   while not out.eof? do
     case out.readline
     when /^(.+)\t([^ ]+) \(fetch\)/
@@ -128,9 +135,12 @@ def gcov(object_dir, source_paths)
   # run gcov in temp directory
   Dir.mktmpdir do |dir|
     Dir.chdir(dir) do
-      # TODO: escape
-      cmd = "gcov -p -o \"#{object_dir}\" #{source_paths.collect {|a| "\"#{a}\"" }.join(" ")}"
-      _in, out, _err = Open3.popen3(cmd)
+      cmd = [
+        "gcov",
+        "--preserve-paths",
+        "--object-directory", object_dir
+      ] + source_paths
+      _in, out, _err = Open3.popen3(*cmd)
       while not out.eof? do
         # TODO: check for error?
         out.readline
@@ -165,6 +175,7 @@ def coveralls_data(gcovs, source_root)
     end
   }
 
+  # TODO: required when not travis? argument?
   #data[:repo_token] = ""
 
   travis_job_id = ENV["TRAVIS_JOB_ID"]
@@ -178,13 +189,57 @@ def coveralls_data(gcovs, source_root)
   data
 end
 
-# TODO: use ruby http
+def build_multipart_request(parts)
+  useragent = "gcoveralls"
+  boundary = "boundary"
+  content_type = "multipart/form-data; boundary=#{boundary}"
+  headers = {"Content-Type" => content_type, "User-Agent" => useragent}
+
+  body = parts.collect do |part|
+    [
+      "--" + boundary,
+      "Content-Disposition: form-data; name=\"#{CGI::escape(part[:name])}\"; filename=\"#{part[:filename]}\"",
+      "Content-Type: #{part[:content_type]}",
+      "",
+      part[:content],
+      ""
+    ].join("\r\n")
+  end.join("") + "--" + boundary + "--"
+
+  return headers, body
+end
+
 def coveralls_submit(coveralls_data)
-  t = Tempfile.new("coveralls")
-  t.write(JSON.generate(coveralls_data))
-  t.close
-  puts coveralls_data
-  `curl -F json_file=@#{t.path} https://coveralls.io/api/v1/jobs`
+  uri = URI("https://coveralls.io/api/v1/jobs")
+  req = Net::HTTP.new(uri.host, uri.port)
+  req.use_ssl = true
+
+  begin
+    req.start do |c|
+      headers, body = build_multipart_request([{
+        :name => "json_file",
+        :filename => "json_file",
+        :content_type => "application/octet-stream",
+        :content => JSON.generate(coveralls_data),
+      }])
+
+      # TODO: retry?
+      res = c.post(uri.path, body, headers)
+      if res.body
+        coveralls_res = JSON::parse(res.body)
+        if coveralls_res.has_key? "error"
+          return false, coveralls_res["message"]
+        else
+          return true, "#{coveralls_res["message"]} #{coveralls_res["url"]}"
+        end
+      else
+        return false, res.message
+      end
+
+    end
+  rescue StandardError => e
+    return false, e
+  end
 end
 
 Encoding.default_external = Encoding::UTF_8
@@ -196,5 +251,6 @@ settings = xcodebuild_build_settings(ARGV[0], ARGV[1])
 source_paths = Dir["**/*.{m,c,cpp,c++,mm}"]
 gcov_data_path = File.join(settings["OBJECT_FILE_DIR_normal"], settings["CURRENT_ARCH"])
 
-coveralls_submit(coveralls_data(gcov(gcov_data_path, source_paths), Dir.getwd))
+result, message = coveralls_submit(coveralls_data(gcov(gcov_data_path, source_paths), Dir.getwd))
+puts "#{result ? "OK" : "Failed"}: #{message}"
 
