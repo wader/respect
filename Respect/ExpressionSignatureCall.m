@@ -27,10 +27,7 @@
 
 + (id<ExpressionSignature>)parseTokens:(PeekableEnumerator *)tokens
                                  error:(NSError **)error {
-    NSError *dummyError = nil;
-    if (error == NULL) {
-        error = &dummyError;
-    }
+    error = error ?: &(NSError *){nil};
     
     ExpressionSignatureToken *current = [tokens nextObject];
     

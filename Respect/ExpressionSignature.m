@@ -54,10 +54,7 @@ NSString * const ExpressionSignatureErrorDomain = @"ExpressionSignatureErrorDoma
 // TODO: capture group info? string unescape
 + (NSRegularExpression *)stringToRegEx:(NSString *)signature
                                  error:(NSError **)error {
-    NSError *dummyError = nil;
-    if (error == NULL) {
-        error = &dummyError;
-    }
+    error = error ?: &(NSError *){nil};
     
     ExpressionSignature *exp = [ExpressionSignature
                                 signatureFromString:signature
@@ -74,10 +71,7 @@ NSString * const ExpressionSignatureErrorDomain = @"ExpressionSignatureErrorDoma
 
 + (ExpressionSignature *)signatureFromString:(NSString *)signature
                                        error:(NSError **)error {
-    NSError *dummyError = nil;
-    if (error == NULL) {
-        error = &dummyError;
-    }
+    error = error ?: &(NSError *){nil};
     
     PeekableEnumerator *peekableTokenEnumerator = [[[PeekableEnumerator alloc]
                                                     initWithEnumerator:
@@ -103,10 +97,7 @@ NSString * const ExpressionSignatureErrorDomain = @"ExpressionSignatureErrorDoma
 
 + (id<ExpressionSignature>)parseTokens:(PeekableEnumerator *)tokens
                                  error:(NSError **)error {
-    NSError *dummyError = nil;
-    if (error == NULL) {
-        error = &dummyError;
-    }
+    error = error ?: &(NSError *){nil};
     
     ExpressionSignatureToken *token0 = [tokens peekObjectAtOffset:0];
     ExpressionSignatureToken *token1 = [tokens peekObjectAtOffset:1];

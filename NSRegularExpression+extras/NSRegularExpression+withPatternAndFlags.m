@@ -25,13 +25,10 @@
 + (NSRegularExpression *)regularExpressionWithPatternAndFlags:(NSString *)patternAndFlags
                                                       options:(NSRegularExpressionOptions)options
                                                         error:(NSError **)error {
+    error = error ?: &(NSError *){nil};
+
     NSRange start = [patternAndFlags rangeOfString:@"/" options:0];
     NSRange end = [patternAndFlags rangeOfString:@"/" options:NSBackwardsSearch];
-    
-    NSError *dummyError = nil;
-    if (error == NULL) {
-        error = &dummyError;
-    }
     
     if (start.location != 0 ||
         end.location == NSNotFound ||
