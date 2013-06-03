@@ -1,5 +1,11 @@
 #!/usr/bin/env ruby
 
+# Submits code coverage reports to coveralls.io for Xcode based projects.
+# Give same arguments as xcodebuild.
+#
+# Will submit to coveralls.io if running in a travis-ci build environment
+# or if REPO_TOKEN is set. Otherwise ouput statistics to stdout.
+
 # Copyright (c) 2013 <mattias.wadman@gmail.com>
 #
 # MIT License:
@@ -21,9 +27,6 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-# This script is work in progress but mean to be used to send code coverage
-# reports to coveralls.io for Xcode based projects
-
 require "open3"
 require "pathname"
 require "tmpdir"
@@ -34,16 +37,15 @@ require "cgi"
 require "uri"
 
 # TODO:
-# cli mode to output stats
-# repo token support
+# output source, html? cli?
 
-def xcodebuild_build_settings(target, objroot)
+def xcodebuild_settings(argv)
+  cmd = ["xcodebuild", "-showBuildSettings"] + argv
   settings = {}
-
-  # format:
-  # NAME = VALUE
-  _in, out, _err = Open3.popen3("xcodebuild -target \"#{target}\" -showBuildSettings \"OBJROOT=#{objroot}\"")
+  _in, out, _err = Open3.popen3(*cmd)
   while not out.eof? do
+    # format:
+    # NAME = VALUE
     case out.readline
     when /^\s*(.*) = (.*)$/ then settings[$1] = $2
     end
@@ -87,12 +89,12 @@ def git_remotes
   remotes
 end
 
-def parse_gcov(gcov_string)
+def gcov_parse_report(report)
   coverage = []
   source_lines = []
   headers = {}
 
-  gcov_string.lines.each do |line|
+  report.lines.each do |line|
     case line
     # format:
     #        -:    0:Key:Value has line number 0
@@ -129,7 +131,7 @@ def parse_gcov(gcov_string)
    :source_lines => source_lines}
 end
 
-def gcov(object_dir, source_paths)
+def gcov_parse(object_dir, srcroot)
   gcovs = []
 
   # run gcov in temp directory
@@ -139,7 +141,7 @@ def gcov(object_dir, source_paths)
         "gcov",
         "--preserve-paths",
         "--object-directory", object_dir
-      ] + source_paths
+      ] + Dir[File.join(srcroot, "**/*.{m,c,h,cpp,c++,cc,cp,cxx,hpp,mm}")]
       _in, out, _err = Open3.popen3(*cmd)
       while not out.eof? do
         # TODO: check for error?
@@ -147,7 +149,7 @@ def gcov(object_dir, source_paths)
       end
 
       Dir.glob("*") do |file|
-        gcovs.push(parse_gcov(open(file).read()))
+        gcovs.push(gcov_parse_report(open(file).read()))
       end
     end
   end
@@ -155,35 +157,31 @@ def gcov(object_dir, source_paths)
   gcovs
 end
 
-def coveralls_data(gcovs, source_root)
-  gcovs.select! {|gcov| gcov[:headers]["Source"].start_with? source_root}
-  source_root = source_root[0..-2] if source_root.end_with? "/"
+def coveralls_data(reports, srcroot, env)
+  is_travis = env.has_key? "TRAVIS_JOB_ID"
 
   data = {
     :git => {
       :head => git_commit_info("HEAD"),
-      :branch => (ENV["TRAVIS_BRANCH"] or git_branch_for_name("HEAD")),
+      :branch => (is_travis ? env["TRAVIS_BRANCH"] : git_branch_for_name("HEAD")),
       :remotes => git_remotes.map do |name, url|
         {:name => name,
          :url => url}
       end
     },
-    :source_files => gcovs.map do |gcov|
-      {:name => gcov[:headers]["Source"][source_root.length+1..-1],
-       :source => gcov[:source_lines].join("\n"),
-       :coverage => gcov[:coverage]}
+    :source_files => reports.map do |report|
+      {:name => Pathname(report[:headers]["Source"]).relative_path_from(Pathname(srcroot)),
+       :source => report[:source_lines].join("\n"),
+       :coverage => report[:coverage]}
     end
   }
 
-  # TODO: required when not travis? argument?
-  #data[:repo_token] = ""
-
-  travis_job_id = ENV["TRAVIS_JOB_ID"]
-  if travis_job_id
+  if is_travis
     data[:service_name] = "travis-ci"
-    data[:service_job_id] = travis_job_id
+    data[:service_job_id] = env["TRAVIS_JOB_ID"]
   else
-    data[:service_name] = "test"
+    data[:service_name] = env["SERVICE_NAME"] or "gcoveralls"
+    data[:repo_token] = env["REPO_TOKEN"] or ""
   end
 
   data
@@ -198,7 +196,9 @@ def build_multipart_request(parts)
   body = parts.collect do |part|
     [
       "--" + boundary,
-      "Content-Disposition: form-data; name=\"#{CGI::escape(part[:name])}\"; filename=\"#{part[:filename]}\"",
+      "Content-Disposition: form-data; " +
+      "name=\"#{CGI::escape(part[:name])}\"; " +
+      "filename=\"#{part[:filename]}\"",
       "Content-Type: #{part[:content_type]}",
       "",
       part[:content],
@@ -220,7 +220,7 @@ def coveralls_submit(coveralls_data)
         :name => "json_file",
         :filename => "json_file",
         :content_type => "application/octet-stream",
-        :content => JSON.generate(coveralls_data),
+        :content => JSON.generate(coveralls_data)
       }])
 
       # TODO: retry?
@@ -242,15 +242,60 @@ def coveralls_submit(coveralls_data)
   end
 end
 
+def output_stats(gcov_reports, srcroot)
+  srcroot_path = Pathname(srcroot)
+  coverage_files = []
+
+  gcov_reports.each do |report|
+    path = Pathname(report[:headers]["Source"]).relative_path_from(srcroot_path)
+    skipped_lines = 0
+    code_lines = 0
+    executed_lines = 0
+
+    report[:coverage].each do |coverage|
+      if coverage == nil
+        skipped_lines += 1
+      else
+        code_lines +=1
+        executed_lines += 1 if coverage > 0
+      end
+    end
+
+    coverage_files.push({
+      :path => path,
+      :skipped_lines => skipped_lines,
+      :code_lines => code_lines,
+      :executed_lines => executed_lines,
+      :percent => executed_lines.to_f / code_lines * 100
+    })
+  end
+
+  total_code_lines = 0
+  total_executed_lines = 0
+  coverage_files.sort_by { |c| c[:percent] }.reverse.each do |c|
+    puts "%7.2f%%  %s" % [c[:percent], c[:path]]
+    total_code_lines += c[:code_lines]
+    total_executed_lines += c[:executed_lines]
+  end
+  puts "=%6.2f%%" % [total_executed_lines.to_f / total_code_lines * 100]
+
+end
+
 Encoding.default_external = Encoding::UTF_8
 Encoding.default_internal = Encoding::UTF_8
 
-#srcroot = settings["SRCROOT"]
+settings = xcodebuild_settings(ARGV)
+srcroot = settings["SRCROOT"]
 
-settings = xcodebuild_build_settings(ARGV[0], ARGV[1])
-source_paths = Dir["**/*.{m,c,cpp,c++,mm}"]
 gcov_data_path = File.join(settings["OBJECT_FILE_DIR_normal"], settings["CURRENT_ARCH"])
+gcov_reports = gcov_parse(gcov_data_path, srcroot)
+# only include reports about files under srcroot
+gcov_reports.select! {|gcov| gcov[:headers]["Source"].start_with? srcroot}
 
-result, message = coveralls_submit(coveralls_data(gcov(gcov_data_path, source_paths), Dir.getwd))
-puts "#{result ? "OK" : "Failed"}: #{message}"
+if ENV.has_key? "TRAVIS_JOB_ID" or ENV.has_key? "REPO_TOKEN"
+  result, message = coveralls_submit(coveralls_data(gcov_reports, srcroot, ENV))
+  puts "#{result ? "OK" : "Failed"}: #{message}"
+else
+  output_stats(gcov_reports, srcroot)
+end
 
