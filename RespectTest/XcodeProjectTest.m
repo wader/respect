@@ -24,15 +24,30 @@
     PBXProject *pbxProject = [PBXProject
                               pbxProjectFromPath:
                               [[[NSFileManager defaultManager] currentDirectoryPath]
-                               stringByAppendingPathComponent:@"RespectTest/Test.xcodeproj"]
+                               stringByAppendingPathComponent:@"RespectTest/RespectTestProject/RespectTestProject.xcodeproj"]
                               environment:nil];
     
-    NSArray *expectedTagets = [NSArray arrayWithObject:@"Test"];
+    NSArray *expectedTagets = [NSArray arrayWithObjects:
+                               @"RespectTestProject",
+                               @"TestConditions",
+                               @"TestMatchers",
+                               @"TestIgnore",
+                               @"TestComments",
+                               @"TestIOSDefault",
+                               @"TestImage",
+                               @"TestInfoPlist",
+                               @"TestBuildConfig",
+                               @"TestCasesensitive",
+                               @"TestError",
+                               @"TestFolderReference",
+                               @"TestXib",
+                               @"TestImageDefault",
+                               nil];
     NSArray *expectedConfigurations = [NSArray arrayWithObjects:@"Debug", @"Release", nil];
     
     STAssertEqualObjects([pbxProject nativeTargetNames], expectedTagets, nil);
     
-    PBXNativeTarget *nativeTarget = [pbxProject nativeTargetNamed:@"Test"];
+    PBXNativeTarget *nativeTarget = [pbxProject nativeTargetNamed:@"RespectTestProject"];
     
     STAssertEqualObjects([nativeTarget configurationNames], expectedConfigurations, nil);
 }
