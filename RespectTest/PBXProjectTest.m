@@ -15,10 +15,10 @@
 // specific language governing permissions and limitations
 // under the License.
 
-#import "XcodeProjectTest.h"
+#import "PBXProjectTest.h"
 #import "PBXProject.h"
 
-@implementation XcodeProjectTest
+@implementation PBXProjectTest
 
 - (void)test_xcodeProject {
     PBXProject *pbxProject = [PBXProject

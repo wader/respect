@@ -17,5 +17,5 @@
 
 #import <SenTestingKit/SenTestingKit.h>
 
-@interface XcodeProjectTest : SenTestCase
+@interface PBXProjectTest : SenTestCase
 @end

@@ -62,7 +62,7 @@
 		09EAA99B15FE41A000EF7F6F /* NSRegularExpression+lineNumberTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 09EAA99A15FE419F00EF7F6F /* NSRegularExpression+lineNumberTest.m */; };
 		09EE594415AB031D00826871 /* ExpressionSignature.m in Sources */ = {isa = PBXBuildFile; fileRef = 09EE594315AB031C00826871 /* ExpressionSignature.m */; };
 		09F841D415AEE9CB004F9CF9 /* PeekableEnumerator.m in Sources */ = {isa = PBXBuildFile; fileRef = 09F841D315AEE9CB004F9CF9 /* PeekableEnumerator.m */; };
-		CD08089815F7E39800B5CACD /* XcodeProjectTest.m in Sources */ = {isa = PBXBuildFile; fileRef = CD08089715F7E39800B5CACD /* XcodeProjectTest.m */; };
+		CD08089815F7E39800B5CACD /* PBXProjectTest.m in Sources */ = {isa = PBXBuildFile; fileRef = CD08089715F7E39800B5CACD /* PBXProjectTest.m */; };
 		CD0D48FF15EA3465000C596C /* NSArray+Respect.m in Sources */ = {isa = PBXBuildFile; fileRef = CD0D48FE15EA3465000C596C /* NSArray+Respect.m */; };
 		CD0D490015EA3465000C596C /* NSArray+Respect.m in Sources */ = {isa = PBXBuildFile; fileRef = CD0D48FE15EA3465000C596C /* NSArray+Respect.m */; };
 		CD0D491115EA79E8000C596C /* NSRegularExpression+withPatternAndFlagsTest.m in Sources */ = {isa = PBXBuildFile; fileRef = CD0D491015EA79E8000C596C /* NSRegularExpression+withPatternAndFlagsTest.m */; };
@@ -194,8 +194,8 @@
 		09EE594315AB031C00826871 /* ExpressionSignature.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ExpressionSignature.m; sourceTree = "<group>"; };
 		09F841D215AEE9CB004F9CF9 /* PeekableEnumerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PeekableEnumerator.h; sourceTree = "<group>"; };
 		09F841D315AEE9CB004F9CF9 /* PeekableEnumerator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PeekableEnumerator.m; sourceTree = "<group>"; };
-		CD08089615F7E39800B5CACD /* XcodeProjectTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XcodeProjectTest.h; sourceTree = "<group>"; };
-		CD08089715F7E39800B5CACD /* XcodeProjectTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XcodeProjectTest.m; sourceTree = "<group>"; };
+		CD08089615F7E39800B5CACD /* PBXProjectTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBXProjectTest.h; sourceTree = "<group>"; };
+		CD08089715F7E39800B5CACD /* PBXProjectTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBXProjectTest.m; sourceTree = "<group>"; };
 		CD08093E1606587900B5CACD /* TextLocation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextLocation.h; sourceTree = "<group>"; };
 		CD0D48FD15EA3465000C596C /* NSArray+Respect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSArray+Respect.h"; sourceTree = "<group>"; };
 		CD0D48FE15EA3465000C596C /* NSArray+Respect.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSArray+Respect.m"; sourceTree = "<group>"; };
@@ -288,8 +288,8 @@
 				CD38369D15B2CDC900D516F3 /* NSString+RespectTest.m */,
 				CD99642E164AE9FE0036A7E7 /* NSArray+RespectTest.h */,
 				CD99642F164AE9FE0036A7E7 /* NSArray+RespectTest.m */,
-				CD08089615F7E39800B5CACD /* XcodeProjectTest.h */,
-				CD08089715F7E39800B5CACD /* XcodeProjectTest.m */,
+				CD08089615F7E39800B5CACD /* PBXProjectTest.h */,
+				CD08089715F7E39800B5CACD /* PBXProjectTest.m */,
 				0926EC1915B0338800100D38 /* RespectTest.h */,
 				0926EC1A15B0338800100D38 /* RespectTest.m */,
 				0926EC1415B0338800100D38 /* Supporting Files */,
@@ -644,7 +644,7 @@
 				096A5E9B15E532F6005887DE /* TextFile.m in Sources */,
 				CD0D490015EA3465000C596C /* NSArray+Respect.m in Sources */,
 				CD0D491115EA79E8000C596C /* NSRegularExpression+withPatternAndFlagsTest.m in Sources */,
-				CD08089815F7E39800B5CACD /* XcodeProjectTest.m in Sources */,
+				CD08089815F7E39800B5CACD /* PBXProjectTest.m in Sources */,
 				09A23EA915FA956200CCAD52 /* LintError.m in Sources */,
 				09A23F1D15FE198F00CCAD52 /* NSRegularExpression+withFnmatchTest.m in Sources */,
 				09EAA99B15FE41A000EF7F6F /* NSRegularExpression+lineNumberTest.m in Sources */,
