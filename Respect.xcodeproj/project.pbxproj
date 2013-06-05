@@ -132,6 +132,16 @@
 		CDEA811C160908BA00DB45C0 /* StaticMatch.m in Sources */ = {isa = PBXBuildFile; fileRef = CDEA811A160908BA00DB45C0 /* StaticMatch.m */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		09B094F4175FD7090062E8ED /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 09504EDB159C61710050594A /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 09504EE3159C61710050594A;
+			remoteInfo = respect;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXCopyFilesBuildPhase section */
 		09504EE2159C61710050594A /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
@@ -554,6 +564,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				09B094F5175FD7090062E8ED /* PBXTargetDependency */,
 			);
 			name = RespectTest;
 			productName = RespectTest;
@@ -811,6 +822,14 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		09B094F5175FD7090062E8ED /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 09504EE3159C61710050594A /* respect */;
+			targetProxy = 09B094F4175FD7090062E8ED /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		0926EC1615B0338800100D38 /* InfoPlist.strings */ = {
