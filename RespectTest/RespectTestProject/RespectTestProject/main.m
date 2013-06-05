@@ -1,3 +1,5 @@
+// @LintWarning: test warning
+
 // TODO: strings?
 // TODO: nib
 // TODO: more functions
