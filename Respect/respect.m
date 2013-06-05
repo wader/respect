@@ -40,7 +40,7 @@ static void error(NSString *format, ...) {
 }
 
 static void help(const char *argv0) {
-    printf("Usage: %s XcodeProjectPath [-cndv] [TargetName] [ConfigurationName]\n"
+    printf("Usage: %s [-cndv] XcodeProjectPath [TargetName] [ConfigurationName]\n"
            "  XcodeProjectPath                   Path to XcodeProject file or directory\n"
            "  TargetName (First native target)   Native target name to lint\n"
            "  ConfigurationName (Release)        Build configuration name\n"
