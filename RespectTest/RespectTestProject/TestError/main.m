@@ -1,7 +1,7 @@
 
 // no argument
 // @LintFile:
-// @ExpectedConfigError: TestError/main.m: No filename specified
+// @ExpectedConfigError: TestError/main.m: No arguments
 
 // no actions
 // @LintSourceMatch: [a b:@]

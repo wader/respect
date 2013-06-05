@@ -86,7 +86,7 @@
         [linter.configErrors addObject:
          [ConfigError configErrorWithFile:file
                              textLocation:textLocation
-                                  message:@"No filename specified"]];
+                                  message:@"No arguments"]];
     } else {
         argPermutationsPattern = [components objectAtIndex:0];
         argOptions = [NSMutableOrderedSet orderedSetWithArray:
