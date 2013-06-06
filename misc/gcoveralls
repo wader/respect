@@ -4,7 +4,8 @@
 # Give same arguments as xcodebuild.
 #
 # Will submit to coveralls.io if running in a travis-ci build environment
-# or if REPO_TOKEN is set. Otherwise ouput statistics to stdout.
+# or if COVERALLS_REPO_TOKEN is set. Otherwise ouput statistics to stdout.
+# service_name sent to coveralls can be changed by COVERALLS_SERVICE_NAME.
 
 # Copyright (c) 2013 <mattias.wadman@gmail.com>
 #
@@ -178,11 +179,11 @@ def coveralls_data(reports, srcroot, env)
   }
 
   if is_travis
-    data[:service_name] = "travis-ci"
+    data[:service_name] = env["COVERALLS_SERVICE_NAME"] or "travis-ci"
     data[:service_job_id] = env["TRAVIS_JOB_ID"]
   else
-    data[:service_name] = env["SERVICE_NAME"] or "gcoveralls"
-    data[:repo_token] = env["REPO_TOKEN"] or ""
+    data[:service_name] = env["COVERALLS_SERVICE_NAME"] or "gcoveralls"
+    data[:repo_token] = env["COVERALLS_REPO_TOKEN"] or ""
   end
 
   data
@@ -293,7 +294,7 @@ gcov_reports = gcov_parse(gcov_data_path, srcroot)
 # only include reports about files under srcroot
 gcov_reports.select! {|gcov| gcov[:headers]["Source"].start_with? srcroot}
 
-if ENV.has_key? "TRAVIS_JOB_ID" or ENV.has_key? "REPO_TOKEN"
+if ENV.has_key? "TRAVIS_JOB_ID" or ENV.has_key? "COVERALLS_REPO_TOKEN"
   result, message = coveralls_submit(coveralls_data(gcov_reports, srcroot, ENV))
   puts "#{result ? "OK" : "Failed"}: #{message}"
 else
