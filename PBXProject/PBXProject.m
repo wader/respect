@@ -610,6 +610,15 @@ static NSError *makePBXError(NSString *format, ...) {
 
 
 @implementation XCVersionGroup
+
+- (BOOL)isValid:(NSError **)error {
+	if (![super isValid:error]) {
+		return NO;
+	}
+
+	return [self.currentVersion isValid:error];
+}
+
 @end
 
 
