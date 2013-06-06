@@ -173,7 +173,8 @@ def coveralls_data(reports, srcroot, env)
       {:name => Pathname(report[:headers]["Source"]).relative_path_from(Pathname(srcroot)),
        :source => report[:source_lines].join("\n"),
        :coverage => report[:coverage]}
-    end
+    end,
+    :run_at => Time.now.to_s
   }
 
   if is_travis
