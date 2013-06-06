@@ -609,6 +609,10 @@ static NSError *makePBXError(NSString *format, ...) {
 @end
 
 
+@implementation XCVersionGroup
+@end
+
+
 @implementation PBXProject
 @synthesize buildConfigurationList = _buildConfigurationList;
 @synthesize targets = _targets;
@@ -651,6 +655,7 @@ static NSError *makePBXError(NSString *format, ...) {
                                     [PBXFileReference class],
                                     [PBXGroup class],
                                     [PBXVariantGroup class],
+                                    [XCVersionGroup class],
                                     nil];
     
     PBXProject *pbxProject = [pbxUnarchiver decodeObject];
