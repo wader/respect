@@ -41,7 +41,7 @@
         return [self.enumerator nextObject];
     }
     
-    id object = [self.peekedObjects objectAtIndex:0];
+    id object = self.peekedObjects[0];
     [self.peekedObjects removeObjectAtIndex:0];
     
     return object;
@@ -59,7 +59,7 @@
     }
     
     if (offset < [self.peekedObjects count]) {
-        return [self.peekedObjects objectAtIndex:offset];
+        return self.peekedObjects[offset];
     }
     
     return nil;

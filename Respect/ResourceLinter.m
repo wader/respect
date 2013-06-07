@@ -169,19 +169,17 @@ static NSComparator fileSourcedErrorComparator = ^NSComparisonResult(id a, id b)
     static NSDictionary *nameToClass = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        nameToClass = [[NSDictionary alloc] initWithObjectsAndKeys:
-                       [SourceMatch class], [SourceMatch name],
-                       [ResourceMatch class], [ResourceMatch name],
-                       [FileAction class], [FileAction name],
-                       [ImageAction class], [ImageAction name],
-                       [NibAction class], [NibAction name],
-                       [InfoPlistAction class], [InfoPlistAction name],
-                       [WarningAction class], [WarningAction name],
-                       [IgnoreConfig class], @"IgnoreMissing",
-                       [IgnoreConfig class], @"IgnoreUnused",
-                       [IgnoreConfig class], @"IgnoreWarning",
-                       [IgnoreConfig class], @"IgnoreError",
-                       nil];
+        nameToClass = @{[SourceMatch name]: [SourceMatch class],
+                        [ResourceMatch name]: [ResourceMatch class],
+                        [FileAction name]: [FileAction class],
+                        [ImageAction name]: [ImageAction class],
+                        [NibAction name]: [NibAction class],
+                        [InfoPlistAction name]: [InfoPlistAction class],
+                        [WarningAction name]: [WarningAction class],
+                        @"IgnoreMissing": [IgnoreConfig class],
+                        @"IgnoreUnused": [IgnoreConfig class],
+                        @"IgnoreWarning": [IgnoreConfig class],
+                        @"IgnoreError": [IgnoreConfig class]};
         
         re = [NSRegularExpression
               // capture group 1 is name
@@ -220,7 +218,7 @@ static NSComparator fileSourcedErrorComparator = ^NSComparisonResult(id a, id b)
              return;
          }
          
-         Class nameClass = [nameToClass objectForKey:name];
+         Class nameClass = nameToClass[name];
          if (nameClass != nil) {
              if (isDefault) {
                  id defaultValue = nil;
@@ -344,12 +342,11 @@ static NSComparator fileSourcedErrorComparator = ^NSComparisonResult(id a, id b)
     // add all bundle resources
     for (NSString *bundlePath in resources) {
         BundleResource *bundleRes = [[BundleResource alloc]
-                                     initWithBuildSourcePath:[resources objectForKey:bundlePath]
+                                     initWithBuildSourcePath:resources[bundlePath]
                                      path:bundlePath];
         
-        [self.bundleResources setObject:bundleRes forKey:bundlePath];
-        [self.lowercaseBundleResources setObject:bundleRes
-                                          forKey:[bundlePath lowercaseString]];
+        self.bundleResources[bundlePath] = bundleRes;
+        self.lowercaseBundleResources[[bundlePath lowercaseString]] = bundleRes;
     }
     
     // find matchers, actions and ignore config

@@ -139,15 +139,14 @@ static NSError *makeParserError(NSString *string,
     
     return [NSError errorWithDomain:XCConfigParserErrorDomain
                                code:0
-                           userInfo:[NSDictionary dictionaryWithObjectsAndKeys:
+                           userInfo:(@{
+                                     NSLocalizedDescriptionKey:
                                      description,
-                                     NSLocalizedDescriptionKey,
-                                     [NSNumber numberWithInteger:location],
-                                     XCConfigParserCharacterLocationKey,
-                                     [NSNumber numberWithInteger:
-                                      lineNumberFromLocation(string, location)],
-                                     XCConfigParserLineNumberKey,
-                                     nil]];
+                                     XCConfigParserCharacterLocationKey:
+                                     @(location),
+                                     XCConfigParserLineNumberKey:
+                                     @(lineNumberFromLocation(string, location))
+                                     })];
 }
 
 @interface XCConfigParser ()
@@ -312,11 +311,11 @@ static NSError *makeParserError(NSString *string,
     
     NSUInteger tokensCount = [filteredTokens count];
     for (NSUInteger i = 0; i < tokensCount; ) {
-        XCConfigParserToken *token1 = [filteredTokens objectAtIndex:i];
+        XCConfigParserToken *token1 = filteredTokens[i];
         XCConfigParserToken *token2 = (i+1 < tokensCount ?
-                                       [filteredTokens objectAtIndex:i+1] : nil);
+                                       filteredTokens[i+1] : nil);
         XCConfigParserToken *token3 = (i+2 < tokensCount ?
-                                       [filteredTokens objectAtIndex:i+2] : nil);
+                                       filteredTokens[i+2] : nil);
         
         if (token1.tokenType == XCConfigParserTokenTypeName &&
             token2 != nil &&
@@ -393,8 +392,7 @@ static NSError *makeParserError(NSString *string,
     for (XCConfigParserStatement *statement in statements) {
         if ([statement isKindOfClass:[XCConfigParserStatementPair class]]) {
             XCConfigParserStatementPair *pair = (id)statement;
-            [configDictionary setObject:pair.value
-                                 forKey:pair.key];
+            configDictionary[pair.key] = pair.value;
         } else if ([statement isKindOfClass:[XCConfigParserStatementInclude class]]) {
             XCConfigParserStatementInclude *include = (id)statement;
             
@@ -462,13 +460,13 @@ static NSError *makeParserError(NSString *string,
                                                  includeBasePath:includeBasePath
                                                            error:error];
     if (configDictionary == nil) {
-        if ([[*error userInfo] objectForKey:XCConfigParserFileKey] == nil) {
+        if ([*error userInfo][XCConfigParserFileKey] == nil) {
             // no file has been set in error yet, include file key.
             // this makes sure the deepest error gets reported.
             
             NSMutableDictionary *userInfo = [NSMutableDictionary
                                              dictionaryWithDictionary:[*error userInfo]];
-            [userInfo setObject:standardizedFile forKey:XCConfigParserFileKey];
+            userInfo[XCConfigParserFileKey] = standardizedFile;
             *error = [NSError
                       errorWithDomain:XCConfigParserErrorDomain
                       code:0

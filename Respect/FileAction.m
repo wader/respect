@@ -77,14 +77,14 @@
                              textLocation:textLocation
                                   message:@"Unbalanced quotes"]];
     } else if ([components count] == 0 ||
-               [[components objectAtIndex:0] length] == 0) {
+               [components[0] length] == 0) {
         self.hasError = YES;
         [linter.configErrors addObject:
          [ConfigError configErrorWithFile:file
                              textLocation:textLocation
                                   message:@"No arguments"]];
     } else {
-        argPermutationsPattern = [components objectAtIndex:0];
+        argPermutationsPattern = components[0];
         argOptions = [NSMutableOrderedSet orderedSetWithArray:
                       [components subarrayWithRange:
                        NSMakeRange(1, [components count]-1)]];
@@ -156,12 +156,11 @@
 }
 
 - (NSArray *)actionResourcePaths:(NSString *)resourcePath {
-    return [NSArray arrayWithObject:resourcePath];
+    return @[resourcePath];
 }
 
 - (NSString *)actionMissingResourceHint:(NSString *)resourcePath {
-    BundleResource *bundlRef =  [self.linter.lowercaseBundleResources objectForKey:
-                                 [resourcePath lowercaseString]];
+    BundleResource *bundlRef = self.linter.lowercaseBundleResources[[resourcePath lowercaseString]];
     if (bundlRef == nil) {
         return nil;
     }
@@ -187,7 +186,7 @@
                                   [pathTemplate respect_stringByReplacingParameters:parameters.parameters]];
         
         for (NSString *resourcePath in resourcePaths) {
-            BundleResource *bundleRes = [self.linter.bundleResources objectForKey:resourcePath];
+            BundleResource *bundleRes = self.linter.bundleResources[resourcePath];
             ResourceReference *resourceRef = nil;
             
             if (bundleRes == nil) {
@@ -239,8 +238,7 @@
 }
 
 - (NSArray *)configLines {
-    return [NSArray arrayWithObject:
-            [NSString stringWithFormat:@"@Lint%@: %@ %@",
+    return @[[NSString stringWithFormat:@"@Lint%@: %@ %@",
              [[self class] name],
              [self.permutationsPattern respect_stringByQuoteAndEscapeIfNeeded],
              [self conditionName]]];

@@ -78,7 +78,7 @@ static int _main(int argc,  char *const argv[]) {
             help(argv0);
             return EXIT_SUCCESS;
         } else if (c == 'c') {
-            configPath = [NSString stringWithUTF8String:optarg];
+            configPath = @(optarg);
         } else if (c == 'n') {
             parseDefaultConfig = NO;
         } else if (c == 'd') {
@@ -87,7 +87,7 @@ static int _main(int argc,  char *const argv[]) {
             fprintf(stdout, "%s\n", GIT_HASH);
             return EXIT_SUCCESS;
         } else if (c == 's') {
-            spFeaturesPath = [NSString stringWithUTF8String:optarg];
+            spFeaturesPath = @(optarg);
         } else {
             return EXIT_FAILURE;
         }
@@ -98,9 +98,9 @@ static int _main(int argc,  char *const argv[]) {
     
     // try to get configuration from env
     NSDictionary *env = [[NSProcessInfo processInfo] environment];
-    NSString *xcodeProjectPath = [env objectForKey:@"PROJECT_FILE_PATH"];
-    NSString *targetName = [env objectForKey:@"TARGET_NAME"];
-    NSString *configurationName = [env objectForKey:@"CONFIGURATION"] ?: @"Release";
+    NSString *xcodeProjectPath = env[@"PROJECT_FILE_PATH"];
+    NSString *targetName = env[@"TARGET_NAME"];
+    NSString *configurationName = env[@"CONFIGURATION"] ?: @"Release";
     // assume Xcode if PROJECT_FILE_PATH env was found else CLI
     Class lintReportClass = (xcodeProjectPath != nil ?
                              [ResourceLinterXcodeReport class] :
@@ -111,21 +111,18 @@ static int _main(int argc,  char *const argv[]) {
     }
     
     if (argc > 0) {
-        xcodeProjectPath = [NSString stringWithCString:argv[0]
-                                              encoding:NSUTF8StringEncoding];
+        xcodeProjectPath = @(argv[0]);
     } else if (xcodeProjectPath == nil) {
         help(argv0);
         return EXIT_FAILURE;
     }
     
     if (argc > 1) {
-        targetName = [NSString stringWithCString:argv[1]
-                                        encoding:NSUTF8StringEncoding];
+        targetName = @(argv[1]);
     }
     
     if (argc > 2) {
-        configurationName = [NSString stringWithCString:argv[2]
-                                               encoding:NSUTF8StringEncoding];
+        configurationName = @(argv[2]);
     }
     
     NSError *error = nil;
@@ -143,7 +140,7 @@ static int _main(int argc,  char *const argv[]) {
             return EXIT_FAILURE;
         }
         
-        targetName = [nativeTargetNames objectAtIndex:0];
+        targetName = nativeTargetNames[0];
     } else {
         if (![nativeTargetNames containsObject:targetName]) {
             print_error(@"No native target named \"%@\" found.", targetName);

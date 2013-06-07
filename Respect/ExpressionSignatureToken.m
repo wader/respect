@@ -77,16 +77,14 @@
         [identFirstCharacerSet addCharactersInString:@"_$*"];
         identCharacterSet = [NSMutableCharacterSet letterCharacterSet];
         [identCharacterSet addCharactersInString:@"0123456789_$*"];
-        charToToken = [[NSDictionary alloc] initWithObjectsAndKeys:
-                       [NSNumber numberWithInt:SIGNATURE_TOKEN_OPEN_BRACKET], @"[",
-                       [NSNumber numberWithInt:SIGNATURE_TOKEN_CLOSE_BRACKET], @"]",
-                       [NSNumber numberWithInt:SIGNATURE_TOKEN_OPEN_PARENTHESES], @"(",
-                       [NSNumber numberWithInt:SIGNATURE_TOKEN_CLOSE_PARENTHESES], @")",
-                       [NSNumber numberWithInt:SIGNATURE_TOKEN_COLON], @":",
-                       [NSNumber numberWithInt:SIGNATURE_TOKEN_COMMA], @",",
-                       [NSNumber numberWithInt:SIGNATURE_TOKEN_AT], @"@",
-                       [NSNumber numberWithInt:SIGNATURE_TOKEN_DOLLAR], @"$",
-                       nil];
+        charToToken = @{@"[": @(SIGNATURE_TOKEN_OPEN_BRACKET),
+                       @"]": @(SIGNATURE_TOKEN_CLOSE_BRACKET),
+                       @"(": @(SIGNATURE_TOKEN_OPEN_PARENTHESES),
+                       @")": @(SIGNATURE_TOKEN_CLOSE_PARENTHESES),
+                       @":": @(SIGNATURE_TOKEN_COLON),
+                       @",": @(SIGNATURE_TOKEN_COMMA),
+                       @"@": @(SIGNATURE_TOKEN_AT),
+                       @"$": @(SIGNATURE_TOKEN_DOLLAR)};
     });
     
     index = [string indexOfFirstFromIndex:index
@@ -98,7 +96,7 @@
     }
     
     NSString *c = [string substringWithRange:NSMakeRange(index, 1)];
-    NSNumber *token = [charToToken objectForKey:c];
+    NSNumber *token = charToToken[c];
     if (token != nil) {
         return [ExpressionSignatureToken
                 tokenWithRange:NSMakeRange(index, 1)

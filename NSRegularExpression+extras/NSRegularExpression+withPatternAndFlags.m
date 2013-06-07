@@ -35,9 +35,8 @@
         start.location == end.location) {
         *error = [NSError errorWithDomain:NSCocoaErrorDomain
                                      code:0
-                                 userInfo:[NSDictionary
-                                           dictionaryWithObject:@"Should be in /regex/[ixsmw] format"
-                                           forKey:NSLocalizedDescriptionKey]];
+                                 userInfo:(@{NSLocalizedDescriptionKey:
+                                           @"Should be in /regex/[ixsmw] format"})];
         return nil;
     }
     
@@ -62,9 +61,8 @@
         } else {
             *error = [NSError errorWithDomain:NSCocoaErrorDomain
                                          code:0
-                                     userInfo:[NSDictionary
-                                               dictionaryWithObject:@"Invalid flags, available flags are ixsmw"
-                                               forKey:NSLocalizedDescriptionKey]];
+                                     userInfo:(@{NSLocalizedDescriptionKey:
+                                               @"Invalid flags, available flags are ixsmw"})];
             return nil;
         }
     }

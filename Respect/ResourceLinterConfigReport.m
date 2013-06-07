@@ -74,12 +74,12 @@
         }
     }
     
-    for (NSArray *ignoreConfigs in [NSArray arrayWithObjects:
+    for (NSArray *ignoreConfigs in (@[
                                     self.linter.missingIgnoreConfigs,
                                     self.linter.unusedIgnoreConfigs,
                                     self.linter.warningIgnoreConfigs,
-                                    self.linter.errorIgnoreConfigs,
-                                    nil]) {
+                                    self.linter.errorIgnoreConfigs
+                                    ])) {
         for (IgnoreConfig *ignoreConfig in ignoreConfigs) {
             [self addLines:[ignoreConfig configLines]];
         }

@@ -34,8 +34,7 @@
 }
 
 - (NSArray *)configLines {
-    return [NSArray arrayWithObject:
-            [NSString stringWithFormat:@"@Lint%@: %@",
+    return @[[NSString stringWithFormat:@"@Lint%@: %@",
              [[self class] name], self.argumentString]];
 }
 

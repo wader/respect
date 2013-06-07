@@ -62,7 +62,7 @@
 }
 
 - (NSArray *)configLines {
-    return [NSArray array];
+    return @[];
 }
 
 @end

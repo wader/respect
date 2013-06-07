@@ -68,8 +68,7 @@
                                               stringByAppendingPathComponent:precompiledHeaderPath];
         TextFile *headerTextFile = [TextFile textFileWithContentOfFile:absPrecompiledHeaderPath];
         if (headerTextFile != nil) {
-            [self.sourceTextFiles setObject:headerTextFile
-                                     forKey:absPrecompiledHeaderPath];
+            self.sourceTextFiles[absPrecompiledHeaderPath] = headerTextFile;
         } else {
             [self.lintErrors addObject:
              [LintError lintErrorWithFile:absPrecompiledHeaderPath
@@ -84,7 +83,7 @@
     if (infoPlistBuildPath != nil) {
         NSString *absInfoPlistBuildPath = [[self sourceRoot]
                                            stringByAppendingPathComponent:infoPlistBuildPath];
-        [self.resources setObject:absInfoPlistBuildPath forKey:@"Info.plist"];
+        self.resources[@"Info.plist"] = absInfoPlistBuildPath;
     }
     
     for (id buildPhase in self.nativeTarget.buildPhases) {
@@ -128,7 +127,7 @@
             continue;
         }
         
-        [self.sourceTextFiles setObject:sourceTextFile forKey:buildPath];
+        self.sourceTextFiles[buildPath] = sourceTextFile;
         [self parseAndAddImportAndIncludesInTextFile:sourceTextFile
                                    headerSearchPaths:headerSearchPaths];
     }
@@ -146,8 +145,7 @@
             NSMutableDictionary *variantResources = [NSMutableDictionary dictionary];
             for (PBXFileReference *fileRef in variantGroup.children) {
                 NSString *bundlePath = fileRef.path;
-                [variantResources setObject:[fileRef buildPath]
-                                     forKey:bundlePath];
+                variantResources[bundlePath] = [fileRef buildPath];
             }
             buildResources = variantResources;
             
@@ -168,8 +166,7 @@
                 }
                 
                 for (NSString *folderSubPath in folderSubPahts) {
-                    [folderResources setObject:[buildPath stringByAppendingPathComponent:folderSubPath]
-                                        forKey:[bundlePath stringByAppendingPathComponent:folderSubPath]];
+                    folderResources[[bundlePath stringByAppendingPathComponent:folderSubPath]] = [buildPath stringByAppendingPathComponent:folderSubPath];
                 }
                 buildResources = folderResources;
                 
@@ -181,9 +178,7 @@
                     continue;
                 }
                 
-                buildResources = [NSDictionary
-                                  dictionaryWithObject:buildPath
-                                  forKey:bundlePath];
+                buildResources = @{bundlePath: buildPath};
             }
         }
         
@@ -193,7 +188,7 @@
 
 - (void)addBuildResourcesDict:(NSDictionary *)buildResources {
     for (__strong NSString *resourcePath in buildResources) {
-        NSString *buildPath = [buildResources objectForKey:resourcePath];
+        NSString *buildPath = buildResources[resourcePath];
         
         // TODO: more proper way? xib -> nib
         if ([resourcePath hasSuffix:@"xib"]) {
@@ -201,7 +196,7 @@
                             stringByAppendingPathExtension:@"nib"];
         }
         
-        NSString *collisionBuildPath = [self.resources objectForKey:resourcePath];
+        NSString *collisionBuildPath = self.resources[resourcePath];
         if (collisionBuildPath != nil) {
             NSString *relativeCollisionPath = [collisionBuildPath
                                                respect_stringRelativeToPathPrefix:self.sourceRoot];
@@ -223,7 +218,7 @@
             continue;
         }
         
-        [self.resources setObject:buildPath forKey:resourcePath];
+        self.resources[resourcePath] = buildPath;
     }
 }
 
@@ -287,14 +282,10 @@
                 textFileWithText:
                 [[[self class] IOSDefultConfigString]
                  pbx_stringByReplacingVariablesFromDict:
-                 [NSDictionary dictionaryWithObjectsAndKeys:
-                  [[NSArray respect_arrayWithIOSImageDeviceNames]
-                   componentsJoinedByString:@"|"],
-                  @"DEVICES_RE",
-                  [[NSArray respect_arrayWithIOSImageExtensionNames]
-                   componentsJoinedByString:@"|"],
-                  @"EXTS_RE",
-                  nil]]
+                 @{@"DEVICES_RE": [[NSArray respect_arrayWithIOSImageDeviceNames]
+                                   componentsJoinedByString:@"|"],
+                 @"EXTS_RE": [[NSArray respect_arrayWithIOSImageExtensionNames]
+                              componentsJoinedByString:@"|"]}]
                 path:@"IOSDefault.config"];
     } else {
         // TODO: OS X project etc
@@ -333,7 +324,7 @@
          
          NSString *absIncludePath = [includePath respect_stringByResolvingPathRealtiveTo:pathDir];
          // skip if already added
-         if ([self.sourceTextFiles objectForKey:absIncludePath]) {
+         if (self.sourceTextFiles[absIncludePath] != nil) {
              return;
          }
          
@@ -345,7 +336,7 @@
                  absIncludePath = [includePath respect_stringByResolvingPathRealtiveTo:headerSearchPath];
                  
                  // already added
-                 if ([self.sourceTextFiles objectForKey:absIncludePath]) {
+                 if (self.sourceTextFiles[absIncludePath]) {
                      return;
                  }
                  
@@ -369,7 +360,7 @@
              return;
          }
          
-         [self.sourceTextFiles setObject:includeTextFile forKey:absIncludePath];
+         self.sourceTextFiles[absIncludePath] = includeTextFile;
          [self _parseAndAddImportAndIncludesInTextFile:includeTextFile
                                      headerSearchPaths:headerSearchPaths
                                               maxDepth:maxDepth-1];
@@ -408,7 +399,7 @@
         return;
     }
     
-    PBXNativeTarget *featureNativeTarget = [featureNativeTargets objectAtIndex:0];
+    PBXNativeTarget *featureNativeTarget = featureNativeTargets[0];
     XCBuildConfiguration *featureBuildConfiguration = [featureNativeTarget
                                                        configurationNamed:self.buildConfiguration.name];
     if (![featurePbxProject prepareWithEnvironment:nil
@@ -436,8 +427,7 @@
                                               stringByAppendingPathComponent:precompiledHeaderPath];
         TextFile *headerTextFile = [TextFile textFileWithContentOfFile:absPrecompiledHeaderPath];
         if (headerTextFile != nil) {
-            [self.sourceTextFiles setObject:headerTextFile
-                                     forKey:absPrecompiledHeaderPath];
+            self.sourceTextFiles[absPrecompiledHeaderPath] = headerTextFile;
         } else {
             [self.lintErrors addObject:
              [LintError lintErrorWithFile:absPrecompiledHeaderPath
@@ -474,7 +464,7 @@
                 continue;
             }
             
-            [buildResources setObject:buildPath forKey:bundleSubpath];
+            buildResources[bundleSubpath] = buildPath;
         }
         
         [self addBuildResourcesDict:buildResources];

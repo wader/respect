@@ -70,7 +70,7 @@ static NSComparator pathStringComparator = ^NSComparisonResult(id a, id b) {
     
     for (NSString *file in [[self.fileIssues allKeys]
                             sortedArrayUsingComparator:pathStringComparator]) {
-        for (id issue in [self.fileIssues objectForKey:file]) {
+        for (id issue in self.fileIssues[file]) {
             if ([issue isKindOfClass:[ResourceReference class]]) {
                 ResourceReference *resourceRef = issue;
                 
@@ -116,10 +116,10 @@ static NSComparator pathStringComparator = ^NSComparisonResult(id a, id b) {
 }
 
 - (void)addIssue:(id)issue forFile:(NSString *)file {
-    NSMutableArray *issues = [self.fileIssues objectForKey:file];
+    NSMutableArray *issues = self.fileIssues[file];
     if (issues == nil) {
         issues = [NSMutableArray array];
-        [self.fileIssues setObject:issues forKey:file];
+        self.fileIssues[file] = issues;
     }
     
     [issues addObject:issue];
