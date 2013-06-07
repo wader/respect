@@ -118,6 +118,11 @@ NSString * const PBXProjectErrorDomain;
 @end
 
 
+@interface XCVersionGroup : PBXGroup
+@property(nonatomic, retain, readonly) PBXFileReference *currentVersion;
+@end
+
+
 @interface PBXBuildFile : NSObject
 @property(nonatomic, retain, readonly) PBXNode *fileRef;
 @end

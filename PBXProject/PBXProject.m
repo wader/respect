@@ -59,6 +59,10 @@ static NSError *makePBXError(NSString *format, ...) {
 @property(nonatomic, retain, readwrite) NSArray *children;
 @end
 
+@interface XCVersionGroup ()
+@property(nonatomic, retain, readwrite) PBXFileReference *currentVersion;
+@end
+
 @interface PBXBuildFile ()
 @property(nonatomic, retain, readwrite) PBXFileReference *fileRef;
 - (BOOL)isValid:(NSError **)error;
@@ -202,6 +206,14 @@ static NSError *makePBXError(NSString *format, ...) {
 @implementation PBXGroup
 @synthesize children = _children;
 
++ (BOOL)isValidChild:(NSObject *)child {
+    // check exact class and not subclass
+    return ([child isMemberOfClass:[PBXGroup class]] ||
+            [child isMemberOfClass:[PBXFileReference class]] ||
+            [child isMemberOfClass:[PBXVariantGroup class]] ||
+            [child isMemberOfClass:[XCVersionGroup class]]);
+}
+
 - (void)dealloc {
     self.children = nil;
     
@@ -221,16 +233,16 @@ static NSError *makePBXError(NSString *format, ...) {
     }
     
     for (id child in self.children) {
-        if ([child isKindOfClass:[PBXGroup class]]) {
-            PBXGroup *group = child;
-            if (![group isValid:error]) {
-                return NO;
-            }
-        } else if ([child isKindOfClass:[PBXFileReference class]]) {
-            PBXFileReference *fileRef = child;
-            if (![fileRef isValid:error]) {
-                return NO;
-            }
+        if (![[self class] isValidChild:child]) {
+            *error = makePBXError(@"Invalid %@ (child %@)",
+                                  NSStringFromClass([self class]),
+                                  NSStringFromClass([child class]));
+            return NO;
+        }
+        
+        if ([child respondsToSelector:@selector(isValid:)] &&
+            ![child isValid:error]) {
+            return NO;
         }
     }
     
@@ -286,6 +298,40 @@ static NSError *makePBXError(NSString *format, ...) {
 
 
 @implementation PBXVariantGroup
++ (BOOL)isValidChild:(NSObject *)child {
+    return [child isMemberOfClass:[PBXFileReference class]];
+}
+@end
+
+
+@implementation XCVersionGroup
+@synthesize currentVersion = _currentVersion;
+
++ (BOOL)isValidChild:(NSObject *)child {
+    return [child isMemberOfClass:[PBXFileReference class]];
+}
+
+- (void)dealloc {
+    self.currentVersion = nil;
+    
+    [super dealloc];
+}
+
+- (BOOL)isValid:(NSError **)error {
+    if (![super isValid:error]) {
+        return NO;
+    }
+    
+    if (!(self.currentVersion != nil &&
+          [self.currentVersion isKindOfClass:[PBXFileReference class]] &&
+          [self.currentVersion isValid:error])) {
+        *error = *error ?: makePBXError(@"Invalid %@ (currentVersion)",
+                                        NSStringFromClass([self class]));
+        return NO;
+    }
+    
+    return YES;
+}
 @end
 
 
@@ -651,6 +697,7 @@ static NSError *makePBXError(NSString *format, ...) {
                                     [PBXFileReference class],
                                     [PBXGroup class],
                                     [PBXVariantGroup class],
+                                    [XCVersionGroup class],
                                     nil];
     
     PBXProject *pbxProject = [pbxUnarchiver decodeObject];

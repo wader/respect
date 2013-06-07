@@ -43,6 +43,7 @@
                                @"TestXib",
                                @"TestImageDefault",
                                @"TestXCConfig",
+                               @"TestCoreData",
                                nil];
     NSArray *expectedConfigurations = [NSArray arrayWithObjects:@"Debug", @"Release", nil];
     
