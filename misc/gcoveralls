@@ -181,11 +181,11 @@ def coveralls_data(reports, srcroot, env)
   }
 
   if is_travis
-    data[:service_name] = env["COVERALLS_SERVICE_NAME"] or "travis-ci"
+    data[:service_name] = (env["COVERALLS_SERVICE_NAME"] or "travis-ci")
     data[:service_job_id] = env["TRAVIS_JOB_ID"]
   else
-    data[:service_name] = env["COVERALLS_SERVICE_NAME"] or "gcoveralls"
-    data[:repo_token] = env["COVERALLS_REPO_TOKEN"] or ""
+    data[:service_name] = (env["COVERALLS_SERVICE_NAME"] or "gcoveralls")
+    data[:repo_token] = env["COVERALLS_REPO_TOKEN"]
   end
 
   data
