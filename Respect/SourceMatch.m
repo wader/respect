@@ -23,9 +23,11 @@
 #import "NSRegularExpression+lineNumber.h"
 #import "NSString+Respect.h"
 
+#import "PCRegularExpression.h"
+
 @interface SourceMatch ()
 @property(nonatomic, retain, readwrite) ExpressionSignature *experssionSignature;
-@property(nonatomic, retain, readwrite) NSRegularExpression *re;
+@property(nonatomic, retain, readwrite) PCRegularExpression *re;
 @property(nonatomic, retain, readwrite) NSError *error;
 @end
 
@@ -56,7 +58,7 @@
     
     self.error = nil;
     if ([argumentString hasPrefix:@"/"]) {
-        self.re = [NSRegularExpression
+        self.re = [PCRegularExpression
                    regularExpressionWithPatternAndFlags:argumentString
                    options:0
                    error:&error];
@@ -65,7 +67,7 @@
                                     signatureFromString:argumentString
                                     error:&error];
         if (self.experssionSignature != nil) {
-            self.re = [NSRegularExpression
+            self.re = [PCRegularExpression
                        regularExpressionWithPattern:[self.experssionSignature toPattern]
                        options:0
                        error:&error];
@@ -96,11 +98,12 @@
 - (void)parseResourceReferencesInSourceFile:(TextFile *)textFile {
     // we can use lineRanges from textFile as comment white out only
     // replaces the comment text with whitesapce and leaves new lines alone
-    [self.re enumerateMatchesWithLineNumberInString:textFile.whitedoutCommentsText
-                                            options:0
-                                              range:NSMakeRange(0, [textFile.whitedoutCommentsText length])
-                                         lineRanges:textFile.lineRanges
-                                         usingBlock:
+    [self.re enumerateMatchesWithLineNumberInUTF8CString:textFile.whitedoutCommentsTextUtf8
+                                          withByteLength:textFile.whitedoutCommentsTextUtf8ByteLength
+                                                 options:0
+                                                   range:NSMakeRange(0, [textFile.whitedoutCommentsText length])
+                                              lineRanges:textFile.lineRanges
+                                              usingBlock:
      ^(NSTextCheckingResult *result, NSUInteger lineNumber, NSRange inLineRange,
        NSMatchingFlags flags, BOOL *stop) {
          NSMutableArray *parameters = [NSMutableArray array];

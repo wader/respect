@@ -35,6 +35,8 @@
 #import "NSRegularExpression+lineNumber.h"
 #import "NSString+Respect.h"
 
+#import "PCRegularExpression.h"
+
 
 static NSString * const RespectDefaultProjectConfigName = @".respect";
 
@@ -213,7 +215,7 @@ static NSComparator fileSourcedErrorComparator = ^NSComparisonResult(id a, id b)
 
 - (void)parseConfigInTextFile:(TextFile *)textFile
           isDefaultConfigFile:(BOOL)isDefaultConfigFile {
-    static NSRegularExpression *re = nil;
+    static PCRegularExpression *re = nil;
     static NSDictionary *nameToClass = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
@@ -231,7 +233,7 @@ static NSComparator fileSourcedErrorComparator = ^NSComparisonResult(id a, id b)
                        [IgnoreConfig class], @"IgnoreError",
                        nil];
         
-        re = [[NSRegularExpression
+        re = [[PCRegularExpression
                // capture group 1 is name
                // capture group 2 is "Default" optionally
                // capture group 3 is separator
@@ -244,11 +246,12 @@ static NSComparator fileSourcedErrorComparator = ^NSComparisonResult(id a, id b)
     
     __block AbstractMatch *currentMatcher = nil;
     __block NSUInteger prevConfigLine = 0;
-    [re enumerateMatchesWithLineNumberInString:textFile.text
-                                       options:0
-                                         range:NSMakeRange(0, [textFile.text length])
-                                    lineRanges:textFile.lineRanges
-                                    usingBlock:
+    [re enumerateMatchesWithLineNumberInUTF8CString:textFile.textUtf8
+                                     withByteLength:textFile.textUtf8ByteLength
+                                            options:0
+                                              range:NSMakeRange(0, [textFile.text length])
+                                         lineRanges:textFile.lineRanges
+                                         usingBlock:
      ^(NSTextCheckingResult *result, NSUInteger lineNumber, NSRange inLineRange,
        NSMatchingFlags flags, BOOL *stop) {
          TextLocation textLocation = MakeTextLocation(lineNumber, inLineRange);

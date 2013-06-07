@@ -23,6 +23,8 @@
 #import "NSString+PBXProject.h"
 #import "NSArray+Respect.h"
 
+#import "PCRegularExpression.h"
+
 
 @interface ResourceLinterXcodeProjectSource ()
 @property(nonatomic, retain, readwrite) PBXProject *pbxProject;
@@ -325,10 +327,10 @@
 - (void)_parseAndAddImportAndIncludesInTextFile:(TextFile *)textFile
                               headerSearchPaths:(NSArray *)headerSearchPaths
                                        maxDepth:(NSUInteger)maxDepth {
-    static NSRegularExpression *re = nil;
+    static PCRegularExpression *re = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        re = [[NSRegularExpression alloc]
+        re = [[PCRegularExpression alloc]
               initWithPattern:
               // match #include "..." or #import "..."
               // capture group 1 is filename
@@ -344,10 +346,11 @@
     
     NSString *pathDir = [textFile.path stringByDeletingLastPathComponent];
     
-    [re enumerateMatchesInString:textFile.text
-                         options:0
-                           range:NSMakeRange(0, [textFile.text length])
-                      usingBlock:
+    [re enumerateMatchesInUTF8CString:textFile.textUtf8
+                       withByteLength:textFile.textUtf8ByteLength
+                              options:0
+                                range:NSMakeRange(0, [textFile.text length])
+                           usingBlock:
      ^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
          NSString *includePath = [textFile.text substringWithRange:[result rangeAtIndex:1]];
          
