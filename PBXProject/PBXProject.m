@@ -56,6 +56,7 @@ static NSError *makePBXError(NSString *format, ...) {
 @end
 
 @interface PBXGroup ()
+@property(nonatomic, retain, readwrite) NSString *name;
 @property(nonatomic, retain, readwrite) NSArray *children;
 @end
 
@@ -204,6 +205,7 @@ static NSError *makePBXError(NSString *format, ...) {
 
 
 @implementation PBXGroup
+@synthesize name = _name;
 @synthesize children = _children;
 
 + (BOOL)isValidChild:(NSObject *)child {
@@ -345,10 +347,14 @@ static NSError *makePBXError(NSString *format, ...) {
 }
 
 - (BOOL)isValid:(NSError **)error {
-    if (!(self.fileRef &&
-          [self.fileRef isKindOfClass:[PBXNode class]] &&
+    if (!(self.fileRef != nil &&
+          ([self.fileRef isMemberOfClass:[PBXFileReference class]] ||
+           [self.fileRef isMemberOfClass:[PBXVariantGroup class]] ||
+           [self.fileRef isMemberOfClass:[XCVersionGroup class]]) &&
           [self.fileRef isValid:error])) {
-        *error = *error ?: makePBXError(@"Invalid %@", NSStringFromClass([self class]));
+        *error = *error ?: makePBXError(@"Invalid %@ (fileRef %@)",
+                                        NSStringFromClass([self class]),
+                                        self.fileRef ? NSStringFromClass([self.fileRef class]) : nil);
         return NO;
     }
     
@@ -708,6 +714,8 @@ static NSError *makePBXError(NSString *format, ...) {
         return nil;
     }
     
+    pbxProject.project = pbxProject;
+    pbxProject.parent = nil;
     [pbxProject.mainGroup recursivelySetParent:pbxProject andProject:pbxProject];
     
     // TODO: connect pbxProject.buildConfigurationList.buildConfigurations[*].parent

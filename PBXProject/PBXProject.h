@@ -1,9 +1,11 @@
 // Implementation of some of the classes found in a project.pbxproj file.
 // Will usually be instantiated during unarchive by PBXUnarchiver.
 //
-// Use +[PBXProject pbxProjectFromPath:environment:] to instantiate and validate
+// Use +[PBXProject pbxProjectFromPath:...] to instantiate and validate
 // a whole project tree from a file. It will take care of associating group and
-// build configuration parent objects.
+// build configuration parent objects etc.
+// Use -[PBXProject prepareWithEnvironment...] to configure the project for
+// a specific target and build environment.
 //
 // Copyright (c) 2013 <mattias.wadman@gmail.com>
 //
@@ -37,6 +39,8 @@
  *          name NSString
  *          buildSettings NSDictionary
  *          parent is nil, could point to Xcode defaults later
+ *          baseConfigurationReference PBXFileReference
+ *          baseConfiguration NSDictionary, nil or parsed baseConfigurationReference
  *    targets NSArray
  *      PBXNativeTarget
  *        name NSString
@@ -44,45 +48,50 @@
  *          PBXSourcesBuildPhase
  *            files NSArray
  *              PBXBuildFile
- *                fileRef PBXFileReference
+ *                fileRef PBXFileReference | PBXVariantGroup | XCVersionGroup
  *                  path NSString
  *                  sourceTree NSString
- *                  parent points to parent PBXNode in mainGroup tree
- *                  project points to root PBXProject
+ *                  parent PBXNode, is parent node in mainGroup tree
+ *                  project PBXProject, is root project
  *          PBXResourcesBuildPhase
  *            files NSArray
  *              PBXBuildFile
- *                fileRef PBXFileReference
+ *                fileRef PBXFileReference | PBXVariantGroup | XCVersionGroup
  *                  path NSString
  *                  sourceTree NSString
- *                  parent points to parent PBXNode in mainGroup tree
- *                  project points to root PBXProject
+ *                  parent PBXNode, is parent node in mainGroup tree
+ *                  project PBXProject, is root project
  *        buildConfigurationList XCConfigurationList
  *          buildConfigurations NSArray
  *            XCBuildConfiguration
  *              name NSString
  *              buildSettings NSDictionary
- *              parent points to corresponding XCBuildConfiguration in root project
+ *              parent XCBuildConfiguration, is corresponding build configuration root project
+ *              baseConfigurationReference PBXFileReference
+ *              baseConfiguration NSDictionary, nil or parsed baseConfigurationReference
  *    mainGroup PBXGroup
  *      path NSString
  *      sourceTree NSString
  *      children NSArray
+ *      parent PBXNode, is parent node
+ *      project PBXProject, is root project
  *         PBXGroup
- *           ...
- *           parent points to parent PBXNode
- *           project points to root PBXProject
+ *           ... nested group ...
  *         PBXVariantGroup
  *           path NSString
  *           sourceTree NSString
- *           parent points to parent PBXNode
- *           project points to root PBXProject
+ *           parent PBXNode, is parent node
+ *           project PBXProject, is root project
  *         PBXFileReference
+ *           name NSString
  *           path NSString
  *           sourceTree NSString
- *           parent points to parent PBXNode
- *           project points to root PBXProject
+ *           parent PBXNode, points to parent node
+ *           project PBXProject, points to root project
  *    knownRegions NSArray
  *      NSString
+ *    parent PBXNode, is nil
+ *    project PBXProject, is self
  */
 
 #import <Foundation/Foundation.h>
@@ -93,7 +102,7 @@ NSString * const PBXProjectErrorDomain;
 
 // abstract class, does not exist in PBX files
 @interface PBXNode : NSObject
-@property(nonatomic, retain, readonly) NSString *path;
+@property(nonatomic, retain, readonly) NSString *path; // can be nil
 @property(nonatomic, retain, readonly) NSString *sourceTree;
 @property(nonatomic, assign, readonly) PBXNode *parent;
 @property(nonatomic, assign, readonly) PBXProject *project;
@@ -102,13 +111,14 @@ NSString * const PBXProjectErrorDomain;
 
 
 @interface PBXFileReference : PBXNode
-@property(nonatomic, retain, readonly) NSString *name;
+@property(nonatomic, retain, readonly) NSString *name; // can be nil
 - (BOOL)isFolderReference;
 - (NSArray *)subPathsForFolderReference;
 @end
 
 
 @interface PBXGroup : PBXNode
+@property(nonatomic, retain, readonly) NSString *name; // can be nil
 @property(nonatomic, retain, readonly) NSArray *children;
 - (void)recursivelySetParent:(PBXNode *)parent andProject:(PBXProject *)project;
 @end
@@ -124,6 +134,7 @@ NSString * const PBXProjectErrorDomain;
 
 
 @interface PBXBuildFile : NSObject
+// fileRef can be PBXFileReference or XCVersionGroup
 @property(nonatomic, retain, readonly) PBXNode *fileRef;
 @end
 
@@ -134,6 +145,9 @@ NSString * const PBXProjectErrorDomain;
 @property(nonatomic, retain, readonly) NSDictionary *buildSettings;
 @property(nonatomic, assign, readonly) XCBuildConfiguration *parent;
 @property(nonatomic, assign, readonly) PBXProject *project;
+
+// not in project file, nil or parsed version of baseConfigurationReference
+@property(nonatomic, retain, readonly) NSDictionary *baseConfiguration;
 
 - (id)resolveConfigValueNamed:(NSString *)configName;
 - (NSArray *)resolveConfigPathsNamed:(NSString *)configName
