@@ -253,34 +253,34 @@ static NSError *makePBXError(NSString *format, ...) {
 }
 
 /*
- + (NSString *)spaceWidth:(NSUInteger)width {
- NSMutableString *s = [NSMutableString string];
- for (NSUInteger i = 0; i < width; i++) {
- [s appendString:@" "];
- }
- return s;
- }
- 
- - (void)dumpWithIndent:(NSUInteger)indent {
- NSLog(@"%@%@ sourceTree=%@ project=%@ parent=%@ path=%@",
- [[self class] spaceWidth:indent],
- self, self.sourceTree, self.project, self.parent, self.path);
- 
- for (id child in self.children) {
- if ([child isKindOfClass:[PBXGroup class]]) {
- [child dumpWithIndent:indent+2];
- } else if ([child isKindOfClass:[PBXFileReference class]]) {
- NSLog(@"  %@%@", [[self class] spaceWidth:indent], ((PBXFileReference *)child).path);
- } else {
- NSLog(@"  %@%@", [[self class] spaceWidth:indent], child);
- }
- }
- }
- 
- - (void)dump {
- [self dumpWithIndent:0];
- }
- */
++ (NSString *)spaceWidth:(NSUInteger)width {
+    NSMutableString *s = [NSMutableString string];
+    for (NSUInteger i = 0; i < width; i++) {
+        [s appendString:@" "];
+    }
+    return s;
+}
+
+- (void)dumpWithIndent:(NSUInteger)indent {
+    NSLog(@"%@%@ sourceTree=%@ project=%@ parent=%@ path=%@",
+          [[self class] spaceWidth:indent],
+          self, self.sourceTree, self.project, self.parent, self.path);
+    
+    for (id child in self.children) {
+        if ([child isKindOfClass:[PBXGroup class]]) {
+            [child dumpWithIndent:indent+2];
+        } else if ([child isKindOfClass:[PBXFileReference class]]) {
+            NSLog(@"  %@%@", [[self class] spaceWidth:indent], ((PBXFileReference *)child).path);
+        } else {
+            NSLog(@"  %@%@", [[self class] spaceWidth:indent], child);
+        }
+    }
+}
+
+- (void)dump {
+    [self dumpWithIndent:0];
+}
+*/
 
 @end
 
