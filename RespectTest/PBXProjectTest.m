@@ -20,12 +20,14 @@
 
 @implementation PBXProjectTest
 
-- (void)test_xcodeProject {
+- (void)test_PBXProjectTest {
+    NSError *error = nil;
     PBXProject *pbxProject = [PBXProject
                               pbxProjectFromPath:
                               [[[NSFileManager defaultManager] currentDirectoryPath]
                                stringByAppendingPathComponent:@"RespectTest/RespectTestProject/RespectTestProject.xcodeproj"]
-                              error:nil];
+                              error:&error];
+    STAssertNotNil(pbxProject, @"");
     
     NSArray *expectedTagets = [NSArray arrayWithObjects:
                                @"RespectTestProject",
