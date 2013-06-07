@@ -1,12 +1,14 @@
 #!/usr/bin/env ruby
-
-# Submits code coverage reports to coveralls.io for Xcode based projects.
-# Give same arguments as xcodebuild.
+#
+# Submit code coverage report to coveralls.io for Xcode based projects.
+# Usage is to give same arguments as to xcodebuild.
+#
+# Requires ruby 1.9 and has no dependencies on gems.
 #
 # Will submit to coveralls.io if running in a travis-ci build environment
 # or if COVERALLS_REPO_TOKEN is set. Otherwise ouput statistics to stdout.
 # service_name sent to coveralls can be changed by COVERALLS_SERVICE_NAME.
-
+#
 # Copyright (c) 2013 <mattias.wadman@gmail.com>
 #
 # MIT License:
