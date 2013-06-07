@@ -21,8 +21,8 @@
 
 
 @interface ImageNamedFinder ()
-@property(nonatomic, retain, readwrite) ImageNamedOptions *options;
-@property(nonatomic, retain, readwrite) ImageNamedOptions *wildcardOptions;
+@property(nonatomic, strong, readwrite) ImageNamedOptions *options;
+@property(nonatomic, strong, readwrite) ImageNamedOptions *wildcardOptions;
 @end
 
 @implementation ImageNamedFinder
@@ -33,18 +33,11 @@
         return nil;
     }
     
-    self.options = [[[ImageNamedOptions alloc] init] autorelease];
-    self.wildcardOptions = [[[ImageNamedOptions alloc] init] autorelease];
+    self.options = [[ImageNamedOptions alloc] init];
+    self.wildcardOptions = [[ImageNamedOptions alloc] init];
     [self.wildcardOptions applyOptions:[ImageNamedOptions allOptions]];
     
     return self;
-}
-
-- (void)dealloc {
-    self.options = nil;
-    self.wildcardOptions = nil;
-    
-    [super dealloc];
 }
 
 + (void)dumpPrefix:(NSString *)prefix
@@ -135,17 +128,17 @@
                       scales:foundScales devices:foundDevices exts:foundExts];
     
     // image that must exist are the union of limits and found
-    NSMutableOrderedSet *mustScales = [[foundScales mutableCopy] autorelease];
+    NSMutableOrderedSet *mustScales = [foundScales mutableCopy];
     if (limitScales != nil) {
         [mustScales unionOrderedSet:limitScales];
     }
     
-    NSMutableOrderedSet *mustDevices = [[foundDevices mutableCopy] autorelease];
+    NSMutableOrderedSet *mustDevices = [foundDevices mutableCopy];
     if (limitDevices != nil) {
         [mustDevices unionOrderedSet:limitDevices];
     }
     
-    NSMutableOrderedSet *mustExts = [[foundExts mutableCopy] autorelease];
+    NSMutableOrderedSet *mustExts = [foundExts mutableCopy];
     if (limitExts != nil) {
         [mustExts unionOrderedSet:limitExts];
     }

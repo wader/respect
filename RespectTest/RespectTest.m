@@ -48,23 +48,21 @@ static BOOL test(NSString *path) {
         
         [SenTestLog testLogWithFormat:@"Testing target %@\n", nativeTarget.name];
         
-        id<ResourceLinterSource> linterSource = [[[ResourceLinterXcodeProjectSource alloc]
-                                                  initWithPBXProject:pbxProject
-                                                  nativeTarget:nativeTarget
-                                                  buildConfiguration:buildConfiguration]
-                                                 autorelease];
-        ResourceLinter *linter = [[[ResourceLinter alloc]
-                                   initWithResourceLinterSource:linterSource
-                                   configPath:nil
-                                   parseDefaultConfig:YES]
-                                  autorelease];
+        id<ResourceLinterSource> linterSource = [[ResourceLinterXcodeProjectSource alloc]
+                                                 initWithPBXProject:pbxProject
+                                                 nativeTarget:nativeTarget
+                                                 buildConfiguration:buildConfiguration];
+        ResourceLinter *linter = [[ResourceLinter alloc]
+                                  initWithResourceLinterSource:linterSource
+                                  configPath:nil
+                                  parseDefaultConfig:YES];
         
         NSMutableSet *expectedUnused = [NSMutableSet set];
         NSMutableSet *expectedMissing = [NSMutableSet set];
         NSMutableDictionary *expectedWarnings = [NSMutableDictionary dictionary];
         NSMutableDictionary *expectedConfigErrors = [NSMutableDictionary dictionary];
         NSMutableDictionary *expectedLintErrors = [NSMutableDictionary dictionary];
-
+        
         for (TextFile *sourceTextFile in [[linterSource sourceTextFiles] objectEnumerator]) {
             [[NSRegularExpression
               regularExpressionWithPattern:
@@ -257,9 +255,8 @@ static BOOL test(NSString *path) {
                                    [ResourceLinterXcodeReport class],
                                    [ResourceLinterConfigReport class],
                                    nil]) {
-            ResourceLinterAbstractReport *reporter = [[[reportClass alloc]
-                                                       initWithLinter:linter]
-                                                      autorelease];
+            ResourceLinterAbstractReport *reporter = [[reportClass alloc]
+                                                      initWithLinter:linter];
             (void)reporter;
         }
         

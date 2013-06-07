@@ -52,18 +52,14 @@
 @end
 
 @implementation ExpressionSignatureToken
-@synthesize range = _range;
-@synthesize string = _string;
-@synthesize type = _type;
 
 + (id)tokenWithRange:(NSRange)range
             inString:(NSString *)string
                 type:(ExpressionSignatureTokenType)type {
     
-    return [[[ExpressionSignatureToken alloc] initWithRange:range
-                                                   inString:string
-                                                       type:type]
-            autorelease];
+    return [[ExpressionSignatureToken alloc] initWithRange:range
+                                                  inString:string
+                                                      type:type];
 }
 
 + (ExpressionSignatureToken *)tokenizeString:(NSString *)string
@@ -74,23 +70,21 @@
     static NSDictionary *charToToken = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        whitespaceCharacterSet = [[NSCharacterSet whitespaceCharacterSet] retain];
-        identFirstCharacerSet = [[NSMutableCharacterSet letterCharacterSet] retain];
+        whitespaceCharacterSet = [NSCharacterSet whitespaceCharacterSet];
+        identFirstCharacerSet = [NSMutableCharacterSet letterCharacterSet];
         // add "*" to allow wildcard matching
         // TODO: [0-9A-Za-z_]? \u?
         [identFirstCharacerSet addCharactersInString:@"_$*"];
-        identCharacterSet = [[NSMutableCharacterSet letterCharacterSet] retain];
+        identCharacterSet = [NSMutableCharacterSet letterCharacterSet];
         [identCharacterSet addCharactersInString:@"0123456789_$*"];
-        charToToken = [[NSDictionary alloc] initWithObjectsAndKeys:
-                       [NSNumber numberWithInt:SIGNATURE_TOKEN_OPEN_BRACKET], @"[",
-                       [NSNumber numberWithInt:SIGNATURE_TOKEN_CLOSE_BRACKET], @"]",
-                       [NSNumber numberWithInt:SIGNATURE_TOKEN_OPEN_PARENTHESES], @"(",
-                       [NSNumber numberWithInt:SIGNATURE_TOKEN_CLOSE_PARENTHESES], @")",
-                       [NSNumber numberWithInt:SIGNATURE_TOKEN_COLON], @":",
-                       [NSNumber numberWithInt:SIGNATURE_TOKEN_COMMA], @",",
-                       [NSNumber numberWithInt:SIGNATURE_TOKEN_AT], @"@",
-                       [NSNumber numberWithInt:SIGNATURE_TOKEN_DOLLAR], @"$",
-                       nil];
+        charToToken = @{@"[": @(SIGNATURE_TOKEN_OPEN_BRACKET),
+                       @"]": @(SIGNATURE_TOKEN_CLOSE_BRACKET),
+                       @"(": @(SIGNATURE_TOKEN_OPEN_PARENTHESES),
+                       @")": @(SIGNATURE_TOKEN_CLOSE_PARENTHESES),
+                       @":": @(SIGNATURE_TOKEN_COLON),
+                       @",": @(SIGNATURE_TOKEN_COMMA),
+                       @"@": @(SIGNATURE_TOKEN_AT),
+                       @"$": @(SIGNATURE_TOKEN_DOLLAR)};
     });
     
     index = [string indexOfFirstFromIndex:index
@@ -102,7 +96,7 @@
     }
     
     NSString *c = [string substringWithRange:NSMakeRange(index, 1)];
-    NSNumber *token = [charToToken objectForKey:c];
+    NSNumber *token = charToToken[c];
     if (token != nil) {
         return [ExpressionSignatureToken
                 tokenWithRange:NSMakeRange(index, 1)
@@ -140,11 +134,6 @@
     return self;
 }
 
-- (void)dealloc {
-    self.string = nil;
-    
-    [super dealloc];
-}
 
 - (NSString *)description {
     return [NSString stringWithFormat:@"%@ type=%d string=%@",

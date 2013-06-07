@@ -39,17 +39,10 @@ static NSString * const InfoPlistKeyCFBundlePrimaryIcon = @"CFBundlePrimaryIcon"
 static NSString * const InfoPlistKeyUINewsstandIcon = @"UINewsstandIcon";
 
 @interface InfoPlistAction ()
-@property(nonatomic, retain, readwrite) ImageNamedFinder *imageNamedFinder;
+@property(nonatomic, strong, readwrite) ImageNamedFinder *imageNamedFinder;
 @end
 
 @implementation InfoPlistAction
-@synthesize imageNamedFinder = _imageNamedFinder;
-
-- (void)dealloc {
-    self.imageNamedFinder = nil;
-    
-    [super dealloc];
-}
 
 + (NSString *)name {
     return @"InfoPlist";
@@ -58,18 +51,17 @@ static NSString * const InfoPlistKeyUINewsstandIcon = @"UINewsstandIcon";
 - (void)addResourcePath:(NSString *)resourcePath
           referencePath:(NSString *)referencePath
           referenceHint:(NSString *)referenceHint {
-    ResourceReference *resourceRef = [[[ResourceReference alloc]
-                                       initWithResourcePath:resourcePath
-                                       referencePath:referencePath
-                                       referenceLocation:MakeTextLineLocation(1)
-                                       referenceHint:referenceHint
-                                       missingResourceHint:
-                                       // TODO: image smartness?
-                                       [self actionMissingResourceHint:resourcePath]]
-                                      autorelease];
+    ResourceReference *resourceRef = [[ResourceReference alloc]
+                                      initWithResourcePath:resourcePath
+                                      referencePath:referencePath
+                                      referenceLocation:MakeTextLineLocation(1)
+                                      referenceHint:referenceHint
+                                      missingResourceHint:
+                                      // TODO: image smartness?
+                                      [self actionMissingResourceHint:resourcePath]];
     [self.linter.resourceReferences addObject:resourceRef];
     
-    BundleResource *bundleRes = [self.linter.bundleResources objectForKey:resourcePath];
+    BundleResource *bundleRes = self.linter.bundleResources[resourcePath];
     if (bundleRes == nil) {
         return;
     }
@@ -82,7 +74,7 @@ static NSString * const InfoPlistKeyUINewsstandIcon = @"UINewsstandIcon";
    referencePath:(NSString *)referencePath
    referenceHint:(NSString *)referenceHint
       isOptional:(BOOL)isOptional {
-    if (isOptional && ![self.linter.bundleResources objectForKey:name]) {
+    if (isOptional && self.linter.bundleResources[name] == nil) {
         return;
     }
     
@@ -98,13 +90,13 @@ static NSString * const InfoPlistKeyUINewsstandIcon = @"UINewsstandIcon";
     NSArray *resourcePaths = [self.imageNamedFinder
                               pathsForName:name
                               usingFileExistsBlock:^BOOL(NSString *path) {
-                                  return [self.linter.bundleResources objectForKey:path] != nil;
+                                  return self.linter.bundleResources[path] != nil;
                               }];
     
     // optional only if all of the found variants do not exist
     if (isOptional) {
         for (NSString *resourcePath in resourcePaths) {
-            if ([self.linter.bundleResources objectForKey:resourcePath]) {
+            if (self.linter.bundleResources[resourcePath] != nil) {
                 isOptional = NO;
                 break;
             }
@@ -120,7 +112,7 @@ static NSString * const InfoPlistKeyUINewsstandIcon = @"UINewsstandIcon";
 }
 
 - (void)addLaunchImage:(NSDictionary *)infoPlist path:(NSString *)path {
-    NSString *launchImage = [infoPlist objectForKey:InfoPlistKeyUILaunchImageFile];
+    NSString *launchImage = infoPlist[InfoPlistKeyUILaunchImageFile];
     BOOL launchImageOptional = NO;
     if (launchImage == nil || ![launchImage isKindOfClass:[NSString class]] ||
         [[launchImage respect_stringByTrimmingWhitespace] length] == 0) {
@@ -134,7 +126,7 @@ static NSString * const InfoPlistKeyUINewsstandIcon = @"UINewsstandIcon";
     
     NSString *launchImageIphoneKey = [InfoPlistKeyUILaunchImageFile
                                       stringByAppendingString:@"~iphone"];
-    NSString *launchImageIphone = [infoPlist objectForKey:launchImageIphoneKey];
+    NSString *launchImageIphone = infoPlist[launchImageIphoneKey];
     if (launchImageIphone != nil && [launchImageIphone isKindOfClass:[NSString class]] &&
         [[launchImageIphone respect_stringByTrimmingWhitespace] length] > 0) {
         [self addNamedImages:launchImageIphone
@@ -150,7 +142,7 @@ static NSString * const InfoPlistKeyUINewsstandIcon = @"UINewsstandIcon";
     
     NSString *launchImageIpadKey = [InfoPlistKeyUILaunchImageFile
                                     stringByAppendingString:@"~ipad"];
-    NSString *launchImageIpad = [infoPlist objectForKey:launchImageIpadKey];
+    NSString *launchImageIpad = infoPlist[launchImageIpadKey];
     if (launchImageIpad != nil && [launchImageIpad isKindOfClass:[NSString class]] &&
         [[launchImageIpad respect_stringByTrimmingWhitespace] length] > 0) {
         [self addNamedImages:launchImageIpad
@@ -200,35 +192,33 @@ static NSString * const InfoPlistKeyUINewsstandIcon = @"UINewsstandIcon";
     // use dictionary key for hint.
     NSMutableDictionary *iconArraysDict = [NSMutableDictionary dictionary];
     
-    NSDictionary *icons = [infoPlist objectForKey:InfoPlistKeyCFBundleIcons];
+    NSDictionary *icons = infoPlist[InfoPlistKeyCFBundleIcons];
     if (icons != nil && [icons isKindOfClass:[NSDictionary class]]) {
-        for (NSString *iconKey in [NSArray arrayWithObjects:
+        for (NSString *iconKey in (@[
                                    InfoPlistKeyCFBundlePrimaryIcon,
-                                   InfoPlistKeyUINewsstandIcon,
-                                   nil]) {
-            NSDictionary *iconDict = [icons objectForKey:iconKey];
+                                   InfoPlistKeyUINewsstandIcon
+                                   ])) {
+            NSDictionary *iconDict = icons[iconKey];
             if (iconDict == nil || ![iconDict isKindOfClass:[NSDictionary class]]) {
                 continue;
             }
             
-            NSArray *iconArray = [iconDict objectForKey:InfoPlistKeyCFBundleIconFiles];
+            NSArray *iconArray = iconDict[InfoPlistKeyCFBundleIconFiles];
             if (iconArray != nil) {
-                [iconArraysDict setObject:iconArray
-                                   forKey:[NSString stringWithFormat:@"%@/%@",
+                iconArraysDict[[NSString stringWithFormat:@"%@/%@",
                                            InfoPlistKeyCFBundleIcons,
-                                           iconKey]];
+                                           iconKey]] = iconArray;
             }
         }
     }
     
-    NSArray *iconFiles = [infoPlist objectForKey:InfoPlistKeyCFBundleIconFiles];
+    NSArray *iconFiles = infoPlist[InfoPlistKeyCFBundleIconFiles];
     if (iconFiles != nil) {
-        [iconArraysDict setObject:iconFiles
-                           forKey:InfoPlistKeyCFBundleIconFiles];
+        iconArraysDict[InfoPlistKeyCFBundleIconFiles] = iconFiles;
     }
     
     for (NSString *hintKey in iconArraysDict) {
-        NSArray *iconArray = [iconArraysDict objectForKey:hintKey];
+        NSArray *iconArray = iconArraysDict[hintKey];
         
         if (![iconArray isKindOfClass:[NSArray class]]) {
             continue;
@@ -247,7 +237,7 @@ static NSString * const InfoPlistKeyUINewsstandIcon = @"UINewsstandIcon";
         }
     }
     
-    NSString *iconFile = [infoPlist objectForKey:InfoPlistKeyCFBundleIconFile];
+    NSString *iconFile = infoPlist[InfoPlistKeyCFBundleIconFile];
     if (iconFile == nil || ![iconFile isKindOfClass:[NSString class]] ||
         [[iconFile respect_stringByTrimmingWhitespace] length] == 0) {
         iconFile = @"Icon";
@@ -257,13 +247,11 @@ static NSString * const InfoPlistKeyUINewsstandIcon = @"UINewsstandIcon";
         iconFileExt = [@"." stringByAppendingString:iconFileExt];
     }
     NSString *iconFileNormalized = [iconFile respect_stringByNormalizingIOSImageName];
-    for (NSString *suffix in [NSArray arrayWithObjects:
-                              @"",
+    for (NSString *suffix in @[@"",
                               @"~ipad",
                               @"-72",
                               @"-Small",
-                              @"-Small-50",
-                              nil]) {
+                              @"-Small-50"]) {
         [self addNamedImages:[NSString stringWithFormat:@"%@%@%@",
                               iconFileNormalized, suffix, iconFileExt]
                referencePath:path
@@ -286,10 +274,10 @@ static NSString * const InfoPlistKeyUINewsstandIcon = @"UINewsstandIcon";
     [self addIcons:infoPlist path:path];
     
     // not needed for app store but used in itunes for ad hoc distributions
-    for (NSString *optionalNamed in [NSArray arrayWithObjects:
+    for (NSString *optionalNamed in (@[
                                      @"iTunesArtwork",
-                                     @"iTunesArtwork@2x",
-                                     nil]) {
+                                     @"iTunesArtwork@2x"
+                                     ])) {
         [self addNamed:optionalNamed
          referencePath:path
          referenceHint:nil
@@ -302,7 +290,7 @@ static NSString * const InfoPlistKeyUINewsstandIcon = @"UINewsstandIcon";
 
 - (NSArray *)actionResourcePaths:(NSString *)resourcePath {
     if (self.imageNamedFinder == nil) {
-        self.imageNamedFinder = [[[ImageNamedFinder alloc] init] autorelease];
+        self.imageNamedFinder = [[ImageNamedFinder alloc] init];
         NSOrderedSet *defaultOptions = [self.linter defaultConfigValueForName:[[ImageAction class] name]];
         if (defaultOptions != nil) {
             [self.imageNamedFinder.options applyOptions:defaultOptions];
@@ -324,7 +312,7 @@ static NSString * const InfoPlistKeyUINewsstandIcon = @"UINewsstandIcon";
     for (NSString *region in [self.linter.linterSource knownRegions]) {
         NSString *stringsPath = [NSString stringWithFormat:@"%@.lproj/InfoPlist.strings",
                                  region];
-        if ([self.linter.bundleResources objectForKey:stringsPath]) {
+        if (self.linter.bundleResources[stringsPath] != nil) {
             [foundPaths addObject:stringsPath];
         }
     }

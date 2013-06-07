@@ -36,7 +36,7 @@
     for (AbstractAction *action in self.actions) {
         [action performWithParameters:
          [PerformParameters
-          performParametersWithParameters:[NSArray array]
+          performParametersWithParameters:@[]
           path:action.file
           textLocation:action.textLocation]];
     }

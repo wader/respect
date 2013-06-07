@@ -43,25 +43,25 @@ typedef enum {
 @end
 
 @interface ResourceLinter : NSObject
-@property(nonatomic, retain, readonly) id<ResourceLinterSource> linterSource;
-@property(nonatomic, retain, readonly) NSMutableArray *defaultConfigs;
-@property(nonatomic, retain, readonly) NSMutableArray *matchers;
-@property(nonatomic, retain, readonly) NSMutableDictionary *bundleResources;
-@property(nonatomic, retain, readonly) NSMutableDictionary *lowercaseBundleResources;
-@property(nonatomic, retain, readonly) NSMutableSet *resourceReferences;
-@property(nonatomic, retain, readonly) NSMutableArray *missingReferences;
-@property(nonatomic, retain, readonly) NSMutableArray *missingReferencesIgnored;
-@property(nonatomic, retain, readonly) NSMutableArray *unusedResources;
-@property(nonatomic, retain, readonly) NSMutableArray *unusedResourcesIgnored;
-@property(nonatomic, retain, readonly) NSMutableArray *lintWarnings;
-@property(nonatomic, retain, readonly) NSMutableArray *lintWarningsIgnored;
-@property(nonatomic, retain, readonly) NSMutableArray *lintErrors;
-@property(nonatomic, retain, readonly) NSMutableArray *lintErrorsIgnored;
-@property(nonatomic, retain, readonly) NSMutableArray *configErrors;
-@property(nonatomic, retain, readonly) NSMutableArray *unusedIgnoreConfigs;
-@property(nonatomic, retain, readonly) NSMutableArray *missingIgnoreConfigs;
-@property(nonatomic, retain, readonly) NSMutableArray *warningIgnoreConfigs;
-@property(nonatomic, retain, readonly) NSMutableArray *errorIgnoreConfigs;
+@property(nonatomic, strong, readonly) id<ResourceLinterSource> linterSource;
+@property(nonatomic, strong, readonly) NSMutableArray *defaultConfigs;
+@property(nonatomic, strong, readonly) NSMutableArray *matchers;
+@property(nonatomic, strong, readonly) NSMutableDictionary *bundleResources;
+@property(nonatomic, strong, readonly) NSMutableDictionary *lowercaseBundleResources;
+@property(nonatomic, strong, readonly) NSMutableSet *resourceReferences;
+@property(nonatomic, strong, readonly) NSMutableArray *missingReferences;
+@property(nonatomic, strong, readonly) NSMutableArray *missingReferencesIgnored;
+@property(nonatomic, strong, readonly) NSMutableArray *unusedResources;
+@property(nonatomic, strong, readonly) NSMutableArray *unusedResourcesIgnored;
+@property(nonatomic, strong, readonly) NSMutableArray *lintWarnings;
+@property(nonatomic, strong, readonly) NSMutableArray *lintWarningsIgnored;
+@property(nonatomic, strong, readonly) NSMutableArray *lintErrors;
+@property(nonatomic, strong, readonly) NSMutableArray *lintErrorsIgnored;
+@property(nonatomic, strong, readonly) NSMutableArray *configErrors;
+@property(nonatomic, strong, readonly) NSMutableArray *unusedIgnoreConfigs;
+@property(nonatomic, strong, readonly) NSMutableArray *missingIgnoreConfigs;
+@property(nonatomic, strong, readonly) NSMutableArray *warningIgnoreConfigs;
+@property(nonatomic, strong, readonly) NSMutableArray *errorIgnoreConfigs;
 
 - (id)initWithResourceLinterSource:(id<ResourceLinterSource>)linterSource
                         configPath:(NSString *)configPath

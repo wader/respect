@@ -23,19 +23,17 @@
     static NSArray *extensions = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        extensions = [[NSArray alloc] initWithObjects:
-                      @"png",
-                      @"jpg",
-                      @"jpeg",
-                      @"tiff",
-                      @"tif",
-                      @"gif",
-                      @"bmp",
-                      @"bmpf",
-                      @"ico",
-                      @"cur",
-                      @"xbm",
-                      nil];
+        extensions = @[@"png",
+                       @"jpg",
+                       @"jpeg",
+                       @"tiff",
+                       @"tif",
+                       @"gif",
+                       @"bmp",
+                       @"bmpf",
+                       @"ico",
+                       @"cur",
+                       @"xbm"];
     });
     
     return extensions;
@@ -50,7 +48,7 @@
             [extWithDots addObject:[@"." stringByAppendingString:ext]];
         }
         
-        dotExtensions = [[NSArray arrayWithArray:extWithDots] retain];
+        dotExtensions = [NSArray arrayWithArray:extWithDots];
     });
     
     return dotExtensions;
@@ -60,7 +58,7 @@
     static NSArray *scales = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        scales = [[NSArray alloc] initWithObjects:@"@2x", nil];
+        scales = @[@"@2x"];
     });
     
     return scales;
@@ -70,7 +68,7 @@
     static NSArray *devices = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        devices = [[NSArray alloc] initWithObjects:@"~ipad", @"~iphone", nil];
+        devices = @[@"~ipad", @"~iphone"];
     });
     
     return devices;
@@ -80,13 +78,11 @@
     static NSArray *devices = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        devices = [[NSArray alloc] initWithObjects:
-                   @"PortraitUpsideDown",
-                   @"LandscapeLeft",
-                   @"LandscapeRight",
-                   @"Portrait",
-                   @"Landscape",
-                   nil];
+        devices = @[@"PortraitUpsideDown",
+                    @"LandscapeLeft",
+                    @"LandscapeRight",
+                    @"Portrait",
+                    @"Landscape"];
     });
     
     return devices;

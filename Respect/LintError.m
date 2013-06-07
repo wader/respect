@@ -21,18 +21,16 @@
 + (id)lintErrorWithFile:(NSString *)file
                location:(TextLocation)textLocation
                 message:(NSString *)message {
-    return [[[self alloc] initWithFile:file
-                          textLocation:textLocation
-                               message:message]
-            autorelease];
+    return [[self alloc] initWithFile:file
+                         textLocation:textLocation
+                              message:message];
 }
 
 + (id)lintErrorWithFile:(NSString *)file
                 message:(NSString *)message {
-    return [[[self alloc] initWithFile:file
-                          textLocation:MakeTextLineLocation(1)
-                               message:message]
-            autorelease];
+    return [[self alloc] initWithFile:file
+                         textLocation:MakeTextLineLocation(1)
+                              message:message];
 }
 
 @end

@@ -27,8 +27,7 @@
 
 static void fprintf_nsstring(FILE *stream, NSString *format, va_list va) {
     fprintf(stream, "%s\n",
-            [[[[NSString alloc] initWithFormat:format arguments:va]
-              autorelease]
+            [[[NSString alloc] initWithFormat:format arguments:va]
              cStringUsingEncoding:NSUTF8StringEncoding]);
 }
 
@@ -56,8 +55,7 @@ static void help(const char *argv0) {
            argv0);
 }
 
-int main(int argc,  char *const argv[]) {
-    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+static int _main(int argc,  char *const argv[]) {
     char *argv0 = argv[0];
     NSString *configPath = nil;
     BOOL parseDefaultConfig = YES;
@@ -80,7 +78,7 @@ int main(int argc,  char *const argv[]) {
             help(argv0);
             return EXIT_SUCCESS;
         } else if (c == 'c') {
-            configPath = [NSString stringWithUTF8String:optarg];
+            configPath = @(optarg);
         } else if (c == 'n') {
             parseDefaultConfig = NO;
         } else if (c == 'd') {
@@ -89,7 +87,7 @@ int main(int argc,  char *const argv[]) {
             fprintf(stdout, "%s\n", GIT_HASH);
             return EXIT_SUCCESS;
         } else if (c == 's') {
-            spFeaturesPath = [NSString stringWithUTF8String:optarg];
+            spFeaturesPath = @(optarg);
         } else {
             return EXIT_FAILURE;
         }
@@ -100,9 +98,9 @@ int main(int argc,  char *const argv[]) {
     
     // try to get configuration from env
     NSDictionary *env = [[NSProcessInfo processInfo] environment];
-    NSString *xcodeProjectPath = [env objectForKey:@"PROJECT_FILE_PATH"];
-    NSString *targetName = [env objectForKey:@"TARGET_NAME"];
-    NSString *configurationName = [env objectForKey:@"CONFIGURATION"] ?: @"Release";
+    NSString *xcodeProjectPath = env[@"PROJECT_FILE_PATH"];
+    NSString *targetName = env[@"TARGET_NAME"];
+    NSString *configurationName = env[@"CONFIGURATION"] ?: @"Release";
     // assume Xcode if PROJECT_FILE_PATH env was found else CLI
     Class lintReportClass = (xcodeProjectPath != nil ?
                              [ResourceLinterXcodeReport class] :
@@ -113,21 +111,18 @@ int main(int argc,  char *const argv[]) {
     }
     
     if (argc > 0) {
-        xcodeProjectPath = [NSString stringWithCString:argv[0]
-                                              encoding:NSUTF8StringEncoding];
+        xcodeProjectPath = @(argv[0]);
     } else if (xcodeProjectPath == nil) {
         help(argv0);
         return EXIT_FAILURE;
     }
     
     if (argc > 1) {
-        targetName = [NSString stringWithCString:argv[1]
-                                        encoding:NSUTF8StringEncoding];
+        targetName = @(argv[1]);
     }
     
     if (argc > 2) {
-        configurationName = [NSString stringWithCString:argv[2]
-                                               encoding:NSUTF8StringEncoding];
+        configurationName = @(argv[2]);
     }
     
     NSError *error = nil;
@@ -145,7 +140,7 @@ int main(int argc,  char *const argv[]) {
             return EXIT_FAILURE;
         }
         
-        targetName = [nativeTargetNames objectAtIndex:0];
+        targetName = nativeTargetNames[0];
     } else {
         if (![nativeTargetNames containsObject:targetName]) {
             print_error(@"No native target named \"%@\" found.", targetName);
@@ -179,32 +174,35 @@ int main(int argc,  char *const argv[]) {
         return EXIT_FAILURE;
     }
     
-    ResourceLinterXcodeProjectSource *projectSource = [[[ResourceLinterXcodeProjectSource alloc]
-                                                        initWithPBXProject:pbxProject
-                                                        nativeTarget:nativeTarget
-                                                        buildConfiguration:buildConfiguration]
-                                                       autorelease];
+    ResourceLinterXcodeProjectSource *projectSource = [[ResourceLinterXcodeProjectSource alloc]
+                                                       initWithPBXProject:pbxProject
+                                                       nativeTarget:nativeTarget
+                                                       buildConfiguration:buildConfiguration];
+    
     if (spFeaturesPath != nil) {
         [projectSource addSpotifyFeaturesAtPath:spFeaturesPath];
     }
     
-    ResourceLinter *linter = [[[ResourceLinter alloc]
-                               initWithResourceLinterSource:projectSource
-                               configPath:configPath
-                               parseDefaultConfig:parseDefaultConfig]
-                              autorelease];
+    ResourceLinter *linter = [[ResourceLinter alloc]
+                              initWithResourceLinterSource:projectSource
+                              configPath:configPath
+                              parseDefaultConfig:parseDefaultConfig];
     
-    ResourceLinterAbstractReport *lintReport = [[[lintReportClass alloc]
-                                                 initWithLinter:linter]
-                                                autorelease];
+    ResourceLinterAbstractReport *lintReport = [[lintReportClass alloc]
+                                                initWithLinter:linter];
     
     fprintf(stdout, "%s", [lintReport.outputBuffer UTF8String]);
     
-    // as we should not have any side effects we can safly skip to drain the
-    // autorelease pool and by that save some time by not calling release
-    // and dealloc on autoreleased objects
-    //[pool drain];
-    (void)pool;
-    
     return EXIT_SUCCESS;
+}
+
+int main(int argc,  char *const argv[]) {
+    @autoreleasepool {
+        // as we should not have any side effects we can safly skip to drain the
+        // autorelease pool and by that save some time by not calling release
+        // and dealloc on autoreleased objects.
+        // also use exit(3) so that streams are flushed.
+
+        exit(_main(argc, argv));
+    }
 }

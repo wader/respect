@@ -24,7 +24,7 @@
 #import "PerformParameters.h"
 
 @interface AbstractAction : NSObject
-@property(nonatomic, assign, readonly) ResourceLinter *linter;
+@property(nonatomic, weak, readonly) ResourceLinter *linter;
 @property(nonatomic, copy, readonly) NSString *file;
 @property(nonatomic, assign, readonly) TextLocation textLocation;
 @property(nonatomic, copy, readonly) NSString *argumentString;

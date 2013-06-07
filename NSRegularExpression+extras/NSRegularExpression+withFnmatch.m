@@ -39,7 +39,7 @@ static NSString *fnmatchRePatternBrace(NSString *fnmatchBrace) {
                                                                     balanceCharacterPair:@"{}"];
     [braceRePattern appendString:@"("];
     for (NSUInteger i = 0; i < [braceParts count]; i++) {
-        [braceRePattern appendString:fnmatchRePatternNested([braceParts objectAtIndex:i])];
+        [braceRePattern appendString:fnmatchRePatternNested(braceParts[i])];
         if (i < [braceParts count]-1) {
             [braceRePattern appendString:@"|"];
         }
@@ -119,9 +119,9 @@ static NSString *fnmatchRePattern(NSString *fnmatch) {
     if (fnmatchRe == nil && error != nil) {
         *error = [NSError errorWithDomain:NSCocoaErrorDomain
                                      code:0
-                                 userInfo:[NSDictionary
-                                           dictionaryWithObject:@"Invalid fnmatch pattern"
-                                           forKey:NSLocalizedDescriptionKey]];
+                                 userInfo:(@{
+                                           NSLocalizedDescriptionKey:
+                                           @"Invalid fnmatch pattern"})];
     }
     
     return fnmatchRe;

@@ -177,7 +177,7 @@
 		0933B0EA15B7091D004D3F01 /* ExpressionSignatureTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ExpressionSignatureTest.m; sourceTree = "<group>"; };
 		093B7A34163450C500F3C250 /* ImageNamedFinder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageNamedFinder.h; sourceTree = "<group>"; };
 		093B7A35163450C600F3C250 /* ImageNamedFinder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImageNamedFinder.m; sourceTree = "<group>"; };
-		09504EE4159C61710050594A /* Respect */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; name = Respect; path = respect; sourceTree = BUILT_PRODUCTS_DIR; };
+		09504EE4159C61710050594A /* respect */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = respect; sourceTree = BUILT_PRODUCTS_DIR; };
 		09504EF6159C61EB0050594A /* ResourceLinter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ResourceLinter.h; sourceTree = "<group>"; };
 		09504EF7159C61EB0050594A /* ResourceLinter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ResourceLinter.m; sourceTree = "<group>"; };
 		09504EF9159C61EB0050594A /* respect.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = respect.m; sourceTree = "<group>"; };
@@ -367,7 +367,7 @@
 		09504EE5159C61710050594A /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				09504EE4159C61710050594A /* Respect */,
+				09504EE4159C61710050594A /* respect */,
 				0926EC0A15B0338800100D38 /* RespectTest.octest */,
 			);
 			name = Products;
@@ -587,7 +587,7 @@
 			);
 			name = respect;
 			productName = Respect;
-			productReference = 09504EE4159C61710050594A /* Respect */;
+			productReference = 09504EE4159C61710050594A /* respect */;
 			productType = "com.apple.product-type.tool";
 		};
 /* End PBXNativeTarget section */
@@ -872,6 +872,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
@@ -908,6 +909,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;

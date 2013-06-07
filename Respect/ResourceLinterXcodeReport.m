@@ -27,7 +27,7 @@ static NSComparator pathStringComparator = ^NSComparisonResult(id a, id b) {
 };
 
 @interface ResourceLinterXcodeReport ()
-@property(nonatomic, retain, readwrite) NSMutableDictionary *fileIssues;
+@property(nonatomic, strong, readwrite) NSMutableDictionary *fileIssues;
 
 - (void)addIssue:(id)issue forFile:(NSString *)file;
 - (void)addXcodeWarning:(NSString *)file
@@ -36,7 +36,6 @@ static NSComparator pathStringComparator = ^NSComparisonResult(id a, id b) {
 @end
 
 @implementation ResourceLinterXcodeReport
-@synthesize fileIssues = _fileIssues;
 
 - (id)initWithLinter:(ResourceLinter *)linter {
     self = [super initWithLinter:linter];
@@ -71,7 +70,7 @@ static NSComparator pathStringComparator = ^NSComparisonResult(id a, id b) {
     
     for (NSString *file in [[self.fileIssues allKeys]
                             sortedArrayUsingComparator:pathStringComparator]) {
-        for (id issue in [self.fileIssues objectForKey:file]) {
+        for (id issue in self.fileIssues[file]) {
             if ([issue isKindOfClass:[ResourceReference class]]) {
                 ResourceReference *resourceRef = issue;
                 
@@ -116,17 +115,11 @@ static NSComparator pathStringComparator = ^NSComparisonResult(id a, id b) {
     return self;
 }
 
-- (void)dealloc {
-    self.fileIssues = nil;
-    
-    [super dealloc];
-}
-
 - (void)addIssue:(id)issue forFile:(NSString *)file {
-    NSMutableArray *issues = [self.fileIssues objectForKey:file];
+    NSMutableArray *issues = self.fileIssues[file];
     if (issues == nil) {
         issues = [NSMutableArray array];
-        [self.fileIssues setObject:issues forKey:file];
+        self.fileIssues[file] = issues;
     }
     
     [issues addObject:issue];
@@ -142,5 +135,5 @@ static NSComparator pathStringComparator = ^NSComparisonResult(id a, id b) {
         arguments:va];
     va_end(va);
 }
-                 
+
 @end

@@ -30,33 +30,28 @@ NSString * const PBXProjectErrorDomain = @"PBXProjectErrorDomain";
 static NSError *makePBXError(NSString *format, ...) {
     va_list ap;
     va_start(ap, format);
-    NSString *description = [[[NSString alloc]
-                              initWithFormat:format arguments:ap]
-                             autorelease];
+    NSString *description = [[NSString alloc] initWithFormat:format arguments:ap];
     va_end(ap);
     
     return [NSError errorWithDomain:PBXProjectErrorDomain
                                code:0
-                           userInfo:[NSDictionary dictionaryWithObjectsAndKeys:
-                                     description,
-                                     NSLocalizedDescriptionKey,
-                                     nil]];
+                           userInfo:@{NSLocalizedDescriptionKey: description}];
 }
 
 @interface PBXNode ()
-@property(nonatomic, retain, readwrite) NSString *path;
-@property(nonatomic, retain, readwrite) NSString *sourceTree;
-@property(nonatomic, assign, readwrite) PBXNode *parent;
-@property(nonatomic, assign, readwrite) PBXProject *project;
+@property(nonatomic, strong, readwrite) NSString *path;
+@property(nonatomic, strong, readwrite) NSString *sourceTree;
+@property(nonatomic, weak, readwrite) PBXNode *parent;
+@property(nonatomic, weak, readwrite) PBXProject *project;
 - (BOOL)isValid:(NSError **)error;
 @end
 
 @interface PBXFileReference ()
-@property(nonatomic, retain, readwrite) NSString *name;
+@property(nonatomic, strong, readwrite) NSString *name;
 @end
 
 @interface PBXGroup ()
-@property(nonatomic, retain, readwrite) NSArray *children;
+@property(nonatomic, strong, readwrite) NSArray *children;
 @end
 
 @interface XCVersionGroup ()
@@ -64,27 +59,27 @@ static NSError *makePBXError(NSString *format, ...) {
 @end
 
 @interface PBXBuildFile ()
-@property(nonatomic, retain, readwrite) PBXFileReference *fileRef;
+@property(nonatomic, strong, readwrite) PBXFileReference *fileRef;
 - (BOOL)isValid:(NSError **)error;
 @end
 
 @interface PBXBuildPhase ()
-@property(nonatomic, retain, readwrite) NSArray *files;
+@property(nonatomic, strong, readwrite) NSArray *files;
 - (BOOL)isValid:(NSError **)error;
 @end
 
 @interface PBXNativeTarget ()
-@property(nonatomic, retain, readwrite) NSString *name;
-@property(nonatomic, retain, readwrite) NSArray *buildPhases;
-@property(nonatomic, retain, readwrite) XCConfigurationList *buildConfigurationList;
+@property(nonatomic, strong, readwrite) NSString *name;
+@property(nonatomic, strong, readwrite) NSArray *buildPhases;
+@property(nonatomic, strong, readwrite) XCConfigurationList *buildConfigurationList;
 @end
 
 @interface XCBuildConfiguration ()
-@property(nonatomic, retain, readwrite) NSString *name;
-@property(nonatomic, retain, readwrite) PBXFileReference *baseConfigurationReference;
-@property(nonatomic, retain, readwrite) NSDictionary *buildSettings;
-@property(nonatomic, assign, readwrite) XCBuildConfiguration *parent;
-@property(nonatomic, assign, readwrite) PBXProject *project;
+@property(nonatomic, strong, readwrite) NSString *name;
+@property(nonatomic, strong, readwrite) PBXFileReference *baseConfigurationReference;
+@property(nonatomic, strong, readwrite) NSDictionary *buildSettings;
+@property(nonatomic, weak, readwrite) XCBuildConfiguration *parent;
+@property(nonatomic, weak, readwrite) PBXProject *project;
 
 @property(nonatomic, retain, readwrite) NSDictionary *baseConfiguration;
 
@@ -92,38 +87,26 @@ static NSError *makePBXError(NSString *format, ...) {
 @end
 
 @interface XCConfigurationList ()
-@property(nonatomic, retain, readwrite) NSArray *buildConfigurations;
+@property(nonatomic, strong, readwrite) NSArray *buildConfigurations;
 - (BOOL)isValid:(NSError **)error;
 @end
 
 @interface PBXProject ()
-@property(nonatomic, retain, readwrite) XCConfigurationList *buildConfigurationList;
-@property(nonatomic, retain, readwrite) NSArray *targets;
-@property(nonatomic, retain, readwrite) NSArray *knownRegions;
-@property(nonatomic, retain, readwrite) PBXGroup *mainGroup;
-@property(nonatomic, retain, readwrite) NSDictionary *environment;
-@property(nonatomic, retain, readwrite) NSString *pbxFilePath;
+@property(nonatomic, strong, readwrite) XCConfigurationList *buildConfigurationList;
+@property(nonatomic, strong, readwrite) NSArray *targets;
+@property(nonatomic, strong, readwrite) NSArray *knownRegions;
+@property(nonatomic, strong, readwrite) PBXGroup *mainGroup;
+@property(nonatomic, strong, readwrite) NSDictionary *environment;
+@property(nonatomic, strong, readwrite) NSString *pbxFilePath;
 
-@property(nonatomic, retain, readwrite) NSDictionary *fallbackEnvironment;
+@property(nonatomic, strong, readwrite) NSDictionary *fallbackEnvironment;
 
 - (NSDictionary *)buildFallbackEnvironmentWithTarget:(PBXNativeTarget *)target
                                   buildConfiguration:(XCBuildConfiguration *)buildConfiguration;
-
 @end
 
 
 @implementation PBXNode
-@synthesize path = _path;
-@synthesize sourceTree = _sourceTree;
-@synthesize parent = _parent;
-@synthesize project = _project;
-
-- (void)dealloc {
-    self.path = nil;
-    self.sourceTree = nil;
-    
-    [super dealloc];
-}
 
 - (NSString *)buildPath {
     NSString *absPath = nil;
@@ -153,13 +136,6 @@ static NSError *makePBXError(NSString *format, ...) {
 
 
 @implementation PBXFileReference
-@synthesize name = _name;
-
-- (void)dealloc {
-    self.name = nil;
-    
-    [super dealloc];
-}
 
 - (BOOL)isValid:(NSError **)error {
     if (!([super isValid:error] &&
@@ -204,20 +180,12 @@ static NSError *makePBXError(NSString *format, ...) {
 
 
 @implementation PBXGroup
-@synthesize children = _children;
-
 + (BOOL)isValidChild:(NSObject *)child {
     // check exact class and not subclass
     return ([child isMemberOfClass:[PBXGroup class]] ||
             [child isMemberOfClass:[PBXFileReference class]] ||
             [child isMemberOfClass:[PBXVariantGroup class]] ||
             [child isMemberOfClass:[XCVersionGroup class]]);
-}
-
-- (void)dealloc {
-    self.children = nil;
-    
-    [super dealloc];
 }
 
 - (BOOL)isValid:(NSError **)error {
@@ -305,16 +273,8 @@ static NSError *makePBXError(NSString *format, ...) {
 
 
 @implementation XCVersionGroup
-@synthesize currentVersion = _currentVersion;
-
 + (BOOL)isValidChild:(NSObject *)child {
     return [child isMemberOfClass:[PBXFileReference class]];
-}
-
-- (void)dealloc {
-    self.currentVersion = nil;
-    
-    [super dealloc];
 }
 
 - (BOOL)isValid:(NSError **)error {
@@ -336,14 +296,6 @@ static NSError *makePBXError(NSString *format, ...) {
 
 
 @implementation PBXBuildFile
-@synthesize fileRef = _fileRef;
-
-- (void)dealloc {
-    self.fileRef = nil;
-    
-    [super dealloc];
-}
-
 - (BOOL)isValid:(NSError **)error {
     if (!(self.fileRef &&
           [self.fileRef isKindOfClass:[PBXNode class]] &&
@@ -358,14 +310,6 @@ static NSError *makePBXError(NSString *format, ...) {
 
 
 @implementation PBXBuildPhase
-@synthesize files = _files;
-
-- (void)dealloc {
-    self.files = nil;
-    
-    [super dealloc];
-}
-
 - (BOOL)isValid:(NSError **)error {
     if (!(self.files &&
           [self.files isKindOfClass:[NSArray class]])) {
@@ -397,17 +341,6 @@ static NSError *makePBXError(NSString *format, ...) {
 
 
 @implementation PBXNativeTarget
-@synthesize name = _name;
-@synthesize buildPhases = _buildPhases;
-@synthesize buildConfigurationList = _buildConfigurationList;
-
-- (void)dealloc {
-    self.name = nil;
-    self.buildPhases = nil;
-    self.buildConfigurationList = nil;
-    
-    [super dealloc];
-}
 
 - (BOOL)isValid:(NSError **)error {
     if (!(self.name &&
@@ -476,22 +409,6 @@ static NSError *makePBXError(NSString *format, ...) {
 
 
 @implementation XCBuildConfiguration
-@synthesize name = _name;
-@synthesize baseConfigurationReference = _baseConfigurationReference;
-@synthesize buildSettings = _buildSettings;
-@synthesize parent = _parent;
-@synthesize project = _project;
-
-@synthesize baseConfiguration = _baseConfiguration;
-
-- (void)dealloc {
-    self.name = nil;
-    self.baseConfigurationReference = nil;
-    self.buildSettings = nil;
-    
-    [super dealloc];
-}
-
 - (BOOL)isValid:(NSError **)error {
     if (!(self.buildSettings &&
           [self.buildSettings isKindOfClass:[NSDictionary class]])) {
@@ -517,9 +434,9 @@ static NSError *makePBXError(NSString *format, ...) {
                                   dictionaryFromFile:[self.baseConfigurationReference buildPath]
                                   error:error];
         if (self.baseConfiguration == nil) {
-            NSNumber *lineNumber = [[*error userInfo] objectForKey:XCConfigParserLineNumberKey];
+            NSNumber *lineNumber = [*error userInfo][XCConfigParserLineNumberKey];
             *error = makePBXError(@"%@:%@ %@",
-                                  [[*error userInfo] objectForKey:XCConfigParserFileKey] ?:
+                                  [*error userInfo][XCConfigParserFileKey] ?:
                                   [self.baseConfigurationReference name],
                                   lineNumber ? [NSString stringWithFormat:@"%@:", lineNumber] : @"",
                                   [*error localizedDescription]);
@@ -539,11 +456,11 @@ static NSError *makePBXError(NSString *format, ...) {
 - (id)resolveConfigValueNamed:(NSString *)configName {
     NSString *value = nil;
     
-    if ([self.buildSettings objectForKey:configName]) {
-        value = [self.buildSettings objectForKey:configName];
+    if (self.buildSettings[configName]) {
+        value = self.buildSettings[configName];
     } else if (self.baseConfiguration &&
-               [self.baseConfiguration objectForKey:configName]) {
-        value = [self.baseConfiguration objectForKey:configName];
+               self.baseConfiguration[configName]) {
+        value = self.baseConfiguration[configName];
     }
     
     if (value != nil) {
@@ -564,19 +481,19 @@ static NSError *makePBXError(NSString *format, ...) {
                usingWorkingDirectory:(NSString *)workingDirectory {
     NSMutableOrderedSet *paths = [NSMutableOrderedSet orderedSet];
     
-    NSArray *templatePaths = [self.buildSettings objectForKey:configName];
+    NSArray *templatePaths = self.buildSettings[configName];
     if (templatePaths == nil) {
         if (self.parent != nil) {
             return [self.parent resolveConfigPathsNamed:configName
                                   usingWorkingDirectory:workingDirectory];
         }
         
-        return [NSArray array];
+        return @[];
     }
     
     // convert string to array with string
     if ([templatePaths isKindOfClass:[NSString class]]) {
-        templatePaths = [NSArray arrayWithObject:templatePaths];
+        templatePaths = @[templatePaths];
     }
     
     for (NSString *templatePath in templatePaths) {
@@ -625,13 +542,6 @@ static NSError *makePBXError(NSString *format, ...) {
 
 
 @implementation XCConfigurationList
-@synthesize buildConfigurations = _buildConfigurations;
-
-- (void)dealloc {
-    self.buildConfigurations = nil;
-    
-    [super dealloc];
-}
 
 - (BOOL)isValid:(NSError **)error {
     if (!(self.buildConfigurations &&
@@ -656,18 +566,9 @@ static NSError *makePBXError(NSString *format, ...) {
 
 
 @implementation PBXProject
-@synthesize buildConfigurationList = _buildConfigurationList;
-@synthesize targets = _targets;
-@synthesize knownRegions = _knownRegions;
-@synthesize mainGroup = _mainGroup;
-@synthesize environment = _environment;
-@synthesize pbxFilePath = _pbxFilePath;
-
-@synthesize fallbackEnvironment = _fallbackEnvironment;
-
 + (PBXProject *)pbxProjectFromPath:(NSString *)path
                              error:(NSError **)error {
-    error = error ?: &(NSError *){nil};
+    error = error ?: &(NSError * __autoreleasing){nil};
     
     BOOL isDir = NO;
     if ([[NSFileManager defaultManager] fileExistsAtPath:path
@@ -680,8 +581,7 @@ static NSError *makePBXError(NSString *format, ...) {
     path = [path pbx_stringByStandardizingAbsolutePath:
             [[NSFileManager defaultManager] currentDirectoryPath]];
     
-    PBXUnarchiver *pbxUnarchiver = [[[PBXUnarchiver alloc] initWithFile:path]
-                                    autorelease];
+    PBXUnarchiver *pbxUnarchiver = [[PBXUnarchiver alloc] initWithFile:path];
     if (pbxUnarchiver == nil) {
         *error = *error ?: makePBXError(@"Could not open pbxproj file");
         return nil;
@@ -745,18 +645,6 @@ static NSError *makePBXError(NSString *format, ...) {
     return pbxProject;
 }
 
-- (void)dealloc {
-    self.buildConfigurationList = nil;
-    self.targets = nil;
-    self.knownRegions = nil;
-    self.mainGroup = nil;
-    self.environment = nil;
-    self.pbxFilePath = nil;
-    self.fallbackEnvironment = nil;
-    
-    [super dealloc];
-}
-
 - (BOOL)prepareWithEnvironment:(NSDictionary *)environment
                   nativeTarget:(PBXNativeTarget *)nativeTarget
             buildConfiguration:(XCBuildConfiguration *)buildConfiguration
@@ -785,23 +673,14 @@ static NSError *makePBXError(NSString *format, ...) {
     // paths below as just guesses when not running in a Xcode run script environment.
     // Hopefully they are mostly used to resovle relative paths so they don't need
     // to be exactly right
-    return [NSDictionary dictionaryWithObjectsAndKeys:
-            sourceRoot,
-            @"SOURCE_ROOT",
-            [NSString pathWithComponents:
-             [NSArray arrayWithObjects:sourceRoot, @"build", @"dummy", nil]],
-            @"BUILT_PRODUCTS_DIR",
-            @"/Applications/Xcode.app/Contents/Developer",
-            @"DEVELOPER_DIR",
-            @"/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS5.1.sdk",
-            @"SDKROOT",
-            target.name,
-            @"TARGET_NAME",
-            buildConfiguration.name,
-            @"CONFIGURATION",
-            self.pbxFilePath,
-            @"PROJECT_FILE_PATH",
-            nil];
+    return @{@"SOURCE_ROOT": sourceRoot,
+            @"BUILT_PRODUCTS_DIR": [NSString pathWithComponents:
+             @[sourceRoot, @"build", @"dummy"]],
+            @"DEVELOPER_DIR": @"/Applications/Xcode.app/Contents/Developer",
+            @"SDKROOT": @"/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS5.1.sdk",
+            @"TARGET_NAME": target.name,
+            @"CONFIGURATION": buildConfiguration.name,
+            @"PROJECT_FILE_PATH": self.pbxFilePath};
 }
 
 - (NSString *)buildPath {
@@ -856,13 +735,13 @@ static NSError *makePBXError(NSString *format, ...) {
 
 - (NSString *)lookupEnvironmentName:(NSString *)name {
     if (self.environment != nil &&
-        [self.environment objectForKey:name] != nil) {
-        return [self.environment objectForKey:name];
+        self.environment[name] != nil) {
+        return self.environment[name];
     }
     
     if (self.fallbackEnvironment != nil &&
-        [self.fallbackEnvironment objectForKey:name] != nil) {
-        return [self.fallbackEnvironment objectForKey:name];
+        self.fallbackEnvironment[name] != nil) {
+        return self.fallbackEnvironment[name];
     }
     
     return nil;
@@ -880,7 +759,7 @@ static NSError *makePBXError(NSString *format, ...) {
     NSArray *components = [self.pbxFilePath pathComponents];
     if ([components count] > 1) {
         // "path/to/projectName/project.pbxproj" -> "projectName"
-        return [[components objectAtIndex:[components count] - 2]
+        return [components[[components count] - 2]
                 stringByDeletingPathExtension];
     } else {
         return self.pbxFilePath;

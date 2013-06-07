@@ -22,17 +22,15 @@
 #import "ExpressionSignatureArgument.h"
 
 @implementation ExpressionSignatureCall
-@synthesize name = _name;
-@synthesize arguments = _arguments;
 
 + (id<ExpressionSignature>)parseTokens:(PeekableEnumerator *)tokens
                                  error:(NSError **)error {
-    error = error ?: &(NSError *){nil};
+    error = error ?: &(NSError * __autoreleasing){nil};
     
     ExpressionSignatureToken *current = [tokens nextObject];
     
-    ExpressionSignatureCall *call = [[[ExpressionSignatureCall alloc] init] autorelease];
-    call.name = [[[ExpressionSignatureIdent alloc] initWithName:current.string] autorelease];
+    ExpressionSignatureCall *call = [[ExpressionSignatureCall alloc] init];
+    call.name = [[ExpressionSignatureIdent alloc] initWithName:current.string];
     NSMutableArray *arguments = [NSMutableArray array];
     call.arguments = arguments;
     
@@ -48,9 +46,8 @@
         }
         
         if (peeked.type == SIGNATURE_TOKEN_COMMA) {
-            [arguments addObject:[[[ExpressionSignatureArgument alloc]
-                                   initWithType:SIGNATURE_ARGUMENT_SKIP]
-                                  autorelease]];
+            [arguments addObject:[[ExpressionSignatureArgument alloc]
+                                  initWithType:SIGNATURE_ARGUMENT_SKIP]];
             [tokens nextObject];
             
             emptyArgument = YES;
@@ -80,19 +77,11 @@
     
     // if no arguments, add a dummy skip argument
     if (emptyArgument) {
-        [arguments addObject:[[[ExpressionSignatureArgument alloc]
-                               initWithType:SIGNATURE_ARGUMENT_SKIP]
-                              autorelease]];
+        [arguments addObject:[[ExpressionSignatureArgument alloc]
+                              initWithType:SIGNATURE_ARGUMENT_SKIP]];
     }
     
     return call;
-}
-
-- (void)dealloc {
-    self.name = nil;
-    self.arguments = nil;
-    
-    [super dealloc];
 }
 
 - (NSString *)description {

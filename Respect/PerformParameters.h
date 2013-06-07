@@ -18,7 +18,7 @@
 #import "TextLocation.h"
 
 @interface PerformParameters : NSObject
-@property(nonatomic, retain, readonly) NSArray *parameters;
+@property(nonatomic, strong, readonly) NSArray *parameters;
 @property(nonatomic, copy, readonly) NSString *path;
 @property(nonatomic, assign, readonly) TextLocation textLocation;
 

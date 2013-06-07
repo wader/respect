@@ -65,10 +65,10 @@
 // so do our own fallback first and then use the apple one
 + (NSString *)respect_stringWithContentsOfFileTryingEncodings:(NSString *)path
                                                         error:(NSError **)error {
-    for (NSNumber *encodingNumber in [NSArray arrayWithObjects:
-                                      [NSNumber numberWithInt:NSUTF8StringEncoding],
-                                      [NSNumber numberWithInt:NSISOLatin1StringEncoding],
-                                      nil]) {
+    for (NSNumber *encodingNumber in (@[
+                                      @(NSUTF8StringEncoding),
+                                      @(NSISOLatin1StringEncoding)
+                                      ])) {
         NSString *source = [NSString stringWithContentsOfFile:path
                                                      encoding:[encodingNumber intValue]
                                                         error:error];
@@ -121,7 +121,7 @@
 }
 
 - (NSString *)respect_stringRelativeToPathPrefix:(NSString *)pathPrefix {
-    NSString *relPath = [self respect_stringByStripPrefixes:[NSArray arrayWithObject:pathPrefix]];
+    NSString *relPath = [self respect_stringByStripPrefixes:@[pathPrefix]];
     if (relPath != self && [relPath hasPrefix:@"/"]) {
         return [relPath substringFromIndex:1];
     }
@@ -148,7 +148,7 @@
             continue;
         }
         
-        NSString *replacement = [parameters objectAtIndex:paramNumber];
+        NSString *replacement = parameters[paramNumber];
         
         r.location -= displace;
         [replaced replaceCharactersInRange:r withString:replacement];
@@ -167,7 +167,7 @@
         return;
     }
     
-    for (NSString *part in [parts objectAtIndex:currentIndex]) {
+    for (NSString *part in parts[currentIndex]) {
         [self respect_permutationsCollectWithParts:parts
                                       permutations:permutations
                                             prefix:[prefix stringByAppendingString:part]
@@ -201,7 +201,7 @@
                               
                               return permutations;
                           } else {
-                              return [NSArray arrayWithObject:string];
+                              return @[string];
                           }
                       }];
     
@@ -218,8 +218,7 @@
     if ([self isAbsolutePath]) {
         return self;
     } else {
-        return [[NSString pathWithComponents:
-                 [NSArray arrayWithObjects:path, self, nil]]
+        return [[NSString pathWithComponents:@[path, self]]
                 stringByStandardizingPath];
     }
 }
@@ -232,7 +231,7 @@
 
 - (NSString *)respect_stringByReplacingCharactersInSet:(NSCharacterSet *)set
                                          withCharacter:(unichar)character {
-    NSMutableString *replaced = [[self mutableCopy] autorelease];
+    NSMutableString *replaced = [self mutableCopy];
     NSString *replaceString = [NSString stringWithFormat:@"%C", character];
     NSUInteger len = [replaced length];
     

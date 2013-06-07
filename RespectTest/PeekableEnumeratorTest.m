@@ -23,22 +23,20 @@
 - (void)testPeekableEnumerator {
     NSArray *testArray3 = [NSArray arrayWithObjects:@"a", @"b", @"c", nil];
     NSArray *testArray2 = [NSArray arrayWithObjects:@"b", @"c", nil];
-
+    
     PeekableEnumerator *peekable = nil;
     
-    peekable = [[[PeekableEnumerator alloc]
-                 initWithEnumerator:[testArray3 objectEnumerator]]
-                autorelease];
+    peekable = [[PeekableEnumerator alloc]
+                initWithEnumerator:[testArray3 objectEnumerator]];
     
     STAssertEqualObjects([peekable nextObject], @"a", @"");
     STAssertEqualObjects([peekable nextObject], @"b", @"");
     STAssertEqualObjects([peekable nextObject], @"c", @"");
     STAssertNil([peekable nextObject], @"");
     
-
-    peekable = [[[PeekableEnumerator alloc]
-                 initWithEnumerator:[testArray3 objectEnumerator]]
-                autorelease];
+    
+    peekable = [[PeekableEnumerator alloc]
+                initWithEnumerator:[testArray3 objectEnumerator]];
     
     STAssertNil([peekable peekObjectAtOffset:3], @"");
     STAssertEqualObjects([peekable peekObjectAtOffset:2], @"c", @"");
@@ -50,18 +48,16 @@
     STAssertNil([peekable nextObject], @"");
     
     
-    peekable = [[[PeekableEnumerator alloc]
-                 initWithEnumerator:[testArray3 objectEnumerator]]
-                autorelease];
+    peekable = [[PeekableEnumerator alloc]
+                initWithEnumerator:[testArray3 objectEnumerator]];
     
     STAssertEqualObjects([peekable allObjects], testArray3, @"");
     STAssertNil([peekable nextObject], @"");
     STAssertNil([peekable peekObject], @"");
     
     
-    peekable = [[[PeekableEnumerator alloc]
-                 initWithEnumerator:[testArray3 objectEnumerator]]
-                autorelease];
+    peekable = [[PeekableEnumerator alloc]
+                initWithEnumerator:[testArray3 objectEnumerator]];
     
     STAssertEqualObjects([peekable peekObject], @"a", @"");
     STAssertEqualObjects([peekable allObjects], testArray3, @"");
@@ -69,9 +65,8 @@
     STAssertNil([peekable peekObject], @"");
     
     
-    peekable = [[[PeekableEnumerator alloc]
-                 initWithEnumerator:[testArray3 objectEnumerator]]
-                autorelease];
+    peekable = [[PeekableEnumerator alloc]
+                initWithEnumerator:[testArray3 objectEnumerator]];
     
     STAssertEqualObjects([peekable nextObject], @"a", @"");
     STAssertEqualObjects([peekable allObjects], testArray2, @"");
@@ -79,9 +74,8 @@
     STAssertNil([peekable peekObject], @"");
     
     
-    peekable = [[[PeekableEnumerator alloc]
-                 initWithEnumerator:[testArray3 objectEnumerator]]
-                autorelease];
+    peekable = [[PeekableEnumerator alloc]
+                initWithEnumerator:[testArray3 objectEnumerator]];
     
     STAssertEqualObjects([peekable peekObject], @"a", @"");
     STAssertEqualObjects([peekable nextObject], @"a", @"");

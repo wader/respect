@@ -27,9 +27,7 @@
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         // \n should work for both \r\n and \n line breaks
-        newlineCharacterSet = [[NSCharacterSet
-                                characterSetWithCharactersInString:@"\n"]
-                               retain];
+        newlineCharacterSet = [NSCharacterSet characterSetWithCharactersInString:@"\n"];
     });
     
     NSMutableArray *lineRanges = [NSMutableArray array];

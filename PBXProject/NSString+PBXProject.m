@@ -86,7 +86,7 @@
 - (NSString *)pbx_stringByReplacingVariablesFromDict:(NSDictionary *)variables {
     return [self pbx_stringByReplacingVariablesUsingBlock:
             ^NSString *(NSString *name) {
-                return [variables objectForKey:name];
+                return variables[name];
             }];
 }
 
@@ -96,8 +96,7 @@
     }
     
     // current work directory + realtive path
-    return [[NSString pathWithComponents:
-             [NSArray arrayWithObjects:path, self, nil]]
+    return [[NSString pathWithComponents:@[path, self]]
             stringByStandardizingPath];
 }
 @end

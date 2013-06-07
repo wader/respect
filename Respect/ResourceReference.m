@@ -24,17 +24,11 @@
 @property(nonatomic, copy, readwrite) NSString *referencePath;
 @property(nonatomic, assign, readwrite) TextLocation referenceLocation;
 @property(nonatomic, copy, readwrite) NSString *referenceHint;
-@property(nonatomic, retain, readwrite) NSMutableArray *bundleResources;
+@property(nonatomic, strong, readwrite) NSMutableArray *bundleResources;
 @property(nonatomic, copy, readwrite) NSString *missingResourceHint;
 @end
 
 @implementation ResourceReference
-@synthesize resourcePath = _resourcePath;
-@synthesize referencePath = _referencePath;
-@synthesize referenceHint = _referenceHint;
-@synthesize referenceLocation = _referenceLocation;
-@synthesize bundleResources = _bundleResources;
-@synthesize missingResourceHint = _missingResourceHint;
 
 - (id)initWithResourcePath:(NSString *)resourcePath
              referencePath:(NSString *)referencePath
@@ -65,16 +59,6 @@
                     referenceLocation:referenceLocation
                         referenceHint:nil
                   missingResourceHint:missingResourceHint];
-}
-
-- (void)dealloc {
-    self.resourcePath = nil;
-    self.referencePath = nil;
-    self.referenceHint = nil;
-    self.bundleResources = nil;
-    self.missingResourceHint = nil;
-    
-    [super dealloc];
 }
 
 @end
