@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0900F8C7176E56F200DF7258 /* Model2.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 0900F8C5176E56F200DF7258 /* Model2.xcdatamodeld */; };
+		0900F8C9176E570800DF7258 /* Model.xcmappingmodel in Sources */ = {isa = PBXBuildFile; fileRef = 0900F8C8176E570800DF7258 /* Model.xcmappingmodel */; };
 		09190743162D9AB100199984 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 09190742162D9AB100199984 /* UIKit.framework */; };
 		09190745162D9AB100199984 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 09190744162D9AB100199984 /* Foundation.framework */; };
 		09190747162D9AB100199984 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 09190746162D9AB100199984 /* CoreGraphics.framework */; };
@@ -133,6 +135,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0900F8C6176E56F200DF7258 /* Model2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model2.xcdatamodel; sourceTree = "<group>"; };
+		0900F8C8176E570800DF7258 /* Model.xcmappingmodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcmappingmodel; path = Model.xcmappingmodel; sourceTree = "<group>"; };
 		0919073E162D9AB100199984 /* RespectTestProject.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RespectTestProject.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		09190742162D9AB100199984 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		09190744162D9AB100199984 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -565,6 +569,8 @@
 				09B0951B1761F2CE0062E8ED /* InfoPlist.strings */,
 				09B0951E1761F2CE0062E8ED /* main.m */,
 				09B095361761F2EB0062E8ED /* Model.xcdatamodeld */,
+				0900F8C5176E56F200DF7258 /* Model2.xcdatamodeld */,
+				0900F8C8176E570800DF7258 /* Model.xcmappingmodel */,
 			);
 			path = TestCoreData;
 			sourceTree = "<group>";
@@ -1246,6 +1252,8 @@
 			files = (
 				09B0951F1761F2CE0062E8ED /* main.m in Sources */,
 				09B095381761F2EB0062E8ED /* Model.xcdatamodeld in Sources */,
+				0900F8C7176E56F200DF7258 /* Model2.xcdatamodeld in Sources */,
+				0900F8C9176E570800DF7258 /* Model.xcmappingmodel in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1965,6 +1973,16 @@
 /* End XCConfigurationList section */
 
 /* Begin XCVersionGroup section */
+		0900F8C5176E56F200DF7258 /* Model2.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				0900F8C6176E56F200DF7258 /* Model2.xcdatamodel */,
+			);
+			currentVersion = 0900F8C6176E56F200DF7258 /* Model2.xcdatamodel */;
+			path = Model2.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
 		09B095361761F2EB0062E8ED /* Model.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (

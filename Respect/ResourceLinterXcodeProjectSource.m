@@ -123,11 +123,6 @@
 - (void)addSourcesBuildPhase:(PBXSourcesBuildPhase *)sourcesBuildPhase
            headerSearchPaths:(NSArray *)headerSearchPaths {
     for (PBXBuildFile *buildFile in sourcesBuildPhase.files) {
-        // TODO: can there be variant groups in sources build?
-        if (![buildFile.fileRef isKindOfClass:[PBXFileReference class]]) {
-            continue;
-        }
-        
         NSString *buildPath = [buildFile.fileRef buildPath];
         if (buildPath == nil) {
             [self.lintErrors addObject:
@@ -136,6 +131,15 @@
                                            @"Failed to resolve path (souceTree=%@ path=%@)",
                                            buildFile.fileRef.sourceTree,
                                            buildFile.fileRef.path]]];
+            continue;
+        }
+        
+        // A build file can have a file ref that points to a directoary and
+        // not a source file (e.g. wrapper.xcmappingmodel). Just ignore if so.
+        BOOL isDir = NO;
+        if ([[NSFileManager defaultManager] fileExistsAtPath:buildPath
+                                                 isDirectory:&isDir] &&
+            isDir) {
             continue;
         }
         
