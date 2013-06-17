@@ -12,6 +12,6 @@ class Respect < Formula
                          "SYMROOT=build",
                          "DSTROOT=build",
                          "INSTALL_PATH=/bin"
-    bin.install "build/bin/Respect"
+    bin.install "build/bin/respect"
   end
 end
