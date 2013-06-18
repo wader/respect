@@ -16,5 +16,4 @@ t xcode.sh
 t config.sh
 t nodefault.sh
 t dump.sh
-t version.sh
 

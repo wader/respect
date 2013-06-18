@@ -23,7 +23,6 @@
 #import "ResourceLinterCliReport.h"
 #import "ResourceLinterConfigReport.h"
 #include <getopt.h>
-#include "version.h"
 
 static void fprintf_nsstring(FILE *stream, NSString *format, va_list va) {
     fprintf(stream, "%s\n",
@@ -50,7 +49,6 @@ static void help(const char *argv0) {
            "  -c, --config Path   Configuration file ($SRCROOT/.respect)\n"
            "  -n, --nodefault     Don't use default configuration\n"
            "  -d, --dumpconfig    Dump interpreted configuration\n"
-           "  -v, --version       Print build version\n"
            "  --spfeatures Path   Spotify features path\n"
            ,
            argv0);
@@ -69,7 +67,6 @@ int main(int argc,  char *const argv[]) {
         {"config", required_argument, NULL, 'c'},
         {"nodefault", no_argument, NULL, 'n'},
         {"dumpconfig", no_argument, NULL, 'd'},
-        {"version", no_argument, NULL, 'v'},
         {"spfeatures", required_argument, NULL, 's'},
         {NULL, 0, NULL, 0}
     };
@@ -85,9 +82,6 @@ int main(int argc,  char *const argv[]) {
             parseDefaultConfig = NO;
         } else if (c == 'd') {
             dumpConfig = YES;
-        } else if (c == 'v') {
-            fprintf(stdout, "%s\n", GIT_HASH);
-            return EXIT_SUCCESS;
         } else if (c == 's') {
             spFeaturesPath = [NSString stringWithUTF8String:optarg];
         } else {

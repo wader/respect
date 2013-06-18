@@ -575,7 +575,6 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 09504EF1159C61710050594A /* Build configuration list for PBXNativeTarget "respect" */;
 			buildPhases = (
-				09C5C39C16DA6F4F003A611B /* Run Script (version.h) */,
 				09CC427D162606B200B99FDC /* Run Script (generate source from config file) */,
 				09504EE0159C61710050594A /* Sources */,
 				09504EE1159C61710050594A /* Frameworks */,
@@ -668,20 +667,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "# using rsync here because using folder references makes the test project\n# not editiable when this project is open and adding a sub project does not\n# copy the files\nrsync --archive --delete \"$SRCROOT/RespectTest/RespectTestProject\" \"$BUILT_PRODUCTS_DIR/$UNLOCALIZED_RESOURCES_FOLDER_PATH\"";
-		};
-		09C5C39C16DA6F4F003A611B /* Run Script (version.h) */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Run Script (version.h)";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "VERSION_H=\"$SRCROOT/Respect/version.h\"\nHASH_WD=\"`$SRCROOT/misc/githash.sh`\"\nif [ -f \"$VERSION_H\" ] ; then\n    if [ \"$HASH_WD\" = \"`cat \"$VERSION_H\"`\" ] ; then\n        exit\n    fi\nfi\necho \"$HASH_WD\" > \"$VERSION_H\"";
 		};
 		09CC427D162606B200B99FDC /* Run Script (generate source from config file) */ = {
 			isa = PBXShellScriptBuildPhase;
