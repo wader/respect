@@ -22,8 +22,6 @@
 		0926EC1B15B0338800100D38 /* RespectTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 0926EC1A15B0338800100D38 /* RespectTest.m */; };
 		0926EC2115B0349D00100D38 /* ExpressionSignature.m in Sources */ = {isa = PBXBuildFile; fileRef = 09EE594315AB031C00826871 /* ExpressionSignature.m */; };
 		0926EC2215B034AB00100D38 /* PeekableEnumerator.m in Sources */ = {isa = PBXBuildFile; fileRef = 09F841D315AEE9CB004F9CF9 /* PeekableEnumerator.m */; };
-		0929BC8716EFBDAE000F55F4 /* NSString+withFnmatch.m in Sources */ = {isa = PBXBuildFile; fileRef = 0929BC8616EFBDAE000F55F4 /* NSString+withFnmatch.m */; };
-		0929BCC216F28EF7000F55F4 /* NSString+withFnmatch.m in Sources */ = {isa = PBXBuildFile; fileRef = 0929BC8616EFBDAE000F55F4 /* NSString+withFnmatch.m */; };
 		0933B0EB15B7091E004D3F01 /* ExpressionSignatureTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 0933B0EA15B7091D004D3F01 /* ExpressionSignatureTest.m */; };
 		093B7A36163450C700F3C250 /* ImageNamedFinder.m in Sources */ = {isa = PBXBuildFile; fileRef = 093B7A35163450C600F3C250 /* ImageNamedFinder.m */; };
 		093B7A37163450C700F3C250 /* ImageNamedFinder.m in Sources */ = {isa = PBXBuildFile; fileRef = 093B7A35163450C600F3C250 /* ImageNamedFinder.m */; };
@@ -72,6 +70,8 @@
 		09B09477175BF00A0062E8ED /* xcconfig_test9.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 09B09476175BF0090062E8ED /* xcconfig_test9.xcconfig */; };
 		09B0947A175BF0C30062E8ED /* xcconfig_test10.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 09B09478175BF0C10062E8ED /* xcconfig_test10.xcconfig */; };
 		09B0947B175BF0C30062E8ED /* xcconfig_test10_1.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 09B09479175BF0C10062E8ED /* xcconfig_test10_1.xcconfig */; };
+		09BEDA951771034200C1374F /* NSString+withFnmatch.m in Sources */ = {isa = PBXBuildFile; fileRef = 09BEDA941771034200C1374F /* NSString+withFnmatch.m */; };
+		09BEDA961771034200C1374F /* NSString+withFnmatch.m in Sources */ = {isa = PBXBuildFile; fileRef = 09BEDA941771034200C1374F /* NSString+withFnmatch.m */; };
 		09C5C33E16D3CEA4003A611B /* PerformParameters.m in Sources */ = {isa = PBXBuildFile; fileRef = 09C5C33D16D3CEA4003A611B /* PerformParameters.m */; };
 		09C5C33F16D3D1EF003A611B /* PerformParameters.m in Sources */ = {isa = PBXBuildFile; fileRef = 09C5C33D16D3CEA4003A611B /* PerformParameters.m */; };
 		09DA235D174FAB9E00D54BD8 /* XCConfigParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 09DA235B174FAB9E00D54BD8 /* XCConfigParser.m */; };
@@ -171,8 +171,6 @@
 		0926EC1915B0338800100D38 /* RespectTest.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RespectTest.h; sourceTree = "<group>"; };
 		0926EC1A15B0338800100D38 /* RespectTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RespectTest.m; sourceTree = "<group>"; };
 		0928D2C3162633C500F643A1 /* IOSDefault.config */ = {isa = PBXFileReference; lastKnownFileType = text; path = IOSDefault.config; sourceTree = "<group>"; };
-		0929BC8516EFBDAE000F55F4 /* NSString+withFnmatch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+withFnmatch.h"; sourceTree = "<group>"; };
-		0929BC8616EFBDAE000F55F4 /* NSString+withFnmatch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+withFnmatch.m"; sourceTree = "<group>"; };
 		0933B0E915B7091D004D3F01 /* ExpressionSignatureTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExpressionSignatureTest.h; sourceTree = "<group>"; };
 		0933B0EA15B7091D004D3F01 /* ExpressionSignatureTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ExpressionSignatureTest.m; sourceTree = "<group>"; };
 		093B7A34163450C500F3C250 /* ImageNamedFinder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageNamedFinder.h; sourceTree = "<group>"; };
@@ -229,6 +227,8 @@
 		09B09476175BF0090062E8ED /* xcconfig_test9.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = xcconfig_test9.xcconfig; sourceTree = "<group>"; };
 		09B09478175BF0C10062E8ED /* xcconfig_test10.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = xcconfig_test10.xcconfig; sourceTree = "<group>"; };
 		09B09479175BF0C10062E8ED /* xcconfig_test10_1.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = xcconfig_test10_1.xcconfig; sourceTree = "<group>"; };
+		09BEDA931771034200C1374F /* NSString+withFnmatch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSString+withFnmatch.h"; path = "NSRegularExpression+extras/NSString+withFnmatch.h"; sourceTree = SOURCE_ROOT; };
+		09BEDA941771034200C1374F /* NSString+withFnmatch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSString+withFnmatch.m"; path = "NSRegularExpression+extras/NSString+withFnmatch.m"; sourceTree = SOURCE_ROOT; };
 		09C5C33C16D3CEA3003A611B /* PerformParameters.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PerformParameters.h; sourceTree = "<group>"; };
 		09C5C33D16D3CEA4003A611B /* PerformParameters.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PerformParameters.m; sourceTree = "<group>"; };
 		09DA235B174FAB9E00D54BD8 /* XCConfigParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = XCConfigParser.m; path = PBXProject/XCConfigParser.m; sourceTree = SOURCE_ROOT; };
@@ -458,8 +458,8 @@
 				090D4C7C16FF38DF005A67A4 /* NSString+lineNumber.m */,
 				CD10C5E116E93389004FED06 /* NSRegularExpression+withFnmatch.h */,
 				CD10C5E216E93389004FED06 /* NSRegularExpression+withFnmatch.m */,
-				0929BC8516EFBDAE000F55F4 /* NSString+withFnmatch.h */,
-				0929BC8616EFBDAE000F55F4 /* NSString+withFnmatch.m */,
+				09BEDA931771034200C1374F /* NSString+withFnmatch.h */,
+				09BEDA941771034200C1374F /* NSString+withFnmatch.m */,
 				CD10C5E316E93389004FED06 /* NSRegularExpression+withPatternAndFlags.h */,
 				CD10C5DE16E93389004FED06 /* NSRegularExpression+withPatternAndFlags.m */,
 			);
@@ -744,10 +744,10 @@
 				CD10C5E716E9338E004FED06 /* NSRegularExpression+withPatternAndFlags.m in Sources */,
 				CD10C5E816E93390004FED06 /* NSRegularExpression+lineNumber.m in Sources */,
 				CD10C5E916E93393004FED06 /* NSRegularExpression+withFnmatch.m in Sources */,
-				0929BCC216F28EF7000F55F4 /* NSString+withFnmatch.m in Sources */,
 				090D4C7E16FF38DF005A67A4 /* NSString+lineNumber.m in Sources */,
 				09E7E0051753850100FE18D2 /* XCConfigParser.m in Sources */,
 				09B0945E175BC89E0062E8ED /* XCConfigParserTest.m in Sources */,
+				09BEDA961771034200C1374F /* NSString+withFnmatch.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -800,9 +800,9 @@
 				CD10C5E416E93389004FED06 /* NSRegularExpression+withPatternAndFlags.m in Sources */,
 				CD10C5E516E93389004FED06 /* NSRegularExpression+lineNumber.m in Sources */,
 				CD10C5E616E93389004FED06 /* NSRegularExpression+withFnmatch.m in Sources */,
-				0929BC8716EFBDAE000F55F4 /* NSString+withFnmatch.m in Sources */,
 				090D4C7D16FF38DF005A67A4 /* NSString+lineNumber.m in Sources */,
 				09DA235D174FAB9E00D54BD8 /* XCConfigParser.m in Sources */,
+				09BEDA951771034200C1374F /* NSString+withFnmatch.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
