@@ -72,7 +72,7 @@ int main(int argc,  char *const argv[]) {
     };
     
     int c;
-    while ((c = getopt_long(argc, argv, "hc:ndvs:", longopts, NULL)) != -1) {
+    while ((c = getopt_long(argc, argv, "hc:nds:", longopts, NULL)) != -1) {
         if (c == 'h') {
             help(argv0);
             return EXIT_SUCCESS;
