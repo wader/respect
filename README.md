@@ -165,7 +165,7 @@ down and respect will use the new configuration to find missing resources.
 
 #### Default configuration
 
-The [default configuration](TODO) included in respect have configuration for
+The [default configuration](Respect/IOSDefault.config) included in respect have configuration for
 most of the iOS API that deals with resources so you will probably only need
 to write matchers for own resource methods.
 
