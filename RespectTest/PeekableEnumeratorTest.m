@@ -30,71 +30,71 @@
                  initWithEnumerator:[testArray3 objectEnumerator]]
                 autorelease];
     
-    STAssertEqualObjects([peekable nextObject], @"a", @"");
-    STAssertEqualObjects([peekable nextObject], @"b", @"");
-    STAssertEqualObjects([peekable nextObject], @"c", @"");
-    STAssertNil([peekable nextObject], @"");
+    XCTAssertEqualObjects([peekable nextObject], @"a", @"");
+    XCTAssertEqualObjects([peekable nextObject], @"b", @"");
+    XCTAssertEqualObjects([peekable nextObject], @"c", @"");
+    XCTAssertNil([peekable nextObject], @"");
     
 
     peekable = [[[PeekableEnumerator alloc]
                  initWithEnumerator:[testArray3 objectEnumerator]]
                 autorelease];
     
-    STAssertNil([peekable peekObjectAtOffset:3], @"");
-    STAssertEqualObjects([peekable peekObjectAtOffset:2], @"c", @"");
-    STAssertEqualObjects([peekable peekObjectAtOffset:1], @"b", @"");
-    STAssertEqualObjects([peekable peekObjectAtOffset:0], @"a", @"");
-    STAssertEqualObjects([peekable nextObject], @"a", @"");
-    STAssertEqualObjects([peekable nextObject], @"b", @"");
-    STAssertEqualObjects([peekable nextObject], @"c", @"");
-    STAssertNil([peekable nextObject], @"");
+    XCTAssertNil([peekable peekObjectAtOffset:3], @"");
+    XCTAssertEqualObjects([peekable peekObjectAtOffset:2], @"c", @"");
+    XCTAssertEqualObjects([peekable peekObjectAtOffset:1], @"b", @"");
+    XCTAssertEqualObjects([peekable peekObjectAtOffset:0], @"a", @"");
+    XCTAssertEqualObjects([peekable nextObject], @"a", @"");
+    XCTAssertEqualObjects([peekable nextObject], @"b", @"");
+    XCTAssertEqualObjects([peekable nextObject], @"c", @"");
+    XCTAssertNil([peekable nextObject], @"");
     
     
     peekable = [[[PeekableEnumerator alloc]
                  initWithEnumerator:[testArray3 objectEnumerator]]
                 autorelease];
     
-    STAssertEqualObjects([peekable allObjects], testArray3, @"");
-    STAssertNil([peekable nextObject], @"");
-    STAssertNil([peekable peekObject], @"");
+    XCTAssertEqualObjects([peekable allObjects], testArray3, @"");
+    XCTAssertNil([peekable nextObject], @"");
+    XCTAssertNil([peekable peekObject], @"");
     
     
     peekable = [[[PeekableEnumerator alloc]
                  initWithEnumerator:[testArray3 objectEnumerator]]
                 autorelease];
     
-    STAssertEqualObjects([peekable peekObject], @"a", @"");
-    STAssertEqualObjects([peekable allObjects], testArray3, @"");
-    STAssertNil([peekable nextObject], @"");
-    STAssertNil([peekable peekObject], @"");
+    XCTAssertEqualObjects([peekable peekObject], @"a", @"");
+    XCTAssertEqualObjects([peekable allObjects], testArray3, @"");
+    XCTAssertNil([peekable nextObject], @"");
+    XCTAssertNil([peekable peekObject], @"");
     
     
     peekable = [[[PeekableEnumerator alloc]
                  initWithEnumerator:[testArray3 objectEnumerator]]
                 autorelease];
     
-    STAssertEqualObjects([peekable nextObject], @"a", @"");
-    STAssertEqualObjects([peekable allObjects], testArray2, @"");
-    STAssertNil([peekable nextObject], @"");
-    STAssertNil([peekable peekObject], @"");
+    XCTAssertEqualObjects([peekable nextObject], @"a", @"");
+    XCTAssertEqualObjects([peekable allObjects], testArray2, @"");
+    XCTAssertNil([peekable nextObject], @"");
+    XCTAssertNil([peekable peekObject], @"");
     
     
     peekable = [[[PeekableEnumerator alloc]
                  initWithEnumerator:[testArray3 objectEnumerator]]
                 autorelease];
     
-    STAssertEqualObjects([peekable peekObject], @"a", @"");
-    STAssertEqualObjects([peekable nextObject], @"a", @"");
-    STAssertEqualObjects([peekable peekObject], @"b", @"");
-    STAssertEqualObjects([peekable peekObjectAtOffset:1], @"c", @"");
-    STAssertNil([peekable peekObjectAtOffset:2], @"");
+    XCTAssertEqualObjects([peekable peekObject], @"a", @"");
+    XCTAssertEqualObjects([peekable nextObject], @"a", @"");
+    XCTAssertEqualObjects([peekable peekObject], @"b", @"");
+    XCTAssertEqualObjects([peekable peekObjectAtOffset:1], @"c", @"");
+    XCTAssertNil([peekable peekObjectAtOffset:2], @"");
     
-    STAssertEqualObjects([peekable nextObject], @"b", @"");
-    STAssertEqualObjects([peekable peekObject], @"c", @"");
-    STAssertNil([peekable peekObjectAtOffset:2], @"");
+    XCTAssertEqualObjects([peekable nextObject], @"b", @"");
+    XCTAssertEqualObjects([peekable peekObject], @"c", @"");
+    XCTAssertNil([peekable peekObjectAtOffset:2], @"");
     
-    STAssertEqualObjects([peekable nextObject], @"c", @"");
-    STAssertNil([peekable peekObject], @"");
+    XCTAssertEqualObjects([peekable nextObject], @"c", @"");
+    XCTAssertNil([peekable peekObject], @"");
 }
 
 @end

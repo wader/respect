@@ -36,7 +36,7 @@
      ^(NSTextCheckingResult *result, NSUInteger lineNumber, NSRange inLineRange,
        NSMatchingFlags flags, BOOL *stop) {
          NSString *resultString = [lines substringWithRange:result.range];
-         STAssertTrue([resultString integerValue] == lineNumber, nil);
+         XCTAssertTrue([resultString integerValue] == lineNumber);
     }];
 }
 @end

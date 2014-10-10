@@ -15,7 +15,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
-#import <SenTestingKit/SenTestingKit.h>
+#import <XCTest/XCTest.h>
 
-@interface NSArray_RespectTest : SenTestCase
+@interface NSArray_RespectTest : XCTestCase
 @end

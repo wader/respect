@@ -30,11 +30,11 @@
                                 options:0
                                 error:&error];
     
-    STAssertTrue([re numberOfMatchesInString:@"a" options:0 range:NSMakeRange(0, 1)] > 0, @"");
-    STAssertFalse([re numberOfMatchesInString:@"A" options:0 range:NSMakeRange(0, 1)] > 0, @"");
-    STAssertTrue([rei numberOfMatchesInString:@"a" options:0 range:NSMakeRange(0, 1)] > 0, @"");
-    STAssertTrue([rei numberOfMatchesInString:@"A" options:0 range:NSMakeRange(0, 1)] > 0, @"");
-    STAssertFalse([rei numberOfMatchesInString:@"b" options:0 range:NSMakeRange(0, 1)] > 0, @"");
+    XCTAssertTrue([re numberOfMatchesInString:@"a" options:0 range:NSMakeRange(0, 1)] > 0, @"");
+    XCTAssertFalse([re numberOfMatchesInString:@"A" options:0 range:NSMakeRange(0, 1)] > 0, @"");
+    XCTAssertTrue([rei numberOfMatchesInString:@"a" options:0 range:NSMakeRange(0, 1)] > 0, @"");
+    XCTAssertTrue([rei numberOfMatchesInString:@"A" options:0 range:NSMakeRange(0, 1)] > 0, @"");
+    XCTAssertFalse([rei numberOfMatchesInString:@"b" options:0 range:NSMakeRange(0, 1)] > 0, @"");
 }
 
 @end
