@@ -24,11 +24,11 @@
 #import <Foundation/Foundation.h>
 
 // NSError domain and keys
-NSString * const XCConfigParserErrorDomain;
-NSString * const XCConfigParserCharacterLocationKey;
+extern NSString * const XCConfigParserErrorDomain;
+extern NSString * const XCConfigParserCharacterLocationKey;
 // which file the error happend in, set when error occur in included file
-NSString * const XCConfigParserFileKey;
-NSString * const XCConfigParserLineNumberKey;
+extern NSString * const XCConfigParserFileKey;
+extern NSString * const XCConfigParserLineNumberKey;
 
 @interface XCConfigParser : NSObject
 

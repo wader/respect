@@ -27,7 +27,7 @@
                               [[[NSFileManager defaultManager] currentDirectoryPath]
                                stringByAppendingPathComponent:@"RespectTest/RespectTestProject/RespectTestProject.xcodeproj"]
                               error:&error];
-    STAssertNotNil(pbxProject, @"");
+    XCTAssertNotNil(pbxProject, @"");
     
     NSArray *expectedTagets = [NSArray arrayWithObjects:
                                @"RespectTestProject",
@@ -49,11 +49,11 @@
                                nil];
     NSArray *expectedConfigurations = [NSArray arrayWithObjects:@"Debug", @"Release", nil];
     
-    STAssertEqualObjects([pbxProject nativeTargetNames], expectedTagets, nil);
+    XCTAssertEqualObjects([pbxProject nativeTargetNames], expectedTagets);
     
     PBXNativeTarget *nativeTarget = [pbxProject nativeTargetNamed:@"RespectTestProject"];
     
-    STAssertEqualObjects([nativeTarget configurationNames], expectedConfigurations, nil);
+    XCTAssertEqualObjects([nativeTarget configurationNames], expectedConfigurations);
 }
 
 @end

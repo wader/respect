@@ -28,12 +28,12 @@
     NSArray *t5 = [NSArray arrayWithObjects:@"a", @"\\", @"c", nil];
     NSArray *t6 = [NSArray arrayWithObjects:@"a", @" \\\"", @"c", nil];
     
-    STAssertEqualObjects([t1 respect_componentsJoinedByWhitespaceQuoteAndEscapeIfNeeded], @"a", nil);
-    STAssertEqualObjects([t2 respect_componentsJoinedByWhitespaceQuoteAndEscapeIfNeeded], @"a b", nil);
-    STAssertEqualObjects([t3 respect_componentsJoinedByWhitespaceQuoteAndEscapeIfNeeded], @"a \" \" c", nil);
-    STAssertEqualObjects([t4 respect_componentsJoinedByWhitespaceQuoteAndEscapeIfNeeded], @"a \\\" c", nil);
-    STAssertEqualObjects([t5 respect_componentsJoinedByWhitespaceQuoteAndEscapeIfNeeded], @"a \\\\ c", nil);
-    STAssertEqualObjects([t6 respect_componentsJoinedByWhitespaceQuoteAndEscapeIfNeeded], @"a \" \\\\\\\"\" c", nil);
+    XCTAssertEqualObjects([t1 respect_componentsJoinedByWhitespaceQuoteAndEscapeIfNeeded], @"a");
+    XCTAssertEqualObjects([t2 respect_componentsJoinedByWhitespaceQuoteAndEscapeIfNeeded], @"a b");
+    XCTAssertEqualObjects([t3 respect_componentsJoinedByWhitespaceQuoteAndEscapeIfNeeded], @"a \" \" c");
+    XCTAssertEqualObjects([t4 respect_componentsJoinedByWhitespaceQuoteAndEscapeIfNeeded], @"a \\\" c");
+    XCTAssertEqualObjects([t5 respect_componentsJoinedByWhitespaceQuoteAndEscapeIfNeeded], @"a \\\\ c");
+    XCTAssertEqualObjects([t6 respect_componentsJoinedByWhitespaceQuoteAndEscapeIfNeeded], @"a \" \\\\\\\"\" c");
 }
 
 @end

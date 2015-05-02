@@ -96,7 +96,7 @@
 
 #import <Foundation/Foundation.h>
 
-NSString * const PBXProjectErrorDomain;
+extern NSString * const PBXProjectErrorDomain;
 
 @class PBXProject;
 

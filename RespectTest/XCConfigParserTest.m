@@ -77,16 +77,16 @@ static BOOL XCConfigParserTestCase(NSString *testName) {
 @implementation XCConfigParserTest
 
 - (void)test_XConfigParser {
-    STAssertTrue(XCConfigParserTestCase(@"xcconfig_test1.xcconfig"), @"");
-    STAssertTrue(XCConfigParserTestCase(@"xcconfig_test2.xcconfig"), @"");
-    STAssertTrue(XCConfigParserTestCase(@"xcconfig_test3.xcconfig"), @"");
-    STAssertTrue(XCConfigParserTestCase(@"xcconfig_test4.xcconfig"), @"");
-    STAssertTrue(XCConfigParserTestCase(@"xcconfig_test5.xcconfig"), @"");
-    STAssertTrue(XCConfigParserTestCase(@"xcconfig_test6.xcconfig"), @"");
-    STAssertTrue(XCConfigParserTestCase(@"xcconfig_test7.xcconfig"), @"");
-    STAssertTrue(XCConfigParserTestCase(@"xcconfig_test8.xcconfig"), @"");
-    STAssertTrue(XCConfigParserTestCase(@"xcconfig_test9.xcconfig"), @"");
-    STAssertTrue(XCConfigParserTestCase(@"xcconfig_test10.xcconfig"), @"");
+    XCTAssertTrue(XCConfigParserTestCase(@"xcconfig_test1.xcconfig"), @"");
+    XCTAssertTrue(XCConfigParserTestCase(@"xcconfig_test2.xcconfig"), @"");
+    XCTAssertTrue(XCConfigParserTestCase(@"xcconfig_test3.xcconfig"), @"");
+    XCTAssertTrue(XCConfigParserTestCase(@"xcconfig_test4.xcconfig"), @"");
+    XCTAssertTrue(XCConfigParserTestCase(@"xcconfig_test5.xcconfig"), @"");
+    XCTAssertTrue(XCConfigParserTestCase(@"xcconfig_test6.xcconfig"), @"");
+    XCTAssertTrue(XCConfigParserTestCase(@"xcconfig_test7.xcconfig"), @"");
+    XCTAssertTrue(XCConfigParserTestCase(@"xcconfig_test8.xcconfig"), @"");
+    XCTAssertTrue(XCConfigParserTestCase(@"xcconfig_test9.xcconfig"), @"");
+    XCTAssertTrue(XCConfigParserTestCase(@"xcconfig_test10.xcconfig"), @"");
 }
 
 @end

@@ -54,70 +54,70 @@ static BOOL ExpressionSignatureTestCase(NSString *signature,
 @implementation ExpressionSignatureTest
 
 - (void)testExpressionSignature {
-    STAssertTrue(ExpressionSignatureTestCase(@"p(@,)",
+    XCTAssertTrue(ExpressionSignatureTestCase(@"p(@,)",
                                              [NSArray arrayWithObject:@"test"],
                                              [NSArray arrayWithObjects:
                                               @"p(\"test\",d)",
-                                              nil]), nil);
-    STAssertTrue(ExpressionSignatureTestCase(@"p(,@)",
+                                              nil]));
+    XCTAssertTrue(ExpressionSignatureTestCase(@"p(,@)",
                                              [NSArray arrayWithObject:@"test"],
                                              [NSArray arrayWithObjects:
                                               @"p(d,\"test\")",
-                                              nil]), nil);
-    STAssertTrue(ExpressionSignatureTestCase(@"p(@)",
+                                              nil]));
+    XCTAssertTrue(ExpressionSignatureTestCase(@"p(@)",
                                              [NSArray arrayWithObject:@"test"],
                                              [NSArray arrayWithObjects:
                                               @"p(\"test\")",
-                                              nil]), nil);
-    STAssertTrue(ExpressionSignatureTestCase(@"p(,@,,,)",
+                                              nil]));
+    XCTAssertTrue(ExpressionSignatureTestCase(@"p(,@,,,)",
                                              [NSArray arrayWithObject:@"test"],
                                              [NSArray arrayWithObjects:
                                               @"p(d,\"test\",d,d,d)",
-                                              nil]), nil);
+                                              nil]));
     
-    STAssertTrue(ExpressionSignatureTestCase(@"p*(@)",
+    XCTAssertTrue(ExpressionSignatureTestCase(@"p*(@)",
                                              [NSArray arrayWithObject:@"test"],
                                              [NSArray arrayWithObjects:
                                               @"pa(\"test\")",
-                                              nil]), nil);
-    STAssertTrue(ExpressionSignatureTestCase(@"*p(@)",
+                                              nil]));
+    XCTAssertTrue(ExpressionSignatureTestCase(@"*p(@)",
                                              [NSArray arrayWithObject:@"test"],
                                              [NSArray arrayWithObjects:
                                               @"ap(\"test\")",
-                                              nil]), nil);
-    STAssertTrue(ExpressionSignatureTestCase(@"*p*(@)",
+                                              nil]));
+    XCTAssertTrue(ExpressionSignatureTestCase(@"*p*(@)",
                                              [NSArray arrayWithObject:@"test"],
                                              [NSArray arrayWithObjects:
                                               @"apa(\"test\")",
-                                              nil]), nil);
-    STAssertTrue(ExpressionSignatureTestCase(@"p*p(@)",
+                                              nil]));
+    XCTAssertTrue(ExpressionSignatureTestCase(@"p*p(@)",
                                              [NSArray arrayWithObject:@"test"],
                                              [NSArray arrayWithObjects:
                                               @"pap(\"test\")",
-                                              nil]), nil);
+                                              nil]));
     
-    STAssertTrue(ExpressionSignatureTestCase(@"[*r m:@]",
+    XCTAssertTrue(ExpressionSignatureTestCase(@"[*r m:@]",
                                              [NSArray arrayWithObject:@"test"],
                                              [NSArray arrayWithObjects:
                                               @"[ar m:\"test\"]",
-                                              nil]), nil);
-    STAssertTrue(ExpressionSignatureTestCase(@"[r* m:@]",
+                                              nil]));
+    XCTAssertTrue(ExpressionSignatureTestCase(@"[r* m:@]",
                                              [NSArray arrayWithObject:@"test"],
                                              [NSArray arrayWithObjects:
                                               @"[ra m:\"test\"]",
-                                              nil]), nil);
-    STAssertTrue(ExpressionSignatureTestCase(@"[*r* m:@]",
+                                              nil]));
+    XCTAssertTrue(ExpressionSignatureTestCase(@"[*r* m:@]",
                                              [NSArray arrayWithObject:@"test"],
                                              [NSArray arrayWithObjects:
                                               @"[ara m:\"test\"]",
-                                              nil]), nil);
-    STAssertTrue(ExpressionSignatureTestCase(@"[r*r m:@]",
+                                              nil]));
+    XCTAssertTrue(ExpressionSignatureTestCase(@"[r*r m:@]",
                                              [NSArray arrayWithObject:@"test"],
                                              [NSArray arrayWithObjects:
                                               @"[rar m:\"test\"]",
-                                              nil]), nil);
+                                              nil]));
     
-    STAssertTrue(ExpressionSignatureTestCase(@"[tjo bla:p(@)]",
+    XCTAssertTrue(ExpressionSignatureTestCase(@"[tjo bla:p(@)]",
                                              [NSArray arrayWithObject:@"test"],
                                              [NSArray arrayWithObjects:
                                               @"[tjo bla:p(\"test\")]",
@@ -125,26 +125,26 @@ static BOOL ExpressionSignatureTestCase(NSString *signature,
                                               nil]),
                  @"");
     
-    STAssertTrue(ExpressionSignatureTestCase(@"[a b:@]",
+    XCTAssertTrue(ExpressionSignatureTestCase(@"[a b:@]",
                                              [NSArray arrayWithObject:@"test"],
                                              [NSArray arrayWithObjects:
                                               @"[a b:@\"test\"]",
                                               nil]),
                  @"");
-    STAssertTrue(ExpressionSignatureTestCase(@"[a b:@ c: d:@]",
+    XCTAssertTrue(ExpressionSignatureTestCase(@"[a b:@ c: d:@]",
                                              [NSArray arrayWithObjects:@"b", @"d", nil],
                                              [NSArray arrayWithObjects:
                                               @"[a b:@\"b\" c:c d:@\"d\"]",
                                               nil]),
                  @"");
-    STAssertTrue(ExpressionSignatureTestCase(@"[[Appearance sharedAppearance] buttonWithImageNamed:@]",
+    XCTAssertTrue(ExpressionSignatureTestCase(@"[[Appearance sharedAppearance] buttonWithImageNamed:@]",
                                              [NSArray arrayWithObject:@"test"],
                                              [NSArray arrayWithObjects:
                                               @"[[Appearance sharedAppearance]buttonWithImageNamed:@\"test\"]",
                                               @"\t\n [\t\n [\t\n Appearance\t\n sharedAppearance\t\n ]\t\n buttonWithImageNamed:\t\n @\"test\"\t\n ]\t\n ",
                                               nil]),
                  @"");
-    STAssertTrue(ExpressionSignatureTestCase(@"[[[[a a:@] b:] c:@] d:[e e:@]]",
+    XCTAssertTrue(ExpressionSignatureTestCase(@"[[[[a a:@] b:] c:@] d:[e e:@]]",
                                              [NSArray arrayWithObjects:@"a", @"c", @"e", nil],
                                              [NSArray arrayWithObjects:
                                               @"[[[[a a:@\"a\"] b:b] c:@\"c\"] d:[e e:@\"e\"]]",
@@ -154,30 +154,30 @@ static BOOL ExpressionSignatureTestCase(NSString *signature,
     // TODO: verify actual error instead of just making sure we give an
     // error and dont crash
     
-    STAssertTrue(ExpressionSignatureTestCase(@"", nil, nil), nil);
+    XCTAssertTrue(ExpressionSignatureTestCase(@"", nil, nil));
     
-    STAssertTrue(ExpressionSignatureTestCase(@"-", nil, nil), nil);
+    XCTAssertTrue(ExpressionSignatureTestCase(@"-", nil, nil));
     
-    STAssertTrue(ExpressionSignatureTestCase(@"[", nil, nil), nil);
+    XCTAssertTrue(ExpressionSignatureTestCase(@"[", nil, nil));
     
-    STAssertTrue(ExpressionSignatureTestCase(@"[@", nil, nil), nil);
+    XCTAssertTrue(ExpressionSignatureTestCase(@"[@", nil, nil));
     
-    STAssertTrue(ExpressionSignatureTestCase(@"[a b", nil, nil), nil);
+    XCTAssertTrue(ExpressionSignatureTestCase(@"[a b", nil, nil));
 
-    STAssertTrue(ExpressionSignatureTestCase(@"[a b)", nil, nil), nil);
+    XCTAssertTrue(ExpressionSignatureTestCase(@"[a b)", nil, nil));
     
-    STAssertTrue(ExpressionSignatureTestCase(@"[a b-", nil, nil), nil);
+    XCTAssertTrue(ExpressionSignatureTestCase(@"[a b-", nil, nil));
     
-    STAssertTrue(ExpressionSignatureTestCase(@"[a b c]", nil, nil), nil);
+    XCTAssertTrue(ExpressionSignatureTestCase(@"[a b c]", nil, nil));
     
-    STAssertTrue(ExpressionSignatureTestCase(@"[a b c:]", nil, nil), nil);
+    XCTAssertTrue(ExpressionSignatureTestCase(@"[a b c:]", nil, nil));
     
-    STAssertTrue(ExpressionSignatureTestCase(@"p(", nil, nil), nil);
+    XCTAssertTrue(ExpressionSignatureTestCase(@"p(", nil, nil));
     
-    STAssertTrue(ExpressionSignatureTestCase(@"p(a", nil, nil), nil);
+    XCTAssertTrue(ExpressionSignatureTestCase(@"p(a", nil, nil));
     
-    STAssertTrue(ExpressionSignatureTestCase(@"p(a,b", nil, nil), nil);
+    XCTAssertTrue(ExpressionSignatureTestCase(@"p(a,b", nil, nil));
 
-    STAssertTrue(ExpressionSignatureTestCase(@"p(@) trailing", nil, nil), nil);
+    XCTAssertTrue(ExpressionSignatureTestCase(@"p(@) trailing", nil, nil));
 }
 @end

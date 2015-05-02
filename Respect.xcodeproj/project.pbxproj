@@ -56,20 +56,6 @@
 		09A6FE97160A63F200F29372 /* WarningAction.m in Sources */ = {isa = PBXBuildFile; fileRef = 09A6FE96160A63F000F29372 /* WarningAction.m */; };
 		09A6FE98160A63F200F29372 /* WarningAction.m in Sources */ = {isa = PBXBuildFile; fileRef = 09A6FE96160A63F000F29372 /* WarningAction.m */; };
 		09B0945E175BC89E0062E8ED /* XCConfigParserTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 09B0945D175BC89E0062E8ED /* XCConfigParserTest.m */; };
-		09B0946B175BCC840062E8ED /* xcconfig_test8.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 09B09460175BCC840062E8ED /* xcconfig_test8.xcconfig */; };
-		09B0946C175BCC840062E8ED /* xcconfig_test7.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 09B09461175BCC840062E8ED /* xcconfig_test7.xcconfig */; };
-		09B0946D175BCC840062E8ED /* xcconfig_test6.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 09B09462175BCC840062E8ED /* xcconfig_test6.xcconfig */; };
-		09B0946E175BCC840062E8ED /* xcconfig_test5.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 09B09463175BCC840062E8ED /* xcconfig_test5.xcconfig */; };
-		09B0946F175BCC840062E8ED /* xcconfig_test4.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 09B09464175BCC840062E8ED /* xcconfig_test4.xcconfig */; };
-		09B09470175BCC840062E8ED /* xcconfig_test3.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 09B09465175BCC840062E8ED /* xcconfig_test3.xcconfig */; };
-		09B09471175BCC840062E8ED /* xcconfig_test1.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 09B09466175BCC840062E8ED /* xcconfig_test1.xcconfig */; };
-		09B09472175BCC840062E8ED /* xcconfig_test2.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 09B09467175BCC840062E8ED /* xcconfig_test2.xcconfig */; };
-		09B09473175BCC840062E8ED /* xcconfig_test3_1.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 09B09468175BCC840062E8ED /* xcconfig_test3_1.xcconfig */; };
-		09B09474175BCC840062E8ED /* xcconfig_test2_2.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 09B09469175BCC840062E8ED /* xcconfig_test2_2.xcconfig */; };
-		09B09475175BCC840062E8ED /* xcconfig_test2_1.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 09B0946A175BCC840062E8ED /* xcconfig_test2_1.xcconfig */; };
-		09B09477175BF00A0062E8ED /* xcconfig_test9.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 09B09476175BF0090062E8ED /* xcconfig_test9.xcconfig */; };
-		09B0947A175BF0C30062E8ED /* xcconfig_test10.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 09B09478175BF0C10062E8ED /* xcconfig_test10.xcconfig */; };
-		09B0947B175BF0C30062E8ED /* xcconfig_test10_1.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 09B09479175BF0C10062E8ED /* xcconfig_test10_1.xcconfig */; };
 		09BEDA951771034200C1374F /* NSString+withFnmatch.m in Sources */ = {isa = PBXBuildFile; fileRef = 09BEDA941771034200C1374F /* NSString+withFnmatch.m */; };
 		09BEDA961771034200C1374F /* NSString+withFnmatch.m in Sources */ = {isa = PBXBuildFile; fileRef = 09BEDA941771034200C1374F /* NSString+withFnmatch.m */; };
 		09C5C33E16D3CEA4003A611B /* PerformParameters.m in Sources */ = {isa = PBXBuildFile; fileRef = 09C5C33D16D3CEA4003A611B /* PerformParameters.m */; };
@@ -109,11 +95,24 @@
 		CD6D43E51673A5B500E3945A /* ResourceLinterXcodeReport.m in Sources */ = {isa = PBXBuildFile; fileRef = CDCFE9A2160E4B6C001E65D2 /* ResourceLinterXcodeReport.m */; };
 		CD6D43E61673A5B700E3945A /* ResourceLinterCliReport.m in Sources */ = {isa = PBXBuildFile; fileRef = CDCFE9A8160F14D3001E65D2 /* ResourceLinterCliReport.m */; };
 		CD6D43E71673A5BA00E3945A /* ResourceLinterConfigReport.m in Sources */ = {isa = PBXBuildFile; fileRef = CDCFE9CE160F5042001E65D2 /* ResourceLinterConfigReport.m */; };
+		CD985D241AF5249B0049EC67 /* xcconfig_test10.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 09B09478175BF0C10062E8ED /* xcconfig_test10.xcconfig */; };
+		CD985D251AF5249B0049EC67 /* xcconfig_test10_1.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 09B09479175BF0C10062E8ED /* xcconfig_test10_1.xcconfig */; };
+		CD985D261AF5249B0049EC67 /* xcconfig_test9.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 09B09476175BF0090062E8ED /* xcconfig_test9.xcconfig */; };
+		CD985D271AF5249B0049EC67 /* xcconfig_test8.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 09B09460175BCC840062E8ED /* xcconfig_test8.xcconfig */; };
+		CD985D281AF5249B0049EC67 /* xcconfig_test7.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 09B09461175BCC840062E8ED /* xcconfig_test7.xcconfig */; };
+		CD985D291AF5249B0049EC67 /* xcconfig_test6.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 09B09462175BCC840062E8ED /* xcconfig_test6.xcconfig */; };
+		CD985D2A1AF5249B0049EC67 /* xcconfig_test5.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 09B09463175BCC840062E8ED /* xcconfig_test5.xcconfig */; };
+		CD985D2B1AF5249B0049EC67 /* xcconfig_test4.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 09B09464175BCC840062E8ED /* xcconfig_test4.xcconfig */; };
+		CD985D2C1AF5249B0049EC67 /* xcconfig_test3.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 09B09465175BCC840062E8ED /* xcconfig_test3.xcconfig */; };
+		CD985D2D1AF5249B0049EC67 /* xcconfig_test3_1.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 09B09468175BCC840062E8ED /* xcconfig_test3_1.xcconfig */; };
+		CD985D2E1AF5249B0049EC67 /* xcconfig_test1.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 09B09466175BCC840062E8ED /* xcconfig_test1.xcconfig */; };
+		CD985D2F1AF5249B0049EC67 /* xcconfig_test2.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 09B09467175BCC840062E8ED /* xcconfig_test2.xcconfig */; };
+		CD985D301AF5249B0049EC67 /* xcconfig_test2_1.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 09B0946A175BCC840062E8ED /* xcconfig_test2_1.xcconfig */; };
+		CD985D311AF5249B0049EC67 /* xcconfig_test2_2.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 09B09469175BCC840062E8ED /* xcconfig_test2_2.xcconfig */; };
 		CD996430164AE9FF0036A7E7 /* NSArray+RespectTest.m in Sources */ = {isa = PBXBuildFile; fileRef = CD99642F164AE9FE0036A7E7 /* NSArray+RespectTest.m */; };
 		CD9964C71660F30D0036A7E7 /* ImageNamedOptions.m in Sources */ = {isa = PBXBuildFile; fileRef = CD9964C61660F3050036A7E7 /* ImageNamedOptions.m */; };
 		CD9964C81660F30D0036A7E7 /* ImageNamedOptions.m in Sources */ = {isa = PBXBuildFile; fileRef = CD9964C61660F3050036A7E7 /* ImageNamedOptions.m */; };
 		CDBD3DFB15B8865E0031461F /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 09504F03159C64750050594A /* Foundation.framework */; };
-		CDBD3DFD15B8867E0031461F /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0926EC0315B0335000100D38 /* SenTestingKit.framework */; };
 		CDBD3DFE15B9967A0031461F /* ResourceLinter.m in Sources */ = {isa = PBXBuildFile; fileRef = 09504EF7159C61EB0050594A /* ResourceLinter.m */; };
 		CDBD3DFF15B996860031461F /* BundleResource.m in Sources */ = {isa = PBXBuildFile; fileRef = CD49166115A622FD00675A7D /* BundleResource.m */; };
 		CDBD3E0015B996880031461F /* ResourceReference.m in Sources */ = {isa = PBXBuildFile; fileRef = CD49165E15A622E000675A7D /* ResourceReference.m */; };
@@ -164,8 +163,7 @@
 		0916F4AD1607165700A21EF6 /* TextFileError.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextFileError.m; sourceTree = "<group>"; };
 		09190207162C506900199984 /* DefaultConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DefaultConfig.h; sourceTree = "<group>"; };
 		09190208162C506A00199984 /* DefaultConfig.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DefaultConfig.m; sourceTree = "<group>"; };
-		0926EC0315B0335000100D38 /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
-		0926EC0A15B0338800100D38 /* RespectTest.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RespectTest.octest; sourceTree = BUILT_PRODUCTS_DIR; };
+		0926EC0A15B0338800100D38 /* RespectTest.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RespectTest.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		0926EC1515B0338800100D38 /* RespectTest-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "RespectTest-Info.plist"; sourceTree = "<group>"; };
 		0926EC1715B0338800100D38 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		0926EC1915B0338800100D38 /* RespectTest.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RespectTest.h; sourceTree = "<group>"; };
@@ -175,7 +173,7 @@
 		0933B0EA15B7091D004D3F01 /* ExpressionSignatureTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ExpressionSignatureTest.m; sourceTree = "<group>"; };
 		093B7A34163450C500F3C250 /* ImageNamedFinder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageNamedFinder.h; sourceTree = "<group>"; };
 		093B7A35163450C600F3C250 /* ImageNamedFinder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImageNamedFinder.m; sourceTree = "<group>"; };
-		09504EE4159C61710050594A /* Respect */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; name = Respect; path = respect; sourceTree = BUILT_PRODUCTS_DIR; };
+		09504EE4159C61710050594A /* respect */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = respect; sourceTree = BUILT_PRODUCTS_DIR; };
 		09504EF6159C61EB0050594A /* ResourceLinter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ResourceLinter.h; sourceTree = "<group>"; };
 		09504EF7159C61EB0050594A /* ResourceLinter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ResourceLinter.m; sourceTree = "<group>"; };
 		09504EF9159C61EB0050594A /* respect.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = respect.m; sourceTree = "<group>"; };
@@ -301,7 +299,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				CDBD3DFB15B8865E0031461F /* Foundation.framework in Frameworks */,
-				CDBD3DFD15B8867E0031461F /* SenTestingKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -367,8 +364,8 @@
 		09504EE5159C61710050594A /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				09504EE4159C61710050594A /* Respect */,
-				0926EC0A15B0338800100D38 /* RespectTest.octest */,
+				09504EE4159C61710050594A /* respect */,
+				0926EC0A15B0338800100D38 /* RespectTest.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -376,7 +373,6 @@
 		09504EE7159C61710050594A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				0926EC0315B0335000100D38 /* SenTestingKit.framework */,
 				09504F03159C64750050594A /* Foundation.framework */,
 			);
 			name = Frameworks;
@@ -559,7 +555,6 @@
 				0926EC0615B0338800100D38 /* Frameworks */,
 				0926EC0715B0338800100D38 /* Resources */,
 				093B79E71631D61A00F3C250 /* Run Script (copy test project) */,
-				0926EC0815B0338800100D38 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -568,8 +563,8 @@
 			);
 			name = RespectTest;
 			productName = RespectTest;
-			productReference = 0926EC0A15B0338800100D38 /* RespectTest.octest */;
-			productType = "com.apple.product-type.bundle";
+			productReference = 0926EC0A15B0338800100D38 /* RespectTest.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
 		};
 		09504EE3159C61710050594A /* respect */ = {
 			isa = PBXNativeTarget;
@@ -586,7 +581,7 @@
 			);
 			name = respect;
 			productName = Respect;
-			productReference = 09504EE4159C61710050594A /* Respect */;
+			productReference = 09504EE4159C61710050594A /* respect */;
 			productType = "com.apple.product-type.tool";
 		};
 /* End PBXNativeTarget section */
@@ -595,7 +590,7 @@
 		09504EDB159C61710050594A /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0460;
+				LastUpgradeCheck = 0630;
 			};
 			buildConfigurationList = 09504EDE159C61710050594A /* Build configuration list for PBXProject "Respect" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -620,40 +615,27 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CD985D2D1AF5249B0049EC67 /* xcconfig_test3_1.xcconfig in Resources */,
+				CD985D2F1AF5249B0049EC67 /* xcconfig_test2.xcconfig in Resources */,
+				CD985D241AF5249B0049EC67 /* xcconfig_test10.xcconfig in Resources */,
+				CD985D251AF5249B0049EC67 /* xcconfig_test10_1.xcconfig in Resources */,
 				0926EC1815B0338800100D38 /* InfoPlist.strings in Resources */,
-				09B0946B175BCC840062E8ED /* xcconfig_test8.xcconfig in Resources */,
-				09B0946C175BCC840062E8ED /* xcconfig_test7.xcconfig in Resources */,
-				09B0946D175BCC840062E8ED /* xcconfig_test6.xcconfig in Resources */,
-				09B0946E175BCC840062E8ED /* xcconfig_test5.xcconfig in Resources */,
-				09B0946F175BCC840062E8ED /* xcconfig_test4.xcconfig in Resources */,
-				09B09470175BCC840062E8ED /* xcconfig_test3.xcconfig in Resources */,
-				09B09471175BCC840062E8ED /* xcconfig_test1.xcconfig in Resources */,
-				09B09472175BCC840062E8ED /* xcconfig_test2.xcconfig in Resources */,
-				09B09473175BCC840062E8ED /* xcconfig_test3_1.xcconfig in Resources */,
-				09B09474175BCC840062E8ED /* xcconfig_test2_2.xcconfig in Resources */,
-				09B09475175BCC840062E8ED /* xcconfig_test2_1.xcconfig in Resources */,
-				09B09477175BF00A0062E8ED /* xcconfig_test9.xcconfig in Resources */,
-				09B0947A175BF0C30062E8ED /* xcconfig_test10.xcconfig in Resources */,
-				09B0947B175BF0C30062E8ED /* xcconfig_test10_1.xcconfig in Resources */,
+				CD985D2C1AF5249B0049EC67 /* xcconfig_test3.xcconfig in Resources */,
+				CD985D2A1AF5249B0049EC67 /* xcconfig_test5.xcconfig in Resources */,
+				CD985D311AF5249B0049EC67 /* xcconfig_test2_2.xcconfig in Resources */,
+				CD985D261AF5249B0049EC67 /* xcconfig_test9.xcconfig in Resources */,
+				CD985D2E1AF5249B0049EC67 /* xcconfig_test1.xcconfig in Resources */,
+				CD985D271AF5249B0049EC67 /* xcconfig_test8.xcconfig in Resources */,
+				CD985D281AF5249B0049EC67 /* xcconfig_test7.xcconfig in Resources */,
+				CD985D2B1AF5249B0049EC67 /* xcconfig_test4.xcconfig in Resources */,
+				CD985D301AF5249B0049EC67 /* xcconfig_test2_1.xcconfig in Resources */,
+				CD985D291AF5249B0049EC67 /* xcconfig_test6.xcconfig in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		0926EC0815B0338800100D38 /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "# Run the unit tests in this test bundle.\n\"${SYSTEM_DEVELOPER_DIR}/Tools/RunUnitTests\"\n";
-		};
 		093B79E71631D61A00F3C250 /* Run Script (copy test project) */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -833,10 +815,9 @@
 			buildSettings = {
 				ALTERNATE_PERMISSIONS_FILES = macosx;
 				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = "$(DEVELOPER_LIBRARY_DIR)/Frameworks";
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "RespectTest/RespectTest-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				WRAPPER_EXTENSION = octest;
 			};
 			name = Debug;
 		};
@@ -845,10 +826,9 @@
 			buildSettings = {
 				ALTERNATE_PERMISSIONS_FILES = macosx;
 				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = "$(DEVELOPER_LIBRARY_DIR)/Frameworks";
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "RespectTest/RespectTest-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				WRAPPER_EXTENSION = octest;
 			};
 			name = Release;
 		};
@@ -856,17 +836,21 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_GENERATE_TEST_COVERAGE_FILES = YES;
 				GCC_INSTRUMENT_PROGRAM_FLOW_ARCS = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Respect/Respect_Prefix.pch;
@@ -879,7 +863,9 @@
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				ONLY_ACTIVE_ARCH = YES;
@@ -892,22 +878,28 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Respect/Respect_Prefix.pch;
 				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				SDKROOT = macosx;
