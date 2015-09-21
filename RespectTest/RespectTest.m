@@ -279,9 +279,7 @@
 
   }
 
-  //NSString *description = [messages componentsJoinedByString:@"\n"];
-
-  XCTAssertTrue(success);
+  XCTAssertTrue(success, @"%@", [messages componentsJoinedByString:@""]);
 }
 
 @end
