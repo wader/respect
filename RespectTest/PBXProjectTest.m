@@ -24,8 +24,8 @@
     NSError *error = nil;
     PBXProject *pbxProject = [PBXProject
                               pbxProjectFromPath:
-                              [[[NSFileManager defaultManager] currentDirectoryPath]
-                               stringByAppendingPathComponent:@"RespectTest/RespectTestProject/RespectTestProject.xcodeproj"]
+                              [[[NSBundle bundleForClass:[self class]] resourcePath]
+                               stringByAppendingPathComponent:@"RespectTestProject/RespectTestProject.xcodeproj"]
                               error:&error];
     XCTAssertNotNil(pbxProject, @"");
     
