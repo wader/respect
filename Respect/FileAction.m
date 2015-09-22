@@ -24,7 +24,7 @@
 
 @interface FileAction ()
 @property(nonatomic, assign, readwrite) BOOL hasError;
-@property(nonatomic, retain, readwrite) NSArray *resourcePathTemplates;
+@property(nonatomic, strong, readwrite) NSArray *resourcePathTemplates;
 @end
 
 @implementation FileAction
@@ -109,12 +109,6 @@
     return self;
 }
 
-- (void)dealloc {
-    self.resourcePathTemplates = nil;
-    self.permutationsPattern = nil;
-    
-    [super dealloc];
-}
 
 - (NSString *)conditionName {
     if (self.condition == FileReferenceConditionAll) {
@@ -152,7 +146,7 @@
                                   message:@"Only one of all, any or optional can be specified"]];
     }
     
-    NSMutableOrderedSet *unknownOptions = [[options mutableCopy] autorelease];
+    NSMutableOrderedSet *unknownOptions = [options mutableCopy];
     [unknownOptions minusOrderedSet:conditionOptions];
     
     if ([unknownOptions count] > 0) {
@@ -202,12 +196,11 @@
             ResourceReference *resourceRef = nil;
             
             if (bundleRes == nil) {
-                resourceRef = [[[ResourceReference alloc]
+                resourceRef = [[ResourceReference alloc]
                                 initWithResourcePath:resourcePath
                                 referencePath:parameters.path
                                 referenceLocation:parameters.textLocation
-                                missingResourceHint:[self actionMissingResourceHint:resourcePath]]
-                               autorelease];
+                                missingResourceHint:[self actionMissingResourceHint:resourcePath]];
                 
                 [missingRefs addObject:resourceRef];
                 
@@ -216,12 +209,11 @@
             
             resourcePathsMatchCount++;
             
-            resourceRef = [[[ResourceReference alloc]
+            resourceRef = [[ResourceReference alloc]
                             initWithResourcePath:resourcePath
                             referencePath:parameters.path
                             referenceLocation:parameters.textLocation
-                            missingResourceHint:nil]
-                           autorelease];
+                            missingResourceHint:nil];
             
             [bundleRes.resourceReferences addObject:resourceRef];
             [resourceRef.bundleResources addObject:bundleRes];

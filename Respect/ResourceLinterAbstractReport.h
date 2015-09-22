@@ -18,8 +18,8 @@
 #import "ResourceLinter.h"
 
 @interface ResourceLinterAbstractReport : NSObject
-@property(nonatomic, retain, readonly) ResourceLinter *linter;
-@property(nonatomic, retain, readonly) NSMutableString *outputBuffer;
+@property(nonatomic, strong, readonly) ResourceLinter *linter;
+@property(nonatomic, strong, readonly) NSMutableString *outputBuffer;
 
 - (id)initWithLinter:(ResourceLinter *)linter;
 - (void)addLine:(NSString *)format arguments:(va_list)va  NS_FORMAT_FUNCTION(1, 0);

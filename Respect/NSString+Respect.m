@@ -232,7 +232,7 @@
 
 - (NSString *)respect_stringByReplacingCharactersInSet:(NSCharacterSet *)set
                                          withCharacter:(unichar)character {
-    NSMutableString *replaced = [[self mutableCopy] autorelease];
+    NSMutableString *replaced = [self mutableCopy];
     NSString *replaceString = [NSString stringWithFormat:@"%C", character];
     NSUInteger len = [replaced length];
     

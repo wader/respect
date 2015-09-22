@@ -18,8 +18,8 @@
 #import "PeekableEnumerator.h"
 
 @interface PeekableEnumerator ()
-@property(nonatomic, retain, readwrite) NSEnumerator *enumerator;
-@property(nonatomic, retain, readwrite) NSMutableArray *peekedObjects;
+@property(nonatomic, strong, readwrite) NSEnumerator *enumerator;
+@property(nonatomic, strong, readwrite) NSMutableArray *peekedObjects;
 @end
 
 @implementation PeekableEnumerator
@@ -38,12 +38,6 @@
     return self;
 }
 
-- (void)dealloc {
-    self.enumerator = nil;
-    self.peekedObjects = nil;
-    
-    [super dealloc];
-}
 
 - (id)nextObject {
     if ([self.peekedObjects count] == 0) {
@@ -51,7 +45,6 @@
     }
     
     id object = [self.peekedObjects objectAtIndex:0];
-    [[object retain] autorelease];
     [self.peekedObjects removeObjectAtIndex:0];
     
     return object;

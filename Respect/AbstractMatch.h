@@ -22,13 +22,13 @@
 #import "TextLocation.h"
 
 @interface AbstractMatch : NSObject
-@property(nonatomic, assign, readonly) ResourceLinter *linter;
+@property(nonatomic, weak, readonly) ResourceLinter *linter;
 @property(nonatomic, copy, readonly) NSString *file;
 @property(nonatomic, assign, readonly) TextLocation textLocation;
 @property(nonatomic, copy, readonly) NSString *argumentString;
 @property(nonatomic, assign, readonly) BOOL isDefaultConfig;
-@property(nonatomic, retain, readonly) NSMutableArray *actions;
-@property(nonatomic, retain, readonly) NSMutableArray *performParameters;
+@property(nonatomic, strong, readonly) NSMutableArray *actions;
+@property(nonatomic, strong, readonly) NSMutableArray *performParameters;
 
 + (NSString *)name;
 

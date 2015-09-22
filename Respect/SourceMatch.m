@@ -24,9 +24,9 @@
 #import "NSString+Respect.h"
 
 @interface SourceMatch ()
-@property(nonatomic, retain, readwrite) ExpressionSignature *experssionSignature;
-@property(nonatomic, retain, readwrite) NSRegularExpression *re;
-@property(nonatomic, retain, readwrite) NSError *error;
+@property(nonatomic, strong, readwrite) ExpressionSignature *experssionSignature;
+@property(nonatomic, strong, readwrite) NSRegularExpression *re;
+@property(nonatomic, strong, readwrite) NSError *error;
 @end
 
 @implementation SourceMatch
@@ -85,13 +85,6 @@
     return self;
 }
 
-- (void)dealloc {
-    self.experssionSignature = nil;
-    self.re = nil;
-    self.error = nil;
-    
-    [super dealloc];
-}
 
 - (void)parseResourceReferencesInSourceFile:(TextFile *)textFile {
     // we can use lineRanges from textFile as comment white out only

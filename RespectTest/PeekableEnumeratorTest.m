@@ -26,9 +26,8 @@
 
     PeekableEnumerator *peekable = nil;
     
-    peekable = [[[PeekableEnumerator alloc]
-                 initWithEnumerator:[testArray3 objectEnumerator]]
-                autorelease];
+    peekable = [[PeekableEnumerator alloc]
+                 initWithEnumerator:[testArray3 objectEnumerator]];
     
     XCTAssertEqualObjects([peekable nextObject], @"a", @"");
     XCTAssertEqualObjects([peekable nextObject], @"b", @"");
@@ -36,9 +35,8 @@
     XCTAssertNil([peekable nextObject], @"");
     
 
-    peekable = [[[PeekableEnumerator alloc]
-                 initWithEnumerator:[testArray3 objectEnumerator]]
-                autorelease];
+    peekable = [[PeekableEnumerator alloc]
+                 initWithEnumerator:[testArray3 objectEnumerator]];
     
     XCTAssertNil([peekable peekObjectAtOffset:3], @"");
     XCTAssertEqualObjects([peekable peekObjectAtOffset:2], @"c", @"");
@@ -50,18 +48,16 @@
     XCTAssertNil([peekable nextObject], @"");
     
     
-    peekable = [[[PeekableEnumerator alloc]
-                 initWithEnumerator:[testArray3 objectEnumerator]]
-                autorelease];
+    peekable = [[PeekableEnumerator alloc]
+                 initWithEnumerator:[testArray3 objectEnumerator]];
     
     XCTAssertEqualObjects([peekable allObjects], testArray3, @"");
     XCTAssertNil([peekable nextObject], @"");
     XCTAssertNil([peekable peekObject], @"");
     
     
-    peekable = [[[PeekableEnumerator alloc]
-                 initWithEnumerator:[testArray3 objectEnumerator]]
-                autorelease];
+    peekable = [[PeekableEnumerator alloc]
+                 initWithEnumerator:[testArray3 objectEnumerator]];
     
     XCTAssertEqualObjects([peekable peekObject], @"a", @"");
     XCTAssertEqualObjects([peekable allObjects], testArray3, @"");
@@ -69,9 +65,8 @@
     XCTAssertNil([peekable peekObject], @"");
     
     
-    peekable = [[[PeekableEnumerator alloc]
-                 initWithEnumerator:[testArray3 objectEnumerator]]
-                autorelease];
+    peekable = [[PeekableEnumerator alloc]
+                 initWithEnumerator:[testArray3 objectEnumerator]];
     
     XCTAssertEqualObjects([peekable nextObject], @"a", @"");
     XCTAssertEqualObjects([peekable allObjects], testArray2, @"");
@@ -79,9 +74,8 @@
     XCTAssertNil([peekable peekObject], @"");
     
     
-    peekable = [[[PeekableEnumerator alloc]
-                 initWithEnumerator:[testArray3 objectEnumerator]]
-                autorelease];
+    peekable = [[PeekableEnumerator alloc]
+                 initWithEnumerator:[testArray3 objectEnumerator]];
     
     XCTAssertEqualObjects([peekable peekObject], @"a", @"");
     XCTAssertEqualObjects([peekable nextObject], @"a", @"");

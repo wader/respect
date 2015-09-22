@@ -39,17 +39,12 @@ static NSString * const InfoPlistKeyCFBundlePrimaryIcon = @"CFBundlePrimaryIcon"
 static NSString * const InfoPlistKeyUINewsstandIcon = @"UINewsstandIcon";
 
 @interface InfoPlistAction ()
-@property(nonatomic, retain, readwrite) ImageNamedFinder *imageNamedFinder;
+@property(nonatomic, strong, readwrite) ImageNamedFinder *imageNamedFinder;
 @end
 
 @implementation InfoPlistAction
 @synthesize imageNamedFinder = _imageNamedFinder;
 
-- (void)dealloc {
-    self.imageNamedFinder = nil;
-    
-    [super dealloc];
-}
 
 + (NSString *)name {
     return @"InfoPlist";
@@ -58,15 +53,14 @@ static NSString * const InfoPlistKeyUINewsstandIcon = @"UINewsstandIcon";
 - (void)addResourcePath:(NSString *)resourcePath
           referencePath:(NSString *)referencePath
           referenceHint:(NSString *)referenceHint {
-    ResourceReference *resourceRef = [[[ResourceReference alloc]
+    ResourceReference *resourceRef = [[ResourceReference alloc]
                                        initWithResourcePath:resourcePath
                                        referencePath:referencePath
                                        referenceLocation:MakeTextLineLocation(1)
                                        referenceHint:referenceHint
                                        missingResourceHint:
                                        // TODO: image smartness?
-                                       [self actionMissingResourceHint:resourcePath]]
-                                      autorelease];
+                                       [self actionMissingResourceHint:resourcePath]];
     [self.linter.resourceReferences addObject:resourceRef];
     
     BundleResource *bundleRes = [self.linter.bundleResources objectForKey:resourcePath];
@@ -302,7 +296,7 @@ static NSString * const InfoPlistKeyUINewsstandIcon = @"UINewsstandIcon";
 
 - (NSArray *)actionResourcePaths:(NSString *)resourcePath {
     if (self.imageNamedFinder == nil) {
-        self.imageNamedFinder = [[[ImageNamedFinder alloc] init] autorelease];
+        self.imageNamedFinder = [[ImageNamedFinder alloc] init];
         NSOrderedSet *defaultOptions = [self.linter defaultConfigValueForName:[[ImageAction class] name]];
         if (defaultOptions != nil) {
             [self.imageNamedFinder.options applyOptions:defaultOptions];

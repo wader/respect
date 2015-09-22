@@ -25,19 +25,13 @@
 
 @interface ExpressionSignatureSendParameter : NSObject
 @property(nonatomic, copy, readwrite) NSString *name; // TODO: ident for wildcard?
-@property(nonatomic, retain, readwrite) id argument;
+@property(nonatomic, strong, readwrite) id argument;
 @end
 
 @implementation ExpressionSignatureSendParameter
 @synthesize name = _name;
 @synthesize argument = _argument;
 
-- (void)dealloc {
-    self.name = nil;
-    self.argument = nil;
-    
-    [super dealloc];
-}
 @end
 
 
@@ -47,7 +41,7 @@
 
 + (id<ExpressionSignature>)parseTokens:(PeekableEnumerator *)tokens
                                  error:(NSError **)error {
-    error = error ?: &(NSError *){nil};
+    error = error ?: &(NSError * __autoreleasing){nil};
     
     // consume [
     [tokens nextObject];
@@ -59,7 +53,7 @@
         return nil;
     }
     
-    ExpressionSignatureSend *exp = [[[ExpressionSignatureSend alloc] init] autorelease];
+    ExpressionSignatureSend *exp = [[ExpressionSignatureSend alloc] init];
     NSMutableArray *parameters = [NSMutableArray array];
     exp.parameters = parameters;
     exp.receiver = [ExpressionSignature parseTokens:tokens error:error];
@@ -78,8 +72,7 @@
         if (peeked.type == SIGNATURE_TOKEN_IDENT) {
             current = [tokens nextObject];
             
-            ExpressionSignatureSendParameter *parameter = [[[ExpressionSignatureSendParameter alloc] init]
-                                                           autorelease];
+            ExpressionSignatureSendParameter *parameter = [[ExpressionSignatureSendParameter alloc] init];
             parameter.name = current.string;
             
             peeked = [tokens peekObject];
@@ -99,9 +92,8 @@
                     (token0 != nil && token0.type == SIGNATURE_TOKEN_IDENT &&
                      token1 != nil && token1.type == SIGNATURE_TOKEN_COLON)
                     ) {
-                    parameter.argument = [[[ExpressionSignatureArgument alloc]
-                                           initWithType:SIGNATURE_ARGUMENT_SKIP]
-                                          autorelease];
+                    parameter.argument = [[ExpressionSignatureArgument alloc]
+                                           initWithType:SIGNATURE_ARGUMENT_SKIP];
                 } else {
                     parameter.argument = [ExpressionSignature parseTokens:tokens error:error];
                     if (parameter.argument == nil) {
@@ -186,11 +178,5 @@
     return pattern;
 }
 
-- (void)dealloc {
-    self.receiver = nil;
-    self.parameters = nil;
-    
-    [super dealloc];
-}
 
 @end

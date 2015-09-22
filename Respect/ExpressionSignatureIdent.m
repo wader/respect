@@ -26,8 +26,7 @@
     ExpressionSignatureToken *token = [tokens nextObject];
     
     if (token.type == SIGNATURE_TOKEN_IDENT) {
-        return [[[ExpressionSignatureIdent alloc] initWithName:token.string]
-                autorelease];
+        return [[ExpressionSignatureIdent alloc] initWithName:token.string];
     }
     
     return nil;
@@ -44,11 +43,6 @@
     return self;
 }
 
-- (void)dealloc {
-    self.name = nil;
-    
-    [super dealloc];
-}
 
 - (NSString *)toPattern {
     // TODO: [0-9A-Za-z_]? \u?

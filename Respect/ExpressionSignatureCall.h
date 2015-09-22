@@ -18,6 +18,6 @@
 #import "ExpressionSignature.h"
 
 @interface ExpressionSignatureCall : NSObject<ExpressionSignature>
-@property(nonatomic, retain, readwrite) id<ExpressionSignature> name;
-@property(nonatomic, retain, readwrite) NSArray *arguments;
+@property(nonatomic, strong, readwrite) id<ExpressionSignature> name;
+@property(nonatomic, strong, readwrite) NSArray *arguments;
 @end

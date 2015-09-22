@@ -23,7 +23,7 @@
 @property(nonatomic, copy, readonly) NSString *referencePath;
 @property(nonatomic, assign, readonly) TextLocation referenceLocation;
 @property(nonatomic, copy, readonly) NSString *referenceHint;
-@property(nonatomic, retain, readonly) NSMutableArray *bundleResources;
+@property(nonatomic, strong, readonly) NSMutableArray *bundleResources;
 @property(nonatomic, copy, readonly) NSString *missingResourceHint;
 
 - (id)initWithResourcePath:(NSString *)resourcePath

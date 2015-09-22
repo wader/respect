@@ -23,9 +23,9 @@
 #import <objc/runtime.h>
 
 @interface PBXUnarchiver ()
-@property(nonatomic, retain, readwrite) NSDictionary *objects;
-@property(nonatomic, retain, readwrite) NSString *rootObjectId;
-@property(nonatomic, retain, readwrite) NSMutableDictionary *objectIdMap;
+@property(nonatomic, strong, readwrite) NSDictionary *objects;
+@property(nonatomic, strong, readwrite) NSString *rootObjectId;
+@property(nonatomic, strong, readwrite) NSMutableDictionary *objectIdMap;
 @end
 
 @implementation PBXUnarchiver
@@ -52,14 +52,6 @@
     return self;
 }
 
-- (void)dealloc {
-    self.allowedClasses = nil;
-    self.objects = nil;
-    self.rootObjectId = nil;
-    self.objectIdMap = nil;
-    
-    [super dealloc];
-}
 
 - (id)decodeValue:(id)value {
     if ([value isKindOfClass:[NSString class]]) {
@@ -126,7 +118,7 @@
         return nil;
     }
     
-    id objectInstance = [[[objectClass alloc] init] autorelease];
+    id objectInstance = [[objectClass alloc] init];
     
     for (NSString *key in objectDict) {
         if (class_getProperty(objectClass, [key UTF8String]) == NULL) {

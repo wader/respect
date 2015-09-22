@@ -32,7 +32,7 @@
 #import <Foundation/Foundation.h>
 
 @interface PBXUnarchiver : NSObject
-@property(nonatomic, retain, readwrite) NSSet *allowedClasses;
+@property(nonatomic, strong, readwrite) NSSet *allowedClasses;
 
 - (id)initWithFile:(NSString *)path;
 - (id)decodeObject;

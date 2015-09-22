@@ -20,7 +20,7 @@
 @interface BundleResource ()
 @property(nonatomic, copy, readwrite) NSString *buildSourcePath;
 @property(nonatomic, copy, readwrite) NSString *path;
-@property(nonatomic, retain, readwrite) NSMutableArray *resourceReferences;
+@property(nonatomic, strong, readwrite) NSMutableArray *resourceReferences;
 @end
 
 @implementation BundleResource
@@ -42,11 +42,4 @@
     return self;
 }
 
-- (void)dealloc {
-    self.buildSourcePath = nil;
-    self.path = nil;
-    self.resourceReferences = nil;
-    
-    [super dealloc];
-}
 @end

@@ -43,10 +43,4 @@
     return self;
 }
 
-- (void)dealloc {
-    self.file = nil;
-    self.message = nil;
-    
-    [super dealloc];
-}
 @end

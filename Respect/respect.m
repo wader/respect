@@ -26,8 +26,7 @@
 
 static void fprintf_nsstring(FILE *stream, NSString *format, va_list va) {
     fprintf(stream, "%s\n",
-            [[[[NSString alloc] initWithFormat:format arguments:va]
-              autorelease]
+            [[[NSString alloc] initWithFormat:format arguments:va]
              cStringUsingEncoding:NSUTF8StringEncoding]);
 }
 
@@ -55,7 +54,6 @@ static void help(const char *argv0) {
 }
 
 int main(int argc,  char *const argv[]) {
-    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
     char *argv0 = argv[0];
     NSString *configPath = nil;
     BOOL parseDefaultConfig = YES;
@@ -173,32 +171,23 @@ int main(int argc,  char *const argv[]) {
         return EXIT_FAILURE;
     }
     
-    ResourceLinterXcodeProjectSource *projectSource = [[[ResourceLinterXcodeProjectSource alloc]
+    ResourceLinterXcodeProjectSource *projectSource = [[ResourceLinterXcodeProjectSource alloc]
                                                         initWithPBXProject:pbxProject
                                                         nativeTarget:nativeTarget
-                                                        buildConfiguration:buildConfiguration]
-                                                       autorelease];
+                                                        buildConfiguration:buildConfiguration];
     if (spFeaturesPath != nil) {
         [projectSource addSpotifyFeaturesAtPath:spFeaturesPath];
     }
     
-    ResourceLinter *linter = [[[ResourceLinter alloc]
+    ResourceLinter *linter = [[ResourceLinter alloc]
                                initWithResourceLinterSource:projectSource
                                configPath:configPath
-                               parseDefaultConfig:parseDefaultConfig]
-                              autorelease];
+                               parseDefaultConfig:parseDefaultConfig];
     
-    ResourceLinterAbstractReport *lintReport = [[[lintReportClass alloc]
-                                                 initWithLinter:linter]
-                                                autorelease];
+    ResourceLinterAbstractReport *lintReport = [[lintReportClass alloc]
+                                                 initWithLinter:linter];
     
     fprintf(stdout, "%s", [lintReport.outputBuffer UTF8String]);
-    
-    // as we should not have any side effects we can safly skip to drain the
-    // autorelease pool and by that save some time by not calling release
-    // and dealloc on autoreleased objects
-    //[pool drain];
-    (void)pool;
     
     return EXIT_SUCCESS;
 }

@@ -27,7 +27,7 @@ static NSComparator pathStringComparator = ^NSComparisonResult(id a, id b) {
 };
 
 @interface ResourceLinterXcodeReport ()
-@property(nonatomic, retain, readwrite) NSMutableDictionary *fileIssues;
+@property(nonatomic, strong, readwrite) NSMutableDictionary *fileIssues;
 
 - (void)addIssue:(id)issue forFile:(NSString *)file;
 - (void)addXcodeWarning:(NSString *)file
@@ -116,11 +116,6 @@ static NSComparator pathStringComparator = ^NSComparisonResult(id a, id b) {
     return self;
 }
 
-- (void)dealloc {
-    self.fileIssues = nil;
-    
-    [super dealloc];
-}
 
 - (void)addIssue:(id)issue forFile:(NSString *)file {
     NSMutableArray *issues = [self.fileIssues objectForKey:file];

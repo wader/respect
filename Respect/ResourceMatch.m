@@ -24,7 +24,7 @@
 
 @interface ResourceMatch ()
 @property(nonatomic, copy, readwrite) NSRegularExpression *re;
-@property(nonatomic, retain, readwrite) NSError *error;
+@property(nonatomic, strong, readwrite) NSError *error;
 @end
 
 @implementation ResourceMatch
@@ -76,12 +76,6 @@
     return self;
 }
 
-- (void)dealloc {
-    self.re = nil;
-    self.error = nil;
-    
-    [super dealloc];
-}
 
 - (void)performMatch {
     if (self.error != nil) {

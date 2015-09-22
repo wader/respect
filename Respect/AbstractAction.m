@@ -18,7 +18,7 @@
 #import "AbstractAction.h"
 
 @interface AbstractAction ()
-@property(nonatomic, assign, readwrite) ResourceLinter *linter;
+@property(nonatomic, weak, readwrite) ResourceLinter *linter;
 @property(nonatomic, assign, readwrite) TextLocation textLocation;
 @property(nonatomic, copy, readwrite) NSString *file;
 @property(nonatomic, copy, readwrite) NSString *argumentString;
@@ -60,14 +60,6 @@
     self.isDefaultConfig = isDefaultConfig;
     
     return self;
-}
-
-- (void)dealloc {
-    self.linter = nil;
-    self.file = nil;
-    self.argumentString = nil;
-    
-    [super dealloc];
 }
 
 - (void)performWithParameters:(PerformParameters *)parameters {

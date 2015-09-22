@@ -18,13 +18,13 @@
 #import "AbstractMatch.h"
 
 @interface AbstractMatch ()
-@property(nonatomic, assign, readwrite) ResourceLinter *linter;
+@property(nonatomic, weak, readwrite) ResourceLinter *linter;
 @property(nonatomic, copy, readwrite) NSString *file;
 @property(nonatomic, assign, readwrite) TextLocation textLocation;
 @property(nonatomic, copy, readwrite) NSString *argumentString;
 @property(nonatomic, assign, readwrite) BOOL isDefaultConfig;
-@property(nonatomic, retain, readwrite) NSMutableArray *actions;
-@property(nonatomic, retain, readwrite) NSMutableArray *performParameters;
+@property(nonatomic, strong, readwrite) NSMutableArray *actions;
+@property(nonatomic, strong, readwrite) NSMutableArray *performParameters;
 @end
 
 @implementation AbstractMatch
@@ -59,16 +59,6 @@
     self.performParameters = [NSMutableArray array];
     
     return self;
-}
-
-- (void)dealloc {
-    self.linter = nil;
-    self.file = nil;
-    self.argumentString = nil;
-    self.actions = nil;
-    self.performParameters = nil;
-    
-    [super dealloc];
 }
 
 - (void)addAction:(AbstractAction *)action {

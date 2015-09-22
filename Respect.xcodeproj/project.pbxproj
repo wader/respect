@@ -814,6 +814,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALTERNATE_PERMISSIONS_FILES = macosx;
+				CLANG_ENABLE_OBJC_ARC = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "RespectTest/RespectTest-Info.plist";
@@ -825,6 +826,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALTERNATE_PERMISSIONS_FILES = macosx;
+				CLANG_ENABLE_OBJC_ARC = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "RespectTest/RespectTest-Info.plist";
@@ -910,6 +912,7 @@
 		09504EF2159C61710050594A /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_OBJC_ARC = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SYSTEM_APPS_DIR)/Xcode.app/Contents/Developer/Library/Frameworks\"",
@@ -921,6 +924,7 @@
 		09504EF3159C61710050594A /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_OBJC_ARC = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SYSTEM_APPS_DIR)/Xcode.app/Contents/Developer/Library/Frameworks\"",
