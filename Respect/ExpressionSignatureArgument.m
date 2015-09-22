@@ -19,7 +19,6 @@
 #import "ExpressionSignatureToken.h"
 
 @implementation ExpressionSignatureArgument
-@synthesize type = _type;
 
 + (id<ExpressionSignature>)parseTokens:(PeekableEnumerator *)tokens
                                  error:(NSError **)error {

@@ -43,8 +43,6 @@ static NSString * const InfoPlistKeyUINewsstandIcon = @"UINewsstandIcon";
 @end
 
 @implementation InfoPlistAction
-@synthesize imageNamedFinder = _imageNamedFinder;
-
 
 + (NSString *)name {
     return @"InfoPlist";

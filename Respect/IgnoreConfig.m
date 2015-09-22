@@ -32,13 +32,6 @@
 @end
 
 @implementation IgnoreConfig
-@synthesize linter = _linter;
-@synthesize file = _file;
-@synthesize textLocation = _textLocation;
-@synthesize type = _type;
-@synthesize re = _re;
-@synthesize pattern = _pattern;
-@synthesize error = _error;
 
 - (id)initWithLinter:(ResourceLinter *)linter
                 file:(NSString *)file

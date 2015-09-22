@@ -33,10 +33,6 @@ NSString * const ImageNamedOptionsIpad = @"~ipad";
 @end
 
 @implementation ImageNamedOptions
-@synthesize scales = _scales;
-@synthesize devices = _devices;
-@synthesize exts = _exts;
-
 
 + (NSOrderedSet *)scaleOptions {
     static dispatch_once_t onceToken;

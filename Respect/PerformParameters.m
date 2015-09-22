@@ -24,9 +24,6 @@
 @end
 
 @implementation PerformParameters
-@synthesize parameters = _parameters;
-@synthesize path = _path;
-@synthesize textLocation = _textLocation;
 
 + (id)performParametersWithParameters:(NSArray *)parameters
                                  path:(NSString *)path

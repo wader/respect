@@ -52,9 +52,6 @@
 @end
 
 @implementation ExpressionSignatureToken
-@synthesize range = _range;
-@synthesize string = _string;
-@synthesize type = _type;
 
 + (id)tokenWithRange:(NSRange)range
             inString:(NSString *)string

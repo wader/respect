@@ -19,7 +19,6 @@
 #import "ExpressionSignatureToken.h"
 
 @implementation ExpressionSignatureIdent
-@synthesize name = _name;
 
 + (id<ExpressionSignature>)parseTokens:(PeekableEnumerator *)tokens
                                  error:(NSError **)error {

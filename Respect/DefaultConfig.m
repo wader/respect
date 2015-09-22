@@ -31,13 +31,6 @@
 @end
 
 @implementation DefaultConfig
-@synthesize file = _file;
-@synthesize textLocation = _textLocation;
-@synthesize name = _name;
-@synthesize argument = _argument;
-@synthesize configValue = _configValue;
-@synthesize errorMessage = _errorMessage;
-@synthesize hasError = _hasError;
 
 + (id)defaultWithLinter:(ResourceLinter *)linter
                    file:(NSString *)file

@@ -30,10 +30,6 @@
 @end
 
 @implementation TextFile
-@synthesize path = _path;
-@synthesize text = _text;
-@synthesize whitedoutCommentsText = _whitedoutCommentsText;
-@synthesize lineRanges = _lineRanges;
 
 + (id)textFileWithText:(NSString *)text path:(NSString *)path {
     return [[self alloc] initWithText:text path:path];

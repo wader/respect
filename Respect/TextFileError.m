@@ -24,9 +24,6 @@
 @end
 
 @implementation TextFileError
-@synthesize file = _file;
-@synthesize textLocation = _textLocation;
-@synthesize message = _message;
 
 - (id)initWithFile:(NSString *)file
       textLocation:(TextLocation)textLocation

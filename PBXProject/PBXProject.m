@@ -113,11 +113,6 @@ static NSError *makePBXError(NSString *format, ...) {
 
 
 @implementation PBXNode
-@synthesize path = _path;
-@synthesize sourceTree = _sourceTree;
-@synthesize parent = _parent;
-@synthesize project = _project;
-
 
 - (NSString *)buildPath {
     NSString *absPath = nil;
@@ -147,8 +142,6 @@ static NSError *makePBXError(NSString *format, ...) {
 
 
 @implementation PBXFileReference
-@synthesize name = _name;
-
 
 - (BOOL)isValid:(NSError **)error {
     if (!([super isValid:error] &&
@@ -193,8 +186,6 @@ static NSError *makePBXError(NSString *format, ...) {
 
 
 @implementation PBXGroup
-@synthesize name = _name;
-@synthesize children = _children;
 
 + (BOOL)isValidChild:(NSObject *)child {
     // check exact class and not subclass
@@ -290,8 +281,6 @@ static NSError *makePBXError(NSString *format, ...) {
 
 
 @implementation XCVersionGroup
-@synthesize currentVersion = _currentVersion;
-
 + (BOOL)isValidChild:(NSObject *)child {
     return [child isMemberOfClass:[PBXFileReference class]];
 }
@@ -316,9 +305,6 @@ static NSError *makePBXError(NSString *format, ...) {
 
 
 @implementation PBXBuildFile
-@synthesize fileRef = _fileRef;
-
-
 - (BOOL)isValid:(NSError **)error {
     if (!(self.fileRef != nil &&
           ([self.fileRef isMemberOfClass:[PBXFileReference class]] ||
@@ -337,8 +323,6 @@ static NSError *makePBXError(NSString *format, ...) {
 
 
 @implementation PBXBuildPhase
-@synthesize files = _files;
-
 
 - (BOOL)isValid:(NSError **)error {
     if (!(self.files &&
@@ -371,10 +355,6 @@ static NSError *makePBXError(NSString *format, ...) {
 
 
 @implementation PBXNativeTarget
-@synthesize name = _name;
-@synthesize buildPhases = _buildPhases;
-@synthesize buildConfigurationList = _buildConfigurationList;
-
 
 - (BOOL)isValid:(NSError **)error {
     if (!(self.name &&
@@ -443,14 +423,6 @@ static NSError *makePBXError(NSString *format, ...) {
 
 
 @implementation XCBuildConfiguration
-@synthesize name = _name;
-@synthesize baseConfigurationReference = _baseConfigurationReference;
-@synthesize buildSettings = _buildSettings;
-@synthesize parent = _parent;
-@synthesize project = _project;
-
-@synthesize baseConfiguration = _baseConfiguration;
-
 
 - (BOOL)isValid:(NSError **)error {
     if (!(self.buildSettings &&
@@ -585,8 +557,6 @@ static NSError *makePBXError(NSString *format, ...) {
 
 
 @implementation XCConfigurationList
-@synthesize buildConfigurations = _buildConfigurations;
-
 
 - (BOOL)isValid:(NSError **)error {
     if (!(self.buildConfigurations &&
@@ -611,14 +581,6 @@ static NSError *makePBXError(NSString *format, ...) {
 
 
 @implementation PBXProject
-@synthesize buildConfigurationList = _buildConfigurationList;
-@synthesize targets = _targets;
-@synthesize knownRegions = _knownRegions;
-@synthesize mainGroup = _mainGroup;
-@synthesize environment = _environment;
-@synthesize pbxFilePath = _pbxFilePath;
-
-@synthesize fallbackEnvironment = _fallbackEnvironment;
 
 + (PBXProject *)pbxProjectFromPath:(NSString *)path
                              error:(NSError **)error {

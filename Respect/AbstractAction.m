@@ -26,11 +26,6 @@
 @end
 
 @implementation AbstractAction
-@synthesize linter = _linter;
-@synthesize file = _file;
-@synthesize textLocation = _textLocation;
-@synthesize argumentString = _argumentString;
-@synthesize isDefaultConfig = _isDefaultConfig;
 
 + (NSString *)name {
     return @"";

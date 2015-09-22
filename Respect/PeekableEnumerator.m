@@ -23,8 +23,6 @@
 @end
 
 @implementation PeekableEnumerator
-@synthesize enumerator = _enumerator;
-@synthesize peekedObjects = _peekedObjects;
 
 - (id)initWithEnumerator:(NSEnumerator *)enumerator {
     self = [super init];

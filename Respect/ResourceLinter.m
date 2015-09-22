@@ -115,29 +115,6 @@ static NSComparator fileSourcedErrorComparator = ^NSComparisonResult(id a, id b)
 @end
 
 @implementation ResourceLinter
-@synthesize configPath = _configPath;
-@synthesize parseDefaultConfig = _parseDefaultConfig;
-@synthesize staticMatcher = _staticMatcher;
-
-@synthesize linterSource = _linterSource;
-@synthesize defaultConfigs = _defaultConfigs;
-@synthesize matchers = _matchers;
-@synthesize bundleResources = _bundleResources;
-@synthesize lowercaseBundleResources = _lowercaseBundleResources;
-@synthesize resourceReferences = _resourceReferences;
-@synthesize missingReferences = _missingReferences;
-@synthesize missingReferencesIgnored = _missingReferencesIgnored;
-@synthesize unusedResources = _unusedResources;
-@synthesize unusedResourcesIgnored = _unusedResourcesIgnored;
-@synthesize lintWarnings = _lintWarnings;
-@synthesize lintWarningsIgnored = _lintWarningsIgnored;
-@synthesize lintErrors = _lintErrors;
-@synthesize lintErrorsIgnored = _lintErrorsIgnored;
-@synthesize configErrors = _configErrors;
-@synthesize unusedIgnoreConfigs = _unusedIgnoreConfigs;
-@synthesize missingIgnoreConfigs = _missingIgnoreConfigs;
-@synthesize warningIgnoreConfigs = _warningIgnoreConfigs;
-@synthesize errorIgnoreConfigs = _errorIgnoreConfigs;
 
 - (id)initWithResourceLinterSource:(id<ResourceLinterSource>)linterSource
                         configPath:(NSString *)configPath

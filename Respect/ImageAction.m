@@ -27,8 +27,6 @@
 @end
 
 @implementation ImageAction
-@synthesize imageNamedFinder = _imageNamedFinder;
-@synthesize actionOptions = _actionOptions;
 
 + (NSString *)name {
     return @"Image";

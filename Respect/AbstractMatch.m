@@ -28,13 +28,6 @@
 @end
 
 @implementation AbstractMatch
-@synthesize linter = _linter;
-@synthesize file = _file;
-@synthesize textLocation = _textLocation;
-@synthesize argumentString = _argumentString;
-@synthesize isDefaultConfig = _isDefaultConfig;
-@synthesize actions = _actions;
-@synthesize performParameters = _performParameters;
 
 + (NSString *)name {
     return @"";

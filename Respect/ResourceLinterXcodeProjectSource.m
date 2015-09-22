@@ -39,13 +39,6 @@
 @end
 
 @implementation ResourceLinterXcodeProjectSource
-@synthesize pbxProject = _pbxProject;
-@synthesize nativeTarget = _nativeTarget;
-@synthesize buildConfiguration = _buildConfiguration;
-@synthesize sourceTextFiles = _sourceTextFiles;
-@synthesize resources = _resources;
-@synthesize lintWarnings = _lintWarnings;
-@synthesize lintErrors = _lintErrors;
 
 - (id)initWithPBXProject:(PBXProject *)pbxProject
             nativeTarget:(PBXNativeTarget *)nativeTarget

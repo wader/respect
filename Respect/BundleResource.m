@@ -24,9 +24,6 @@
 @end
 
 @implementation BundleResource
-@synthesize buildSourcePath = _buildSourcePath;
-@synthesize path = _path;
-@synthesize resourceReferences = _resourceReferences;
 
 - (id)initWithBuildSourcePath:(NSString *)buildSourcePath
                          path:(NSString *)path {

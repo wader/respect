@@ -23,8 +23,6 @@
 @end
 
 @implementation ResourceLinterAbstractReport
-@synthesize linter = _linter;
-@synthesize outputBuffer = _outputBuffer;
 
 - (id)initWithLinter:(ResourceLinter *)linter {
     self = [super init];

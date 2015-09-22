@@ -22,8 +22,6 @@
 #import "ExpressionSignatureArgument.h"
 
 @implementation ExpressionSignatureCall
-@synthesize name = _name;
-@synthesize arguments = _arguments;
 
 + (id<ExpressionSignature>)parseTokens:(PeekableEnumerator *)tokens
                                  error:(NSError **)error {

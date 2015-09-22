@@ -29,12 +29,6 @@
 @end
 
 @implementation ResourceReference
-@synthesize resourcePath = _resourcePath;
-@synthesize referencePath = _referencePath;
-@synthesize referenceHint = _referenceHint;
-@synthesize referenceLocation = _referenceLocation;
-@synthesize bundleResources = _bundleResources;
-@synthesize missingResourceHint = _missingResourceHint;
 
 - (id)initWithResourcePath:(NSString *)resourcePath
              referencePath:(NSString *)referencePath

@@ -28,8 +28,6 @@
 @end
 
 @implementation ResourceMatch
-@synthesize re = _re;
-@synthesize error = _error;
 
 + (NSString *)name {
     return @"ResourceMatch";

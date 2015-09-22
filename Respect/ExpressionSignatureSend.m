@@ -29,15 +29,10 @@
 @end
 
 @implementation ExpressionSignatureSendParameter
-@synthesize name = _name;
-@synthesize argument = _argument;
-
 @end
 
 
 @implementation ExpressionSignatureSend
-@synthesize receiver = _receiver;
-@synthesize parameters = _parameters;
 
 + (id<ExpressionSignature>)parseTokens:(PeekableEnumerator *)tokens
                                  error:(NSError **)error {

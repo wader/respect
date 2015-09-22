@@ -28,10 +28,6 @@
 @end
 
 @implementation FileAction
-@synthesize condition = _condition;
-@synthesize resourcePathTemplates = _resourcePathTemplates;
-@synthesize permutationsPattern = _permutationsPattern;
-@synthesize hasError = _hasError;
 
 + (NSString *)name {
     return @"File";

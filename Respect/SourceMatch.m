@@ -30,9 +30,6 @@
 @end
 
 @implementation SourceMatch
-@synthesize experssionSignature = _experssionSignature;
-@synthesize re = _re;
-@synthesize error = _error;
 
 + (NSString *)name {
     return @"SourceMatch";

@@ -78,8 +78,6 @@ typedef enum {
 @end
 
 @implementation XCConfigParserToken
-@synthesize tokenType = _tokenType;
-@synthesize range = _range;
 @end
 
 static XCConfigParserToken *makeXCConfigParserToken(XCConfigParserTokenType tokenType,
@@ -97,7 +95,6 @@ static XCConfigParserToken *makeXCConfigParserToken(XCConfigParserTokenType toke
 @end
 
 @implementation XCConfigParserStatement
-@synthesize range = _range;
 @end
 
 @interface XCConfigParserStatementPair : XCConfigParserStatement
@@ -106,8 +103,6 @@ static XCConfigParserToken *makeXCConfigParserToken(XCConfigParserTokenType toke
 @end
 
 @implementation XCConfigParserStatementPair
-@synthesize key = _key;
-@synthesize value = _value;
 @end
 
 @interface XCConfigParserStatementInclude : XCConfigParserStatement
@@ -115,7 +110,6 @@ static XCConfigParserToken *makeXCConfigParserToken(XCConfigParserTokenType toke
 @end
 
 @implementation XCConfigParserStatementInclude
-@synthesize path = _path;
 @end
 
 static NSUInteger lineNumberFromLocation(NSString *string, NSUInteger location) {

@@ -29,10 +29,6 @@
 @end
 
 @implementation PBXUnarchiver
-@synthesize allowedClasses = _allowedClasses;
-@synthesize objects = _objects;
-@synthesize rootObjectId = _rootObjectId;
-@synthesize objectIdMap = _objectIdMap;
 
 - (id)initWithFile:(NSString *)path {
     self = [super init];

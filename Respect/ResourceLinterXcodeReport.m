@@ -36,7 +36,6 @@ static NSComparator pathStringComparator = ^NSComparisonResult(id a, id b) {
 @end
 
 @implementation ResourceLinterXcodeReport
-@synthesize fileIssues = _fileIssues;
 
 - (id)initWithLinter:(ResourceLinter *)linter {
     self = [super initWithLinter:linter];
