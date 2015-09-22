@@ -68,7 +68,7 @@
                              textLocation:textLocation
                                   message:[NSString stringWithFormat:
                                            @"Matcher error: %@",
-                                           [self.error localizedDescription]]]];
+                                           (self.error).localizedDescription]]];
     }
     
     return self;
@@ -80,7 +80,7 @@
         return;
     }
     
-    if ([self.actions count] == 0) {
+    if ((self.actions).count == 0) {
         [self.linter.configErrors addObject:
          [ConfigError configErrorWithFile:self.file
                              textLocation:self.textLocation
@@ -92,7 +92,7 @@
         NSTextCheckingResult *result = [self.re
                                         firstMatchInString:bundleRes.path
                                         options:0
-                                        range:NSMakeRange(0, [bundleRes.path length])];
+                                        range:NSMakeRange(0, (bundleRes.path).length)];
         if (result == nil || result.range.location == NSNotFound) {
             continue;
         }
@@ -117,7 +117,7 @@
         }
     }
     
-    if (!self.isDefaultConfig && [self.performParameters count] == 0) {
+    if (!self.isDefaultConfig && (self.performParameters).count == 0) {
         [self.linter.configErrors addObject:
          [ConfigError configErrorWithFile:self.file
                              textLocation:self.textLocation
@@ -133,7 +133,7 @@
             [lines addObject:[NSString stringWithFormat:@"// Translated to %@", self.re.pattern]];
         }
     } else {
-        [lines addObject:[NSString stringWithFormat:@"// %@", [self.error localizedDescription]]];
+        [lines addObject:[NSString stringWithFormat:@"// %@", (self.error).localizedDescription]];
     }
     
     [lines addObject:[NSString stringWithFormat:@"@Lint%@: %@", [[self class] name], self.argumentString]];

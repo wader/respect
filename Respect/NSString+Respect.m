@@ -23,7 +23,7 @@
 
 - (NSString *)respect_stringByEscapingCharactesInSet:(NSCharacterSet *)set {
     NSMutableString *escaped = [NSMutableString string];
-    NSUInteger length = [self length];
+    NSUInteger length = self.length;
 
     for (NSUInteger i = 0; i < length; i++) {
         unichar c = [self characterAtIndex:i];
@@ -39,7 +39,7 @@
 
 - (NSString *)respect_stringByUnEscapingCharactersInSet:(NSCharacterSet *)set {
     NSMutableString *unescaped = [NSMutableString string];
-    NSUInteger length = [self length];
+    NSUInteger length = self.length;
 
     for (NSUInteger i = 0; i < length; i++) {
         unichar c = [self characterAtIndex:i];
@@ -65,12 +65,10 @@
 // so do our own fallback first and then use the apple one
 + (NSString *)respect_stringWithContentsOfFileTryingEncodings:(NSString *)path
                                                         error:(NSError **)error {
-    for (NSNumber *encodingNumber in [NSArray arrayWithObjects:
-                                      [NSNumber numberWithInt:NSUTF8StringEncoding],
-                                      [NSNumber numberWithInt:NSISOLatin1StringEncoding],
-                                      nil]) {
+    for (NSNumber *encodingNumber in @[@(NSUTF8StringEncoding),
+                                       @(NSISOLatin1StringEncoding)]) {
         NSString *source = [NSString stringWithContentsOfFile:path
-                                                     encoding:[encodingNumber intValue]
+                                                     encoding:encodingNumber.intValue
                                                         error:error];
         if (source != nil) {
             return source;
@@ -84,7 +82,7 @@
 
 - (NSString *)respect_stringByStripSuffix:(NSString *)suffix {
     if ([self hasSuffix:suffix]) {
-        return [self substringToIndex:[self length] - [suffix length]];
+        return [self substringToIndex:self.length - suffix.length];
     } else {
         return self;
     }
@@ -93,7 +91,7 @@
 - (NSString *)respect_stringByStripSuffixes:(NSArray *)suffixes {
     for (NSString *suffix in suffixes) {
         if ([self hasSuffix:suffix]) {
-            return [self substringToIndex:[self length] - [suffix length]];
+            return [self substringToIndex:self.length - suffix.length];
         }
     }
 
@@ -103,7 +101,7 @@
 - (NSString *)respect_stringByStripPrefixes:(NSArray *)prefixes {
     for (NSString *prefix in prefixes) {
         if ([self hasPrefix:prefix]) {
-            return [self substringFromIndex:[prefix length]];
+            return [self substringFromIndex:prefix.length];
         }
     }
 
@@ -121,7 +119,7 @@
 }
 
 - (NSString *)respect_stringRelativeToPathPrefix:(NSString *)pathPrefix {
-    NSString *relPath = [self respect_stringByStripPrefixes:[NSArray arrayWithObject:pathPrefix]];
+    NSString *relPath = [self respect_stringByStripPrefixes:@[pathPrefix]];
     if (relPath != self && [relPath hasPrefix:@"/"]) {
         return [relPath substringFromIndex:1];
     }
@@ -139,20 +137,20 @@
                                error:NULL];
     NSArray *results = [re matchesInString:self
                                    options:0
-                                     range:NSMakeRange(0, [self length])];
+                                     range:NSMakeRange(0, self.length)];
     for (NSTextCheckingResult *result in results) {
         NSRange r = result.range;
         NSString *paramString = [self substringWithRange:[result rangeAtIndex:1]];
-        NSUInteger paramNumber = [paramString intValue];
-        if (paramNumber >= [parameters count]) {
+        NSUInteger paramNumber = paramString.intValue;
+        if (paramNumber >= parameters.count) {
             continue;
         }
 
-        NSString *replacement = [parameters objectAtIndex:paramNumber];
+        NSString *replacement = parameters[paramNumber];
 
         r.location -= displace;
         [replaced replaceCharactersInRange:r withString:replacement];
-        displace += r.length - [replacement length];
+        displace += r.length - replacement.length;
     }
 
     return replaced;
@@ -162,12 +160,12 @@
                                 permutations:(NSMutableArray *)permutations
                                       prefix:(NSString *)prefix
                                 currentIndex:(int)currentIndex {
-    if (currentIndex >= [parts count]) {
+    if (currentIndex >= parts.count) {
         [permutations addObject:prefix];
         return;
     }
 
-    for (NSString *part in [parts objectAtIndex:currentIndex]) {
+    for (NSString *part in parts[currentIndex]) {
         [self respect_permutationsCollectWithParts:parts
                                       permutations:permutations
                                             prefix:[prefix stringByAppendingString:part]
@@ -201,7 +199,7 @@
 
                               return permutations;
                           } else {
-                              return [NSArray arrayWithObject:string];
+                              return @[string];
                           }
                       }];
 
@@ -215,12 +213,11 @@
 }
 
 - (NSString *)respect_stringByResolvingPathRealtiveTo:(NSString *)path {
-    if ([self isAbsolutePath]) {
+    if (self.absolutePath) {
         return self;
     } else {
-        return [[NSString pathWithComponents:
-                 [NSArray arrayWithObjects:path, self, nil]]
-                stringByStandardizingPath];
+        return [NSString pathWithComponents:
+                @[path, self]].stringByStandardizingPath;
     }
 }
 
@@ -234,7 +231,7 @@
                                          withCharacter:(unichar)character {
     NSMutableString *replaced = [self mutableCopy];
     NSString *replaceString = [NSString stringWithFormat:@"%C", character];
-    NSUInteger len = [replaced length];
+    NSUInteger len = replaced.length;
 
     for (NSUInteger i = 0; i < len; i++) {
         if ([set characterIsMember:[replaced characterAtIndex:i]]) {
@@ -247,8 +244,8 @@
 }
 
 - (NSUInteger)respect_levenshteinDistanceToString:(NSString *)string {
-    NSUInteger sl = [self length];
-    NSUInteger tl = [string length];
+    NSUInteger sl = self.length;
+    NSUInteger tl = string.length;
     NSUInteger *d = calloc(sizeof(*d), (sl+1) * (tl+1));
 
 #define d(i, j) d[((j) * sl) + (i)]
@@ -279,12 +276,12 @@
 - (NSString *)respect_stringBySuggestionFromArray:(NSArray *)suggestions
                              maxDistanceThreshold:(NSUInteger)maxDistanceThreshold {
     NSString *bestSuggestion = nil;
-    NSString *lowercased = [self lowercaseString];
+    NSString *lowercased = self.lowercaseString;
     NSUInteger lowestDistance = NSUIntegerMax;
 
     for (NSString *suggestion in suggestions) {
         NSUInteger distance = [lowercased respect_levenshteinDistanceToString:
-                               [suggestion lowercaseString]];
+                               suggestion.lowercaseString];
         if (distance <= maxDistanceThreshold && distance < lowestDistance) {
             bestSuggestion = suggestion;
             lowestDistance = distance;
@@ -297,7 +294,7 @@
 - (NSArray *)respect_componentsSeparatedByWhitespaceAllowingQuotes {
     NSMutableArray *components = [NSMutableArray array];
     NSCharacterSet *whitespaceSet = [NSCharacterSet whitespaceCharacterSet];
-    NSUInteger length = [self length];
+    NSUInteger length = self.length;
     NSUInteger startIndex = -1;
     BOOL inArgument = NO;
     BOOL inQuote = NO;
@@ -368,7 +365,7 @@
     if (!hasSpace) {
         return escaped;
     }
-
+    
     return [NSString stringWithFormat:@"\"%@\"", escaped];
 }
 

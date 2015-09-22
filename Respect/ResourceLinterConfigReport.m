@@ -69,26 +69,24 @@
             [self addLines:[action configLines]];
         }
 
-        if ([matcher.actions count] > 0) {
+        if ((matcher.actions).count > 0) {
             [self addLine:@""];
         }
     }
 
-    for (NSArray *ignoreConfigs in [NSArray arrayWithObjects:
-                                    self.linter.missingIgnoreConfigs,
-                                    self.linter.unusedIgnoreConfigs,
-                                    self.linter.warningIgnoreConfigs,
-                                    self.linter.errorIgnoreConfigs,
-                                    nil]) {
+    for (NSArray *ignoreConfigs in @[self.linter.missingIgnoreConfigs,
+                                     self.linter.unusedIgnoreConfigs,
+                                     self.linter.warningIgnoreConfigs,
+                                     self.linter.errorIgnoreConfigs]) {
         for (IgnoreConfig *ignoreConfig in ignoreConfigs) {
             [self addLines:[ignoreConfig configLines]];
         }
 
-        if ([ignoreConfigs count] > 0) {
+        if (ignoreConfigs.count > 0) {
             [self addLine:@""];
         }
     }
-
+    
     return self;
 }
 

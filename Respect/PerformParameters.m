@@ -25,7 +25,7 @@
 
 @implementation PerformParameters
 
-+ (id)performParametersWithParameters:(NSArray *)parameters
++ (instancetype)performParametersWithParameters:(NSArray *)parameters
                                  path:(NSString *)path
                          textLocation:(TextLocation)textLocation {
     return [[self alloc] initWithParameters:parameters
@@ -33,7 +33,7 @@
                                 textLocation:textLocation];
 }
 
-- (id)initWithParameters:(NSArray *)parameters
+- (instancetype)initWithParameters:(NSArray *)parameters
                     path:(NSString *)path
             textLocation:(TextLocation)textLocation {
     self = [super init];

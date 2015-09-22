@@ -32,11 +32,12 @@
 
 + (NSString *)name;
 
-- (id)initWithLinter:(ResourceLinter *)linter
+- (instancetype)init NS_UNAVAILABLE;
+- (instancetype)initWithLinter:(ResourceLinter *)linter
                 file:(NSString *)file
         textLocation:(TextLocation)textLocation
       argumentString:(NSString *)argumentString
-     isDefaultConfig:(BOOL)isDefaultConfig;
+     isDefaultConfig:(BOOL)isDefaultConfig NS_DESIGNATED_INITIALIZER;
 - (void)addAction:(AbstractAction *)action;
 - (void)performMatch;
 - (NSArray *)configLines;

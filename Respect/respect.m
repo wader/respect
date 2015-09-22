@@ -75,13 +75,13 @@ int main(int argc,  char *const argv[]) {
             help(argv0);
             return EXIT_SUCCESS;
         } else if (c == 'c') {
-            configPath = [NSString stringWithUTF8String:optarg];
+            configPath = @(optarg);
         } else if (c == 'n') {
             parseDefaultConfig = NO;
         } else if (c == 'd') {
             dumpConfig = YES;
         } else if (c == 's') {
-            spFeaturesPath = [NSString stringWithUTF8String:optarg];
+            spFeaturesPath = @(optarg);
         } else {
             return EXIT_FAILURE;
         }
@@ -91,10 +91,10 @@ int main(int argc,  char *const argv[]) {
     argv += optind;
 
     // try to get configuration from env
-    NSDictionary *env = [[NSProcessInfo processInfo] environment];
-    NSString *xcodeProjectPath = [env objectForKey:@"PROJECT_FILE_PATH"];
-    NSString *targetName = [env objectForKey:@"TARGET_NAME"];
-    NSString *configurationName = [env objectForKey:@"CONFIGURATION"] ?: @"Release";
+    NSDictionary *env = [NSProcessInfo processInfo].environment;
+    NSString *xcodeProjectPath = env[@"PROJECT_FILE_PATH"];
+    NSString *targetName = env[@"TARGET_NAME"];
+    NSString *configurationName = env[@"CONFIGURATION"] ?: @"Release";
     // assume Xcode if PROJECT_FILE_PATH env was found else CLI
     Class lintReportClass = (xcodeProjectPath != nil ?
                              [ResourceLinterXcodeReport class] :
@@ -105,39 +105,36 @@ int main(int argc,  char *const argv[]) {
     }
 
     if (argc > 0) {
-        xcodeProjectPath = [NSString stringWithCString:argv[0]
-                                              encoding:NSUTF8StringEncoding];
+        xcodeProjectPath = @(argv[0]);
     } else if (xcodeProjectPath == nil) {
         help(argv0);
         return EXIT_FAILURE;
     }
 
     if (argc > 1) {
-        targetName = [NSString stringWithCString:argv[1]
-                                        encoding:NSUTF8StringEncoding];
+        targetName = @(argv[1]);
     }
 
     if (argc > 2) {
-        configurationName = [NSString stringWithCString:argv[2]
-                                               encoding:NSUTF8StringEncoding];
+        configurationName = @(argv[2]);
     }
 
     NSError *error = nil;
     PBXProject *pbxProject = [PBXProject pbxProjectFromPath:xcodeProjectPath
                                                       error:&error];
     if (pbxProject == nil) {
-        print_error(@"Failed to read %@: %@", xcodeProjectPath, [error localizedDescription]);
+        print_error(@"Failed to read %@: %@", xcodeProjectPath, error.localizedDescription);
         return EXIT_FAILURE;
     }
 
     NSArray *nativeTargetNames = [pbxProject nativeTargetNames];
     if (targetName == nil) {
-        if ([nativeTargetNames count] == 0) {
+        if (nativeTargetNames.count == 0) {
             print_error(@"No native targets found in project file.");
             return EXIT_FAILURE;
         }
 
-        targetName = [nativeTargetNames objectAtIndex:0];
+        targetName = nativeTargetNames[0];
     } else {
         if (![nativeTargetNames containsObject:targetName]) {
             print_error(@"No native target named \"%@\" found.", targetName);
@@ -167,7 +164,7 @@ int main(int argc,  char *const argv[]) {
                                nativeTarget:nativeTarget
                          buildConfiguration:buildConfiguration
                                       error:&error]) {
-        print_error(@"%@: %@", xcodeProjectPath, [error localizedDescription]);
+        print_error(@"%@: %@", xcodeProjectPath, error.localizedDescription);
         return EXIT_FAILURE;
     }
 
@@ -187,7 +184,7 @@ int main(int argc,  char *const argv[]) {
     ResourceLinterAbstractReport *lintReport = [[lintReportClass alloc]
                                                 initWithLinter:linter];
 
-    fprintf(stdout, "%s", [lintReport.outputBuffer UTF8String]);
-
+    fprintf(stdout, "%s", (lintReport.outputBuffer).UTF8String);
+    
     return EXIT_SUCCESS;
 }

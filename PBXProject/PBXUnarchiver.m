@@ -41,8 +41,8 @@
         return nil;
     }
 
-    self.rootObjectId = [pbxDict objectForKey:@"rootObject"];
-    self.objects = [pbxDict objectForKey:@"objects"];
+    self.rootObjectId = pbxDict[@"rootObject"];
+    self.objects = pbxDict[@"objects"];
     self.objectIdMap = [NSMutableDictionary dictionary];
 
     return self;
@@ -51,15 +51,15 @@
 
 - (id)decodeValue:(id)value {
     if ([value isKindOfClass:[NSString class]]) {
-        id object = [self.objectIdMap objectForKey:value];
+        id object = self.objectIdMap[value];
         if (object != nil) {
             return object;
-        } else if ([self.objects objectForKey:value]) {
-            object = [self decodeObject:[self.objects objectForKey:value]];
+        } else if (self.objects[value]) {
+            object = [self decodeObject:self.objects[value]];
             if (object == nil) {
                 return nil;
             }
-            [self.objectIdMap setObject:object forKey:value];
+            self.objectIdMap[value] = object;
 
             return object;
         } else {
@@ -80,12 +80,12 @@
     } else if ([value isKindOfClass:[NSDictionary class]]) {
         NSMutableDictionary *decodedDict = [NSMutableDictionary dictionary];
         for (id key in value) {
-            id decodedObject = [self decodeValue:[value objectForKey:key]];
+            id decodedObject = [self decodeValue:value[key]];
             if (decodedObject == nil) {
                 continue;
             }
 
-            [decodedDict setObject:decodedObject forKey:key];
+            decodedDict[key] = decodedObject;
         }
 
         return decodedDict;
@@ -99,7 +99,7 @@
         return nil;
     }
 
-    NSString *objectIsa = [objectDict objectForKey:@"isa"];
+    NSString *objectIsa = objectDict[@"isa"];
     if (objectIsa == nil || ![objectIsa isKindOfClass:[NSString class]]) {
         return nil;
     }
@@ -117,11 +117,11 @@
     id objectInstance = [[objectClass alloc] init];
 
     for (NSString *key in objectDict) {
-        if (class_getProperty(objectClass, [key UTF8String]) == NULL) {
+        if (class_getProperty(objectClass, key.UTF8String) == NULL) {
             continue;
         }
 
-        [objectInstance setValue:[self decodeValue:[objectDict objectForKey:key]]
+        [objectInstance setValue:[self decodeValue:objectDict[key]]
                           forKey:key];
     }
 
@@ -135,7 +135,7 @@
         ![self.objects isKindOfClass:[NSDictionary class]]) {
         return nil;
     }
-
+    
     return [self decodeValue:self.rootObjectId];
 }
 

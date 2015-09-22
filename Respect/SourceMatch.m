@@ -76,7 +76,7 @@
                              textLocation:textLocation
                                   message:[NSString stringWithFormat:
                                            @"Matcher error: %@",
-                                           [self.error localizedDescription]]]];
+                                           (self.error).localizedDescription]]];
     }
     
     return self;
@@ -88,7 +88,7 @@
     // replaces the comment text with whitesapce and leaves new lines alone
     [self.re enumerateMatchesWithLineNumberInString:textFile.whitedoutCommentsText
                                             options:0
-                                              range:NSMakeRange(0, [textFile.whitedoutCommentsText length])
+                                              range:NSMakeRange(0, (textFile.whitedoutCommentsText).length)
                                          lineRanges:textFile.lineRanges
                                          usingBlock:
      ^(NSTextCheckingResult *result, NSUInteger lineNumber, NSRange inLineRange,
@@ -117,7 +117,7 @@
         return;
     }
     
-    if ([self.actions count] == 0) {
+    if ((self.actions).count == 0) {
         [self.linter.configErrors addObject:
          [ConfigError configErrorWithFile:self.file
                              textLocation:self.textLocation
@@ -130,7 +130,7 @@
         [self parseResourceReferencesInSourceFile:textFile];
     }
     
-    if (!self.isDefaultConfig && [self.performParameters count] == 0) {
+    if (!self.isDefaultConfig && (self.performParameters).count == 0) {
         [self.linter.configErrors addObject:
          [ConfigError configErrorWithFile:self.file
                              textLocation:self.textLocation
@@ -146,7 +146,7 @@
             [lines addObject:[NSString stringWithFormat:@"// Translated to %@", self.re.pattern]];
         }
     } else {
-        [lines addObject:[NSString stringWithFormat:@"// %@", [self.error localizedDescription]]];
+        [lines addObject:[NSString stringWithFormat:@"// %@", (self.error).localizedDescription]];
     }
     
     [lines addObject:[NSString stringWithFormat:@"@Lint%@: %@", [[self class] name], self.argumentString]];

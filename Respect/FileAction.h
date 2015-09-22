@@ -22,11 +22,11 @@
 #import "AbstractAction.h"
 #import "TextLocation.h"
 
-typedef enum {
+typedef NS_ENUM(NSInteger, FileReferenceCondition) {
     FileReferenceConditionAll,
     FileReferenceConditionAny,
     FileReferenceConditionOptional
-} FileReferenceCondition;
+};
 
 @interface FileAction : AbstractAction
 @property(nonatomic, assign, readwrite) FileReferenceCondition condition;

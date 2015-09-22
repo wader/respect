@@ -31,7 +31,7 @@
     return nil;
 }
 
-- (id)initWithName:(NSString *)name {
+- (instancetype)initWithName:(NSString *)name {
     self = [super init];
     if (self == nil) {
         return nil;

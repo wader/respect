@@ -38,18 +38,18 @@
 
 
 - (id)nextObject {
-    if ([self.peekedObjects count] == 0) {
+    if ((self.peekedObjects).count == 0) {
         return [self.enumerator nextObject];
     }
 
-    id object = [self.peekedObjects objectAtIndex:0];
+    id object = self.peekedObjects[0];
     [self.peekedObjects removeObjectAtIndex:0];
 
     return object;
 }
 
 - (id)peekObjectAtOffset:(NSUInteger)offset {
-    for (NSUInteger delta = (offset+1) - [self.peekedObjects count];
+    for (NSUInteger delta = (offset+1) - (self.peekedObjects).count;
          delta > 0; delta--) {
         id object = [self.enumerator nextObject];
         if (object == nil) {
@@ -59,8 +59,8 @@
         [self.peekedObjects addObject:object];
     }
 
-    if (offset < [self.peekedObjects count]) {
-        return [self.peekedObjects objectAtIndex:offset];
+    if (offset < (self.peekedObjects).count) {
+        return self.peekedObjects[offset];
     }
 
     return nil;
@@ -77,7 +77,7 @@
     for (id object in self) {
         [objects addObject:object];
     }
-
+    
     return objects;
 }
 

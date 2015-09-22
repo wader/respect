@@ -19,7 +19,8 @@
 #import "AbstractAction.h"
 
 @implementation StaticMatch
-- (id)initWithLinter:(ResourceLinter *)linter {
+
+- (instancetype)initWithLinter:(ResourceLinter *)linter {
     self = [super initWithLinter:linter
                             file:nil
                     textLocation:MakeTextLineLocation(1)

@@ -22,11 +22,12 @@
 @property(nonatomic, copy, readonly) NSString *path;
 @property(nonatomic, assign, readonly) TextLocation textLocation;
 
-+ (id)performParametersWithParameters:(NSArray *)parameters
++ (instancetype)performParametersWithParameters:(NSArray *)parameters
                                  path:(NSString *)path
                          textLocation:(TextLocation)textLocation;
 
-- (id)initWithParameters:(NSArray *)parameters
+- (instancetype)init NS_UNAVAILABLE;
+- (instancetype)initWithParameters:(NSArray *)parameters
                     path:(NSString *)path
-            textLocation:(TextLocation)textLocation;
+            textLocation:(TextLocation)textLocation NS_DESIGNATED_INITIALIZER;
 @end

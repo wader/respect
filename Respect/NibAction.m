@@ -72,9 +72,9 @@
     for(NSXMLNode *node in [dom.rootElement nodesForXPath:@"//string[@key='NSResourceName']"
                                                     error:NULL]) {
         NSArray *resourcePaths = [self.imageNamedFinder
-                                  pathsForName:[node stringValue]
+                                  pathsForName:node.stringValue
                                   usingFileExistsBlock:^BOOL(NSString *path) {
-                                      return [self.linter.bundleResources objectForKey:path] != nil;
+                                      return self.linter.bundleResources[path] != nil;
                                   }];
         
         for (NSString *resourcePath in resourcePaths) {
@@ -86,7 +86,7 @@
                                                [self actionMissingResourceHint:resourcePath]];
             [self.linter.resourceReferences addObject:resourceRef];
             
-            BundleResource *bundleRes = [self.linter.bundleResources objectForKey:resourcePath];
+            BundleResource *bundleRes = self.linter.bundleResources[resourcePath];
             if (bundleRes == nil) {
                 continue;
             }
@@ -100,8 +100,8 @@
 - (NSArray *)actionResourcePaths:(NSString *)resourcePath {
     NSString *baseNibName = resourcePath;
     
-    if ([[baseNibName pathExtension] isEqualToString:@"nib"]) {
-        baseNibName = [baseNibName stringByDeletingPathExtension];
+    if ([baseNibName.pathExtension isEqualToString:@"nib"]) {
+        baseNibName = baseNibName.stringByDeletingPathExtension;
     }
     
     NSArray *deviceNames = [[NSArray respect_arrayWithIOSImageDeviceNames]
@@ -117,13 +117,13 @@
             NSString *possibleNibPath = [NSString stringWithFormat:@"%@%@%@.nib",
                                          prefix, baseNibName, deviceName];
             
-            if ([self.linter.bundleResources objectForKey:possibleNibPath]) {
+            if (self.linter.bundleResources[possibleNibPath]) {
                 [foundNibPaths addObject:possibleNibPath];
             }
         }
     }
     
-    if ([foundNibPaths count] == 0) {
+    if (foundNibPaths.count == 0) {
         [foundNibPaths addObject:resourcePath];
     }
     

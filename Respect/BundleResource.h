@@ -20,6 +20,7 @@
 @property(nonatomic, copy, readonly) NSString *path;
 @property(nonatomic, strong, readonly) NSMutableArray *resourceReferences;
 
-- (id)initWithBuildSourcePath:(NSString *)buildSourcePath
-                         path:(NSString *)path;
+- (instancetype)init NS_UNAVAILABLE;
+- (instancetype)initWithBuildSourcePath:(NSString *)buildSourcePath
+                                   path:(NSString *)path NS_DESIGNATED_INITIALIZER;
 @end

@@ -32,10 +32,7 @@ NSString * const ExpressionSignatureErrorDomain = @"ExpressionSignatureErrorDoma
     return [NSError
             errorWithDomain:ExpressionSignatureErrorDomain
             code:0
-            userInfo:[NSDictionary dictionaryWithObjectsAndKeys:
-                      description,
-                      NSLocalizedDescriptionKey,
-                      nil]];
+            userInfo:@{NSLocalizedDescriptionKey: description}];
 
 }
 

@@ -103,7 +103,7 @@ NSString * const ImageNamedOptionsIpad = @"~ipad";
     NSMutableOrderedSet *extOptions = [[[self class] extOptions] mutableCopy];
     
     [scaleOptions intersectOrderedSet:options];
-    if ([scaleOptions count] > 0) {
+    if (scaleOptions.count > 0) {
         self.scales = [NSMutableOrderedSet orderedSet];
         if ([scaleOptions containsObject:ImageNamedOptions1x]) {
             [self.scales addObject:@""];
@@ -117,7 +117,7 @@ NSString * const ImageNamedOptionsIpad = @"~ipad";
     }
     
     [deviceOptions intersectOrderedSet:options];
-    if ([deviceOptions count] > 0) {
+    if (deviceOptions.count > 0) {
         self.devices = [NSMutableOrderedSet orderedSet];
         if ([deviceOptions containsObject:ImageNamedOptionsAny]) {
             [self.devices addObject:@""];
@@ -131,7 +131,7 @@ NSString * const ImageNamedOptionsIpad = @"~ipad";
     }
     
     [extOptions intersectOrderedSet:options];
-    if ([extOptions count] > 0) {
+    if (extOptions.count > 0) {
         self.exts = [NSMutableOrderedSet orderedSet];
         for (NSString *ext in extOptions) {
             [self.exts addObject:[@"." stringByAppendingString:ext]];

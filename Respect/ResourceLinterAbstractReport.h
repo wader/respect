@@ -21,7 +21,8 @@
 @property(nonatomic, strong, readonly) ResourceLinter *linter;
 @property(nonatomic, strong, readonly) NSMutableString *outputBuffer;
 
-- (id)initWithLinter:(ResourceLinter *)linter;
+- (instancetype)init NS_UNAVAILABLE;
+- (instancetype)initWithLinter:(ResourceLinter *)linter NS_DESIGNATED_INITIALIZER;
 - (void)addLine:(NSString *)format arguments:(va_list)va  NS_FORMAT_FUNCTION(1, 0);
 - (void)addLine:(NSString *)format, ... NS_FORMAT_FUNCTION(1, 2);
 - (void)addLines:(NSArray *)lines;

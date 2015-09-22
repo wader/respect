@@ -18,27 +18,27 @@
 #import "TextFile.h"
 
 
-typedef enum {
+typedef NS_ENUM(unsigned int, ResourceLinterSourceTargetType) {
     ResourceLinterSourceTargetTypeIOS,
     ResourceLinterSourceTargetTypeUnknown
-} ResourceLinterSourceTargetType;
+};
 
 @protocol ResourceLinterSource <NSObject>
 // filename is key, value is TextFile
-- (NSDictionary *)sourceTextFiles;
+@property (nonatomic, readonly, strong) NSDictionary *sourceTextFiles;
 // bundle path is key, value is build path
-- (NSDictionary *)resources;
+@property (nonatomic, readonly, strong) NSDictionary *resources;
 // warning and errors while reading source
-- (NSArray *)lintWarnings;
-- (NSArray *)lintErrors;
-- (NSString *)projectName;
-- (NSString *)projectPath;
-- (NSString *)sourceRoot;
-- (NSString *)targetName;
-- (NSString *)configurationName;
-- (NSArray *)knownRegions;
-- (ResourceLinterSourceTargetType)targetType;
-- (NSString *)deploymentTarget;
+@property (nonatomic, readonly, strong) NSArray *lintWarnings;
+@property (nonatomic, readonly, strong) NSArray *lintErrors;
+@property (nonatomic, readonly, copy) NSString *projectName;
+@property (nonatomic, readonly, copy) NSString *projectPath;
+@property (nonatomic, readonly, copy) NSString *sourceRoot;
+@property (nonatomic, readonly, copy) NSString *targetName;
+@property (nonatomic, readonly, copy) NSString *configurationName;
+@property (nonatomic, readonly, copy) NSArray *knownRegions;
+@property (nonatomic, readonly) ResourceLinterSourceTargetType targetType;
+@property (nonatomic, readonly, copy) NSString *deploymentTarget;
 - (TextFile *)defaultConfigTextFile;
 @end
 
@@ -63,8 +63,9 @@ typedef enum {
 @property(nonatomic, strong, readonly) NSMutableArray *warningIgnoreConfigs;
 @property(nonatomic, strong, readonly) NSMutableArray *errorIgnoreConfigs;
 
-- (id)initWithResourceLinterSource:(id<ResourceLinterSource>)linterSource
-                        configPath:(NSString *)configPath
-                parseDefaultConfig:(BOOL)parseDefaultConfig;
+- (instancetype)init NS_UNAVAILABLE;
+- (instancetype)initWithResourceLinterSource:(id<ResourceLinterSource>)linterSource
+                                  configPath:(NSString *)configPath
+                          parseDefaultConfig:(BOOL)parseDefaultConfig NS_DESIGNATED_INITIALIZER;
 - (id)defaultConfigValueForName:(NSString *)name;
 @end

@@ -25,7 +25,7 @@
 
 @implementation ExpressionSignatureTokenEnumerator
 
-- (id)initWithSignature:(NSString *)signature {
+- (instancetype)initWithSignature:(NSString *)signature {
     self = [super init];
     if (self == nil) {
         return nil;

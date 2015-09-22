@@ -25,7 +25,7 @@
 
 - (NSString *)withFnmatch_stringByEscapingCharactesInSet:(NSCharacterSet *)set {
     NSMutableString *escaped = [NSMutableString string];
-    NSUInteger length = [self length];
+    NSUInteger length = self.length;
 
     for (NSUInteger i = 0; i < length; i++) {
         unichar c = [self characterAtIndex:i];
@@ -41,7 +41,7 @@
 
 - (NSString *)withFnmatch_stringByUnEscapingCharactersInSet:(NSCharacterSet *)set {
     NSMutableString *unescaped = [NSMutableString string];
-    NSUInteger length = [self length];
+    NSUInteger length = self.length;
 
     for (NSUInteger i = 0; i < length; i++) {
         unichar c = [self characterAtIndex:i];
@@ -67,7 +67,7 @@
                                          balanceCharacterPair:(NSString *)pair
                                                    usingBlock:(id (^)(NSString *string))block {
     NSMutableArray *components = [NSMutableArray array];
-    NSUInteger length = [self length];
+    NSUInteger length = self.length;
     NSUInteger nextCompStartIndex = 0;
     unichar startChar = 0;
     unichar stopChar = 0;
@@ -147,7 +147,7 @@
     unichar startChar = [pair characterAtIndex:0];
     unichar stopChar = [pair characterAtIndex:1];
     NSCharacterSet *pairSet = [NSCharacterSet characterSetWithCharactersInString:pair];
-    NSUInteger length = [self length];
+    NSUInteger length = self.length;
     NSInteger startIndex = -1;
     NSUInteger afterIndex = 0;
     NSUInteger balance = 0;

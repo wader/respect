@@ -61,7 +61,7 @@ static NSString * const InfoPlistKeyUINewsstandIcon = @"UINewsstandIcon";
                                        [self actionMissingResourceHint:resourcePath]];
     [self.linter.resourceReferences addObject:resourceRef];
     
-    BundleResource *bundleRes = [self.linter.bundleResources objectForKey:resourcePath];
+    BundleResource *bundleRes = self.linter.bundleResources[resourcePath];
     if (bundleRes == nil) {
         return;
     }
@@ -74,7 +74,7 @@ static NSString * const InfoPlistKeyUINewsstandIcon = @"UINewsstandIcon";
    referencePath:(NSString *)referencePath
    referenceHint:(NSString *)referenceHint
       isOptional:(BOOL)isOptional {
-    if (isOptional && ![self.linter.bundleResources objectForKey:name]) {
+    if (isOptional && !self.linter.bundleResources[name]) {
         return;
     }
     
@@ -90,13 +90,13 @@ static NSString * const InfoPlistKeyUINewsstandIcon = @"UINewsstandIcon";
     NSArray *resourcePaths = [self.imageNamedFinder
                               pathsForName:name
                               usingFileExistsBlock:^BOOL(NSString *path) {
-                                  return [self.linter.bundleResources objectForKey:path] != nil;
+                                  return self.linter.bundleResources[path] != nil;
                               }];
     
     // optional only if all of the found variants do not exist
     if (isOptional) {
         for (NSString *resourcePath in resourcePaths) {
-            if ([self.linter.bundleResources objectForKey:resourcePath]) {
+            if (self.linter.bundleResources[resourcePath]) {
                 isOptional = NO;
                 break;
             }
@@ -112,10 +112,10 @@ static NSString * const InfoPlistKeyUINewsstandIcon = @"UINewsstandIcon";
 }
 
 - (void)addLaunchImage:(NSDictionary *)infoPlist path:(NSString *)path {
-    NSString *launchImage = [infoPlist objectForKey:InfoPlistKeyUILaunchImageFile];
+    NSString *launchImage = infoPlist[InfoPlistKeyUILaunchImageFile];
     BOOL launchImageOptional = NO;
     if (launchImage == nil || ![launchImage isKindOfClass:[NSString class]] ||
-        [[launchImage respect_stringByTrimmingWhitespace] length] == 0) {
+        [launchImage respect_stringByTrimmingWhitespace].length == 0) {
         launchImage = @"Default";
         launchImageOptional = YES;
     }
@@ -126,9 +126,9 @@ static NSString * const InfoPlistKeyUINewsstandIcon = @"UINewsstandIcon";
     
     NSString *launchImageIphoneKey = [InfoPlistKeyUILaunchImageFile
                                       stringByAppendingString:@"~iphone"];
-    NSString *launchImageIphone = [infoPlist objectForKey:launchImageIphoneKey];
+    NSString *launchImageIphone = infoPlist[launchImageIphoneKey];
     if (launchImageIphone != nil && [launchImageIphone isKindOfClass:[NSString class]] &&
-        [[launchImageIphone respect_stringByTrimmingWhitespace] length] > 0) {
+        [launchImageIphone respect_stringByTrimmingWhitespace].length > 0) {
         [self addNamedImages:launchImageIphone
                referencePath:path
                referenceHint:launchImageIphoneKey
@@ -142,9 +142,9 @@ static NSString * const InfoPlistKeyUINewsstandIcon = @"UINewsstandIcon";
     
     NSString *launchImageIpadKey = [InfoPlistKeyUILaunchImageFile
                                     stringByAppendingString:@"~ipad"];
-    NSString *launchImageIpad = [infoPlist objectForKey:launchImageIpadKey];
+    NSString *launchImageIpad = infoPlist[launchImageIpadKey];
     if (launchImageIpad != nil && [launchImageIpad isKindOfClass:[NSString class]] &&
-        [[launchImageIpad respect_stringByTrimmingWhitespace] length] > 0) {
+        [launchImageIpad respect_stringByTrimmingWhitespace].length > 0) {
         [self addNamedImages:launchImageIpad
                referencePath:path
                referenceHint:launchImageIpadKey
@@ -159,8 +159,8 @@ static NSString * const InfoPlistKeyUINewsstandIcon = @"UINewsstandIcon";
     }
     
     // only ipad have landscape launch images
-    NSString *launchImageIpadBasename = [launchImageIpad stringByDeletingPathExtension];
-    NSString *launchImageIpadExt = [launchImageIpad pathExtension];
+    NSString *launchImageIpadBasename = launchImageIpad.stringByDeletingPathExtension;
+    NSString *launchImageIpadExt = launchImageIpad.pathExtension;
     // Append .ext if ext is not empty to not require ext to be specified
     if (![launchImageIpadExt isEqualToString:@""]) {
         launchImageIpadExt = [@"." stringByAppendingString:launchImageIpadExt];
@@ -192,35 +192,31 @@ static NSString * const InfoPlistKeyUINewsstandIcon = @"UINewsstandIcon";
     // use dictionary key for hint.
     NSMutableDictionary *iconArraysDict = [NSMutableDictionary dictionary];
     
-    NSDictionary *icons = [infoPlist objectForKey:InfoPlistKeyCFBundleIcons];
+    NSDictionary *icons = infoPlist[InfoPlistKeyCFBundleIcons];
     if (icons != nil && [icons isKindOfClass:[NSDictionary class]]) {
-        for (NSString *iconKey in [NSArray arrayWithObjects:
-                                   InfoPlistKeyCFBundlePrimaryIcon,
-                                   InfoPlistKeyUINewsstandIcon,
-                                   nil]) {
-            NSDictionary *iconDict = [icons objectForKey:iconKey];
+        for (NSString *iconKey in @[InfoPlistKeyCFBundlePrimaryIcon,
+                                   InfoPlistKeyUINewsstandIcon]) {
+            NSDictionary *iconDict = icons[iconKey];
             if (iconDict == nil || ![iconDict isKindOfClass:[NSDictionary class]]) {
                 continue;
             }
             
-            NSArray *iconArray = [iconDict objectForKey:InfoPlistKeyCFBundleIconFiles];
+            NSArray *iconArray = iconDict[InfoPlistKeyCFBundleIconFiles];
             if (iconArray != nil) {
-                [iconArraysDict setObject:iconArray
-                                   forKey:[NSString stringWithFormat:@"%@/%@",
+                iconArraysDict[[NSString stringWithFormat:@"%@/%@",
                                            InfoPlistKeyCFBundleIcons,
-                                           iconKey]];
+                                           iconKey]] = iconArray;
             }
         }
     }
     
-    NSArray *iconFiles = [infoPlist objectForKey:InfoPlistKeyCFBundleIconFiles];
+    NSArray *iconFiles = infoPlist[InfoPlistKeyCFBundleIconFiles];
     if (iconFiles != nil) {
-        [iconArraysDict setObject:iconFiles
-                           forKey:InfoPlistKeyCFBundleIconFiles];
+        iconArraysDict[InfoPlistKeyCFBundleIconFiles] = iconFiles;
     }
     
     for (NSString *hintKey in iconArraysDict) {
-        NSArray *iconArray = [iconArraysDict objectForKey:hintKey];
+        NSArray *iconArray = iconArraysDict[hintKey];
         
         if (![iconArray isKindOfClass:[NSArray class]]) {
             continue;
@@ -228,7 +224,7 @@ static NSString * const InfoPlistKeyUINewsstandIcon = @"UINewsstandIcon";
         
         for (NSString *name in iconArray) {
             if (![name isKindOfClass:[NSString class]] ||
-                [[name respect_stringByTrimmingWhitespace] length] == 0) {
+                [name respect_stringByTrimmingWhitespace].length == 0) {
                 continue;
             }
             
@@ -239,23 +235,21 @@ static NSString * const InfoPlistKeyUINewsstandIcon = @"UINewsstandIcon";
         }
     }
     
-    NSString *iconFile = [infoPlist objectForKey:InfoPlistKeyCFBundleIconFile];
+    NSString *iconFile = infoPlist[InfoPlistKeyCFBundleIconFile];
     if (iconFile == nil || ![iconFile isKindOfClass:[NSString class]] ||
-        [[iconFile respect_stringByTrimmingWhitespace] length] == 0) {
+        [iconFile respect_stringByTrimmingWhitespace].length == 0) {
         iconFile = @"Icon";
     }
-    NSString *iconFileExt = [iconFile pathExtension];
+    NSString *iconFileExt = iconFile.pathExtension;
     if (![iconFileExt isEqualToString:@""]) {
         iconFileExt = [@"." stringByAppendingString:iconFileExt];
     }
     NSString *iconFileNormalized = [iconFile respect_stringByNormalizingIOSImageName];
-    for (NSString *suffix in [NSArray arrayWithObjects:
-                              @"",
+    for (NSString *suffix in @[@"",
                               @"~ipad",
                               @"-72",
                               @"-Small",
-                              @"-Small-50",
-                              nil]) {
+                              @"-Small-50"]) {
         [self addNamedImages:[NSString stringWithFormat:@"%@%@%@",
                               iconFileNormalized, suffix, iconFileExt]
                referencePath:path
@@ -278,10 +272,8 @@ static NSString * const InfoPlistKeyUINewsstandIcon = @"UINewsstandIcon";
     [self addIcons:infoPlist path:path];
     
     // not needed for app store but used in itunes for ad hoc distributions
-    for (NSString *optionalNamed in [NSArray arrayWithObjects:
-                                     @"iTunesArtwork",
-                                     @"iTunesArtwork@2x",
-                                     nil]) {
+    for (NSString *optionalNamed in @[@"iTunesArtwork",
+                                     @"iTunesArtwork@2x"]) {
         [self addNamed:optionalNamed
          referencePath:path
          referenceHint:nil
@@ -316,7 +308,7 @@ static NSString * const InfoPlistKeyUINewsstandIcon = @"UINewsstandIcon";
     for (NSString *region in [self.linter.linterSource knownRegions]) {
         NSString *stringsPath = [NSString stringWithFormat:@"%@.lproj/InfoPlist.strings",
                                  region];
-        if ([self.linter.bundleResources objectForKey:stringsPath]) {
+        if (self.linter.bundleResources[stringsPath]) {
             [foundPaths addObject:stringsPath];
         }
     }
@@ -325,7 +317,7 @@ static NSString * const InfoPlistKeyUINewsstandIcon = @"UINewsstandIcon";
 }
 
 - (void)actionForMatchedBundleResource:(BundleResource *)bundleRes {
-    if (![[bundleRes.buildSourcePath pathExtension] isEqualToString:@"plist"]) {
+    if (![(bundleRes.buildSourcePath).pathExtension isEqualToString:@"plist"]) {
         return;
     }
     

@@ -48,13 +48,13 @@
                            errorMessage:errorMessage];
 }
 
-- (id)initWithLinter:(ResourceLinter *)linter
-                file:(NSString *)file
-        textLocation:(TextLocation)textLocation
-                name:(NSString *)name
-      argumentString:(NSString *)argumentString
-         configValue:(id)configValue
-        errorMessage:(NSString *)errorMessage {
+- (instancetype)initWithLinter:(ResourceLinter *)linter
+                          file:(NSString *)file
+                  textLocation:(TextLocation)textLocation
+                          name:(NSString *)name
+                argumentString:(NSString *)argumentString
+                   configValue:(id)configValue
+                  errorMessage:(NSString *)errorMessage {
     self = [super init];
     if (self == nil) {
         return nil;
@@ -91,7 +91,7 @@
     }
 
     [lines addObject:[NSString stringWithFormat:@"@Lint%@Default: %@", self.name, self.argument]];
-
+    
     return lines;
 }
 

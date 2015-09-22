@@ -96,7 +96,7 @@
                     }
                 }
             } else {
-                if ([parameters count] > 0) {
+                if (parameters.count > 0) {
                     *error = [ExpressionSignature errorWithDescriptionFormat:@"Invalid signature parameter at \"%@\"",
                               current.string];
                     return nil;
@@ -110,7 +110,7 @@
         }
     }
 
-    if ([parameters count] == 0) {
+    if (parameters.count == 0) {
         *error = [ExpressionSignature errorWithDescriptionFormat:@"Signature has no parameters"];
         return nil;
     }
@@ -133,7 +133,7 @@
 
     [d appendString:@"["];
     if (self.receiver != nil) {
-        [d appendString:[self.receiver description]];
+        [d appendString:(self.receiver).description];
     } else {
         [d appendString:@"?"];
     }
@@ -169,7 +169,7 @@
         [pattern appendString:@"\\s*"];
     }
     [pattern appendString:@"\\]"];
-
+    
     return pattern;
 }
 

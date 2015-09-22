@@ -25,8 +25,8 @@
 
 @implementation BundleResource
 
-- (id)initWithBuildSourcePath:(NSString *)buildSourcePath
-                         path:(NSString *)path {
+- (instancetype)initWithBuildSourcePath:(NSString *)buildSourcePath
+                                   path:(NSString *)path {
     self = [super init];
     if (self == nil) {
         return nil;

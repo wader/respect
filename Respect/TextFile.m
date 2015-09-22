@@ -60,14 +60,13 @@
               options:0
               error:NULL];
 
-        nonWhitespaceAndNewlineCharacterSet = [[NSCharacterSet whitespaceAndNewlineCharacterSet]
-                                               invertedSet];
+        nonWhitespaceAndNewlineCharacterSet = [NSCharacterSet whitespaceAndNewlineCharacterSet].invertedSet;
     });
 
     NSMutableString *replaced = [source mutableCopy];
 
     [re enumerateMatchesInString:source
-                         options:0 range:NSMakeRange(0, [source length])
+                         options:0 range:NSMakeRange(0, source.length)
                       usingBlock:
      ^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
          // skip if quoted string

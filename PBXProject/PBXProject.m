@@ -36,10 +36,7 @@ static NSError *makePBXError(NSString *format, ...) {
 
     return [NSError errorWithDomain:PBXProjectErrorDomain
                                code:0
-                           userInfo:[NSDictionary dictionaryWithObjectsAndKeys:
-                                     description,
-                                     NSLocalizedDescriptionKey,
-                                     nil]];
+                           userInfo:@{NSLocalizedDescriptionKey: description}];
 }
 
 @interface PBXNode ()
@@ -119,13 +116,11 @@ static NSError *makePBXError(NSString *format, ...) {
     if ([self.sourceTree isEqualToString:@"<group>"]) {
         absPath = [self.parent buildPath];
     } else {
-        absPath = [[self.project pathForSourceTree:self.sourceTree]
-                   stringByStandardizingPath];
+        absPath = [self.project pathForSourceTree:self.sourceTree].stringByStandardizingPath;
     }
 
     if (self.path) {
-        absPath = [[absPath stringByAppendingPathComponent:self.path]
-                   stringByStandardizingPath];
+        absPath = [absPath stringByAppendingPathComponent:self.path].stringByStandardizingPath;
     }
 
     return absPath;
@@ -449,12 +444,12 @@ static NSError *makePBXError(NSString *format, ...) {
                                   dictionaryFromFile:[self.baseConfigurationReference buildPath]
                                   error:error];
         if (self.baseConfiguration == nil) {
-            NSNumber *lineNumber = [[*error userInfo] objectForKey:XCConfigParserLineNumberKey];
+            NSNumber *lineNumber = (*error).userInfo[XCConfigParserLineNumberKey];
             *error = makePBXError(@"%@:%@ %@",
-                                  [[*error userInfo] objectForKey:XCConfigParserFileKey] ?:
-                                  [self.baseConfigurationReference name],
+                                  (*error).userInfo[XCConfigParserFileKey] ?:
+                                  (self.baseConfigurationReference).name,
                                   lineNumber ? [NSString stringWithFormat:@"%@:", lineNumber] : @"",
-                                  [*error localizedDescription]);
+                                  (*error).localizedDescription);
 
             return NO;
         }
@@ -471,11 +466,11 @@ static NSError *makePBXError(NSString *format, ...) {
 - (id)resolveConfigValueNamed:(NSString *)configName {
     NSString *value = nil;
 
-    if ([self.buildSettings objectForKey:configName]) {
-        value = [self.buildSettings objectForKey:configName];
+    if (self.buildSettings[configName]) {
+        value = self.buildSettings[configName];
     } else if (self.baseConfiguration &&
-               [self.baseConfiguration objectForKey:configName]) {
-        value = [self.baseConfiguration objectForKey:configName];
+               self.baseConfiguration[configName]) {
+        value = self.baseConfiguration[configName];
     }
 
     if (value != nil) {
@@ -496,7 +491,7 @@ static NSError *makePBXError(NSString *format, ...) {
                usingWorkingDirectory:(NSString *)workingDirectory {
     NSMutableOrderedSet *paths = [NSMutableOrderedSet orderedSet];
 
-    NSArray *templatePaths = [self.buildSettings objectForKey:configName];
+    NSArray *templatePaths = self.buildSettings[configName];
     if (templatePaths == nil) {
         if (self.parent != nil) {
             return [self.parent resolveConfigPathsNamed:configName
@@ -508,7 +503,7 @@ static NSError *makePBXError(NSString *format, ...) {
 
     // convert string to array with string
     if ([templatePaths isKindOfClass:[NSString class]]) {
-        templatePaths = [NSArray arrayWithObject:templatePaths];
+        templatePaths = @[templatePaths];
     }
 
     for (NSString *templatePath in templatePaths) {
@@ -527,8 +522,8 @@ static NSError *makePBXError(NSString *format, ...) {
                               pbx_stringByStandardizingAbsolutePath:workingDirectory];
 
             // ending with "/**" means recursive path
-            if ([[path lastPathComponent] isEqualToString:@"**"]) {
-                NSString *recursePath = [path stringByDeletingLastPathComponent];
+            if ([path.lastPathComponent isEqualToString:@"**"]) {
+                NSString *recursePath = path.stringByDeletingLastPathComponent;
                 [paths addObject:recursePath];
                 // uses subpathsAtPath instead of subpathsOfDirectoryAtPath as it
                 // does not traverse if path is a symlink (unless you add a "/" to the path)
@@ -550,7 +545,7 @@ static NSError *makePBXError(NSString *format, ...) {
         }
     }
 
-    return [paths array];
+    return paths.array;
 }
 
 @end
@@ -595,7 +590,7 @@ static NSError *makePBXError(NSString *format, ...) {
     }
 
     path = [path pbx_stringByStandardizingAbsolutePath:
-            [[NSFileManager defaultManager] currentDirectoryPath]];
+            [NSFileManager defaultManager].currentDirectoryPath];
 
     PBXUnarchiver *pbxUnarchiver = [[PBXUnarchiver alloc] initWithFile:path];
     if (pbxUnarchiver == nil) {
@@ -682,9 +677,7 @@ static NSError *makePBXError(NSString *format, ...) {
 
 - (NSDictionary *)buildFallbackEnvironmentWithTarget:(PBXNativeTarget *)target
                                   buildConfiguration:(XCBuildConfiguration *)buildConfiguration {
-    NSString *sourceRoot = [[self.pbxFilePath
-                             stringByDeletingLastPathComponent]
-                            stringByDeletingLastPathComponent];
+    NSString *sourceRoot = (self.pbxFilePath).stringByDeletingLastPathComponent.stringByDeletingLastPathComponent;
 
     // TODO: lookup more things from Xcode somehow? based on SDKROOT etc
     // http://developer.apple.com/library/mac/#documentation/DeveloperTools/Reference/XcodeBuildSettingRef/1-Build_Setting_Reference/build_setting_ref.html
@@ -692,23 +685,14 @@ static NSError *makePBXError(NSString *format, ...) {
     // paths below as just guesses when not running in a Xcode run script environment.
     // Hopefully they are mostly used to resovle relative paths so they don't need
     // to be exactly right
-    return [NSDictionary dictionaryWithObjectsAndKeys:
-            sourceRoot,
-            @"SOURCE_ROOT",
-            [NSString pathWithComponents:
-             [NSArray arrayWithObjects:sourceRoot, @"build", @"dummy", nil]],
-            @"BUILT_PRODUCTS_DIR",
-            @"/Applications/Xcode.app/Contents/Developer",
-            @"DEVELOPER_DIR",
-            @"/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS5.1.sdk",
-            @"SDKROOT",
-            target.name,
-            @"TARGET_NAME",
-            buildConfiguration.name,
-            @"CONFIGURATION",
-            self.pbxFilePath,
-            @"PROJECT_FILE_PATH",
-            nil];
+    return @{@"SOURCE_ROOT": sourceRoot,
+             @"BUILT_PRODUCTS_DIR": [NSString pathWithComponents:
+                                     @[sourceRoot, @"build", @"dummy"]],
+             @"DEVELOPER_DIR": @"/Applications/Xcode.app/Contents/Developer",
+             @"SDKROOT": @"/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS5.1.sdk",
+             @"TARGET_NAME": target.name,
+             @"CONFIGURATION": buildConfiguration.name,
+             @"PROJECT_FILE_PATH": self.pbxFilePath};
 }
 
 - (NSString *)buildPath {
@@ -763,13 +747,13 @@ static NSError *makePBXError(NSString *format, ...) {
 
 - (NSString *)lookupEnvironmentName:(NSString *)name {
     if (self.environment != nil &&
-        [self.environment objectForKey:name] != nil) {
-        return [self.environment objectForKey:name];
+        self.environment[name] != nil) {
+        return self.environment[name];
     }
 
     if (self.fallbackEnvironment != nil &&
-        [self.fallbackEnvironment objectForKey:name] != nil) {
-        return [self.fallbackEnvironment objectForKey:name];
+        self.fallbackEnvironment[name] != nil) {
+        return self.fallbackEnvironment[name];
     }
 
     return nil;
@@ -784,10 +768,10 @@ static NSError *makePBXError(NSString *format, ...) {
 }
 
 - (NSString *)projectName {
-    NSArray *components = [self.pbxFilePath pathComponents];
-    if ([components count] > 1) {
+    NSArray *components = (self.pbxFilePath).pathComponents;
+    if (components.count > 1) {
         // "path/to/projectName/project.pbxproj" -> "projectName"
-        return [[components objectAtIndex:[components count] - 2]
+        return [components[components.count - 2]
                 stringByDeletingPathExtension];
     } else {
         return self.pbxFilePath;
@@ -795,7 +779,7 @@ static NSError *makePBXError(NSString *format, ...) {
 }
 
 - (NSString *)projectPath {
-    return [self.pbxFilePath stringByDeletingLastPathComponent];
+    return (self.pbxFilePath).stringByDeletingLastPathComponent;
 }
 
 - (NSString *)sourceRoot {
@@ -814,7 +798,7 @@ static NSError *makePBXError(NSString *format, ...) {
 
 - (NSArray *)nativeTargets {
     NSMutableArray *targets = [NSMutableArray array];
-    
+
     for (PBXNativeTarget *target in self.targets) {
         [targets addObject:target];
     }

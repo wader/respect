@@ -30,11 +30,11 @@
 
 @implementation ResourceReference
 
-- (id)initWithResourcePath:(NSString *)resourcePath
-             referencePath:(NSString *)referencePath
-         referenceLocation:(TextLocation)referenceLocation
-             referenceHint:(NSString *)referenceHint
-       missingResourceHint:(NSString *)missingResourceHint {
+- (instancetype)initWithResourcePath:(NSString *)resourcePath
+                       referencePath:(NSString *)referencePath
+                   referenceLocation:(TextLocation)referenceLocation
+                       referenceHint:(NSString *)referenceHint
+                 missingResourceHint:(NSString *)missingResourceHint {
     self = [super init];
     if (self == nil) {
         return nil;
@@ -50,10 +50,10 @@
     return self;
 }
 
-- (id)initWithResourcePath:(NSString *)resourcePath
-             referencePath:(NSString *)referencePath
-         referenceLocation:(TextLocation)referenceLocation
-       missingResourceHint:(NSString *)missingResourceHint {
+- (instancetype)initWithResourcePath:(NSString *)resourcePath
+                       referencePath:(NSString *)referencePath
+                   referenceLocation:(TextLocation)referenceLocation
+                 missingResourceHint:(NSString *)missingResourceHint {
     return [self initWithResourcePath:resourcePath
                         referencePath:referencePath
                     referenceLocation:referenceLocation

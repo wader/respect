@@ -34,7 +34,7 @@
     return nil;
 }
 
-- (id)initWithType:(ExpressionSignatureArgumentType)type {
+- (instancetype)initWithType:(ExpressionSignatureArgumentType)type {
     self = [super init];
     if (self == nil) {
         return nil;

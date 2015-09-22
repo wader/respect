@@ -32,7 +32,7 @@
     });
 
     NSMutableArray *lineRanges = [NSMutableArray array];
-    NSRange searchRange = NSMakeRange(0, [self length]);
+    NSRange searchRange = NSMakeRange(0, self.length);
 
     // about twice as fast as using NSStringEnumerationByLines/enumerateSubstringsInRange
     for (;;) {
@@ -46,7 +46,7 @@
         NSRange lineRange = NSMakeRange(searchRange.location,
                                         NSMaxRange(lineEndRange) - searchRange.location);
         searchRange.location = NSMaxRange(lineEndRange);
-        searchRange.length = [self length] - searchRange.location;
+        searchRange.length = self.length - searchRange.location;
 
         [lineRanges addObject:[NSValue valueWithRange:lineRange]];
     }

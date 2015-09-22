@@ -24,7 +24,7 @@
 
 @implementation ResourceLinterAbstractReport
 
-- (id)initWithLinter:(ResourceLinter *)linter {
+- (instancetype)initWithLinter:(ResourceLinter *)linter {
     self = [super init];
     if (self == nil) {
         return nil;

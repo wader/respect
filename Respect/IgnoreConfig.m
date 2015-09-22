@@ -66,7 +66,7 @@
         [linter.configErrors addObject:
          [ConfigError configErrorWithFile:file
                              textLocation:textLocation
-                                  message:[self.error localizedDescription]]];
+                                  message:self.error.localizedDescription]];
     }
 
     return self;
@@ -81,7 +81,7 @@
     return ([self.re
              numberOfMatchesInString:string
              options:0
-             range:NSMakeRange(0, [string length])]
+             range:NSMakeRange(0, string.length)]
             > 0);
 }
 
@@ -97,7 +97,7 @@
     }
 
     [lines addObject:[NSString stringWithFormat:@"@Lint%@: %@", self.type, self.pattern]];
-
+    
     return lines;
 }
 

@@ -24,45 +24,43 @@
 
 
 static BOOL XCConfigParserTestCase(NSString *testName) {
-    NSString *testPath = [[[NSBundle bundleForClass:[XCConfigParserTest class]]
-                           resourcePath]
+    NSString *testPath = [[NSBundle bundleForClass:[XCConfigParserTest class]].resourcePath
                           stringByAppendingPathComponent:testName];
     NSString *testString = [NSString stringWithContentsOfFile:testPath
                                                  usedEncoding:nil
                                                         error:NULL];
-    
+
     NSMutableDictionary *expectedDictionary = [NSMutableDictionary dictionary];
     NSMutableString *expectedError = [NSMutableString string];
     [testString enumerateLinesUsingBlock:^(NSString *line, BOOL *stop) {
-         if (![line hasPrefix:@"// EXPECT: "]) {
-             return;
-         }
-         
-         NSString *expect = [line substringFromIndex:11];
-         
-         if ([expect rangeOfString:@"="].location == NSNotFound) {
-             [expectedError setString:expect];
-         } else {
-             NSArray *keyValue = [expect componentsSeparatedByString:@"="];
-             [expectedDictionary setObject:[keyValue objectAtIndex:1]
-                                    forKey:[keyValue objectAtIndex:0]];
-         }
-     }];
-    
+        if (![line hasPrefix:@"// EXPECT: "]) {
+            return;
+        }
+
+        NSString *expect = [line substringFromIndex:11];
+
+        if ([expect rangeOfString:@"="].location == NSNotFound) {
+            [expectedError setString:expect];
+        } else {
+            NSArray *keyValue = [expect componentsSeparatedByString:@"="];
+            expectedDictionary[keyValue[0]] = keyValue[1];
+        }
+    }];
+
     NSError *actualError = nil;
     NSDictionary *actualDictionary = [XCConfigParser dictionaryFromFile:testPath
                                                                   error:&actualError];
     NSError *actualError2 = nil;
     NSDictionary *actualDictionary2 = [XCConfigParser dictionaryFromString:testString
-                                                           includeBasePath:[testPath stringByDeletingLastPathComponent]
+                                                           includeBasePath:testPath.stringByDeletingLastPathComponent
                                                                      error:&actualError2];
 
-    if ([expectedError length] > 0) {
+    if (expectedError.length > 0) {
         return (actualDictionary == nil &&
                 actualDictionary2 == nil &&
-                [[actualError localizedDescription]
+                [actualError.localizedDescription
                  rangeOfString:expectedError].location != NSNotFound &&
-                [[actualError2 localizedDescription]
+                [actualError2.localizedDescription
                  rangeOfString:expectedError].location != NSNotFound);
     } else {
         return (actualDictionary != nil &&
@@ -71,7 +69,7 @@ static BOOL XCConfigParserTestCase(NSString *testName) {
                 [expectedDictionary isEqualToDictionary:actualDictionary] &&
                 [expectedDictionary isEqualToDictionary:actualDictionary2]);
     }
-    
+
 }
 
 @implementation XCConfigParserTest

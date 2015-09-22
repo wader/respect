@@ -25,9 +25,9 @@
 
 @implementation TextFileError
 
-- (id)initWithFile:(NSString *)file
-      textLocation:(TextLocation)textLocation
-           message:(NSString *)message {
+- (instancetype)initWithFile:(NSString *)file
+                textLocation:(TextLocation)textLocation
+                     message:(NSString *)message {
     self = [super init];
     if (self == nil) {
         return nil;

@@ -36,13 +36,14 @@
             configValue:(id)configValue
            errorMessage:(NSString *)errorMessage;
 
-- (id)initWithLinter:(ResourceLinter *)linter
-                file:(NSString *)file
-        textLocation:(TextLocation)textLocation
-                name:(NSString *)name
-      argumentString:(NSString *)argumentString
-         configValue:(id)configValue
-        errorMessage:(NSString *)errorMessage;
+- (instancetype)init NS_UNAVAILABLE;
+- (instancetype)initWithLinter:(ResourceLinter *)linter
+                          file:(NSString *)file
+                  textLocation:(TextLocation)textLocation
+                          name:(NSString *)name
+                argumentString:(NSString *)argumentString
+                   configValue:(id)configValue
+                  errorMessage:(NSString *)errorMessage NS_DESIGNATED_INITIALIZER;
 
 - (NSArray *)configLines;
 @end

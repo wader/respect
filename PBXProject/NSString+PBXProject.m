@@ -60,7 +60,7 @@
                                error:NULL];
     NSArray *results = [re matchesInString:self
                                    options:0
-                                     range:NSMakeRange(0, [self length])];
+                                     range:NSMakeRange(0, self.length)];
     for (NSTextCheckingResult *result in results) {
         NSRange r = result.range;
         NSString *varaibleName = nil;
@@ -77,7 +77,7 @@
 
         r.location -= displace;
         [replaced replaceCharactersInRange:r withString:replacement];
-        displace += r.length - [replacement length];
+        displace += r.length - replacement.length;
     }
 
     return replaced;
@@ -86,18 +86,17 @@
 - (NSString *)pbx_stringByReplacingVariablesFromDict:(NSDictionary *)variables {
     return [self pbx_stringByReplacingVariablesUsingBlock:
             ^NSString *(NSString *name) {
-                return [variables objectForKey:name];
+                return variables[name];
             }];
 }
 
 - (NSString *)pbx_stringByStandardizingAbsolutePath:(NSString *)path {
-    if ([self isAbsolutePath]) {
-        return [self stringByStandardizingPath];
+    if (self.absolutePath) {
+        return self.stringByStandardizingPath;
     }
 
     // current work directory + realtive path
-    return [[NSString pathWithComponents:
-             [NSArray arrayWithObjects:path, self, nil]]
-            stringByStandardizingPath];
+    return [NSString pathWithComponents:
+            @[path, self]].stringByStandardizingPath;
 }
 @end

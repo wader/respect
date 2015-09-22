@@ -145,16 +145,16 @@
     }
     
     // if we have at least one must make sure to add empty string to the non-musts
-    if ([mustScales count] +
-        [mustDevices count] +
-        [mustExts count] > 0) {
-        if ([mustScales count] == 0) {
+    if (mustScales.count +
+        mustDevices.count +
+        mustExts.count > 0) {
+        if (mustScales.count == 0) {
             [mustScales addObject:@""];
         }
-        if ([mustDevices count] == 0) {
+        if (mustDevices.count == 0) {
             [mustDevices addObject:@""];
         }
-        if ([mustExts count] == 0) {
+        if (mustExts.count == 0) {
             [mustExts addObject:@""];
         }
     }
@@ -172,7 +172,7 @@
         }
     }
     
-    return [resourcePaths array];
+    return resourcePaths.array;
 }
 
 @end

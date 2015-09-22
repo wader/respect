@@ -88,11 +88,11 @@
 - (NSString *)description {
     NSMutableString *d = [NSMutableString string];
 
-    [d appendFormat:@"%@(", [self.name description]];
+    [d appendFormat:@"%@(", (self.name).description];
     NSUInteger i = 0;
     for (id<ExpressionSignature> argument in self.arguments) {
-        [d appendString:[argument description]];
-        if (i < [self.arguments count]-1) {
+        [d appendString:argument.description];
+        if (i < (self.arguments).count-1) {
             [d appendString:@", "];
         }
         i++;
@@ -110,13 +110,13 @@
     for (id<ExpressionSignature> argument in self.arguments) {
         [pattern appendString:[argument toPattern]];
         [pattern appendString:@"\\s*"];
-        if (i < [self.arguments count]-1) {
+        if (i < self.arguments.count-1) {
             [pattern appendString:@",\\s*"];
         }
         i++;
     }
     [pattern appendString:@"\\)"];
-
+    
     return pattern;
 }
 

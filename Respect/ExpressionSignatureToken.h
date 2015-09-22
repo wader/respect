@@ -17,7 +17,7 @@
 
 #import <Foundation/Foundation.h>
 
-typedef enum {
+typedef NS_ENUM(NSInteger, ExpressionSignatureTokenType) {
     SIGNATURE_TOKEN_OPEN_BRACKET,
     SIGNATURE_TOKEN_CLOSE_BRACKET,
     SIGNATURE_TOKEN_OPEN_PARENTHESES,
@@ -29,20 +29,21 @@ typedef enum {
     SIGNATURE_TOKEN_COMMA,
     SIGNATURE_TOKEN_END,
     SIGNATURE_TOKEN_UNKNOWN
-} ExpressionSignatureTokenType;
+};
 
 @interface ExpressionSignatureToken : NSObject
 @property(nonatomic, assign, readwrite) NSRange range;
 @property(nonatomic, copy, readwrite) NSString *string;
 @property(nonatomic, assign, readwrite) ExpressionSignatureTokenType type;
 
-+ (id)tokenWithRange:(NSRange)range
-            inString:(NSString *)string
-                type:(ExpressionSignatureTokenType)type;
++ (instancetype)tokenWithRange:(NSRange)range
+                      inString:(NSString *)string
+                          type:(ExpressionSignatureTokenType)type;
 + (ExpressionSignatureToken *)tokenizeString:(NSString *)string
                                    fromIndex:(NSUInteger)index;
 
-- (id)initWithRange:(NSRange)range
-           inString:(NSString *)string
-               type:(ExpressionSignatureTokenType)type;
+- (instancetype)init NS_UNAVAILABLE;
+- (instancetype)initWithRange:(NSRange)range
+                     inString:(NSString *)string
+                         type:(ExpressionSignatureTokenType)type NS_DESIGNATED_INITIALIZER;
 @end

@@ -33,7 +33,7 @@
     return @"";
 }
 
-- (id)initWithLinter:(ResourceLinter *)linter
+- (instancetype)initWithLinter:(ResourceLinter *)linter
                 file:(NSString *)file
         textLocation:(TextLocation)textLocation
       argumentString:(NSString *)argumentString

@@ -21,5 +21,11 @@
 #import "AbstractMatch.h"
 
 @interface StaticMatch : AbstractMatch
-- (id)initWithLinter:(ResourceLinter *)linter;
+- (instancetype)init NS_UNAVAILABLE;
+- (instancetype)initWithLinter:(ResourceLinter *)linter
+                          file:(NSString *)file
+                  textLocation:(TextLocation)textLocation
+                argumentString:(NSString *)argumentString
+               isDefaultConfig:(BOOL)isDefaultConfig NS_UNAVAILABLE;
+- (instancetype)initWithLinter:(ResourceLinter *)linter NS_DESIGNATED_INITIALIZER;
 @end

@@ -20,7 +20,8 @@
 #import <Foundation/Foundation.h>
 
 @interface PeekableEnumerator : NSEnumerator
-- (id)initWithEnumerator:(NSEnumerator *)enumerator;
+- (instancetype)init NS_UNAVAILABLE;
+- (instancetype)initWithEnumerator:(NSEnumerator *)enumerator NS_DESIGNATED_INITIALIZER;
 - (id)peekObjectAtOffset:(NSUInteger)offset;
 - (id)peekObject;
 @end
