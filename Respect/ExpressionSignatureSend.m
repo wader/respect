@@ -37,22 +37,22 @@
 + (id<ExpressionSignature>)parseTokens:(PeekableEnumerator *)tokens
                                  error:(NSError **)error {
     error = error ?: &(NSError * __autoreleasing){nil};
-    
+
     // consume [
     [tokens nextObject];
-    
+
     ExpressionSignatureToken *current = nil;
     ExpressionSignatureToken *peeked = [tokens peekObject];
     if (peeked == nil) {
         *error = [ExpressionSignature errorWithDescription:@"Unexpected end after ["];
         return nil;
     }
-    
+
     ExpressionSignatureSend *exp = [[ExpressionSignatureSend alloc] init];
     NSMutableArray *parameters = [NSMutableArray array];
     exp.parameters = parameters;
     exp.receiver = [ExpressionSignature parseTokens:tokens error:error];
-    
+
     if (![exp.receiver isKindOfClass:[ExpressionSignatureIdent class]] &&
         ![exp.receiver isKindOfClass:[ExpressionSignatureCall class]] &&
         ![exp.receiver isKindOfClass:[ExpressionSignatureSend class]]) {
@@ -60,16 +60,16 @@
                   peeked.string];
         return nil;
     }
-    
+
     // indicates if we have seen a parameter without argument (no colon)
     BOOL noArgument = NO;
     while ((peeked = [tokens peekObject])) {
         if (peeked.type == SIGNATURE_TOKEN_IDENT) {
             current = [tokens nextObject];
-            
+
             ExpressionSignatureSendParameter *parameter = [[ExpressionSignatureSendParameter alloc] init];
             parameter.name = current.string;
-            
+
             peeked = [tokens peekObject];
             if (peeked.type == SIGNATURE_TOKEN_COLON) {
                 if (noArgument) {
@@ -77,18 +77,18 @@
                               current.string];
                     return nil;
                 }
-                
+
                 [tokens nextObject];
-                
+
                 ExpressionSignatureToken *token0 = [tokens peekObjectAtOffset:0];
                 ExpressionSignatureToken *token1 = [tokens peekObjectAtOffset:1];
-                
+
                 if ((token0 != nil && token0.type == SIGNATURE_TOKEN_CLOSE_BRACKET) ||
                     (token0 != nil && token0.type == SIGNATURE_TOKEN_IDENT &&
                      token1 != nil && token1.type == SIGNATURE_TOKEN_COLON)
                     ) {
                     parameter.argument = [[ExpressionSignatureArgument alloc]
-                                           initWithType:SIGNATURE_ARGUMENT_SKIP];
+                                          initWithType:SIGNATURE_ARGUMENT_SKIP];
                 } else {
                     parameter.argument = [ExpressionSignature parseTokens:tokens error:error];
                     if (parameter.argument == nil) {
@@ -103,18 +103,18 @@
                 }
                 noArgument = YES;
             }
-            
+
             [parameters addObject:parameter];
         } else {
             break;
         }
     }
-    
+
     if ([parameters count] == 0) {
         *error = [ExpressionSignature errorWithDescriptionFormat:@"Signature has no parameters"];
         return nil;
     }
-    
+
     current = [tokens nextObject];
     if (current.type == SIGNATURE_TOKEN_CLOSE_BRACKET) {
         return exp;
@@ -130,7 +130,7 @@
 
 - (NSString *)description {
     NSMutableString *d = [NSMutableString string];
-    
+
     [d appendString:@"["];
     if (self.receiver != nil) {
         [d appendString:[self.receiver description]];
@@ -146,20 +146,20 @@
         }
     }
     [d appendString:@"]"];
-    
+
     return d;
 }
 
 - (NSString *)toPattern {
     NSMutableString *pattern = [NSMutableString string];
-    
+
     [pattern appendFormat:@"\\[\\s*%@", [self.receiver toPattern]];
     if ([self.receiver isKindOfClass:[ExpressionSignatureIdent class]]) {
         [pattern appendString:@"\\s+"];
     } else {
         [pattern appendString:@"\\s*"];
     }
-    
+
     for (ExpressionSignatureSendParameter *parameter in self.parameters) {
         [pattern appendString:parameter.name];
         if (parameter.argument != nil) {
@@ -169,7 +169,7 @@
         [pattern appendString:@"\\s*"];
     }
     [pattern appendString:@"\\]"];
-    
+
     return pattern;
 }
 

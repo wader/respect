@@ -42,9 +42,9 @@
     if (self == nil) {
         return nil;
     }
-    
+
     NSError *error = nil;
-    
+
     self.linter = linter;
     self.file = file;
     self.textLocation = textLocation;
@@ -60,7 +60,7 @@
                    regularExpressionWithFnmatch:argumentString
                    error:&error];
     }
-    
+
     if (self.re == nil) {
         self.error = error;
         [linter.configErrors addObject:
@@ -68,7 +68,7 @@
                              textLocation:textLocation
                                   message:[self.error localizedDescription]]];
     }
-    
+
     return self;
 }
 
@@ -77,7 +77,7 @@
     if (self.re == nil) {
         return NO;
     }
-    
+
     return ([self.re
              numberOfMatchesInString:string
              options:0
@@ -87,17 +87,17 @@
 
 - (NSArray *)configLines {
     NSMutableArray *lines = [NSMutableArray array];
-    
+
     [lines addObject:[NSString stringWithFormat:@"// %@:%@",
                       [self.file respect_stringRelativeToPathPrefix:[self.linter.linterSource sourceRoot]],
                       NSStringFromTextLocation(self.textLocation)]];
-    
+
     if (![self.pattern hasPrefix:@"/"]) {
         [lines addObject:[NSString stringWithFormat:@"// Translated to %@", self.re.pattern]];
     }
-    
+
     [lines addObject:[NSString stringWithFormat:@"@Lint%@: %@", self.type, self.pattern]];
-    
+
     return lines;
 }
 

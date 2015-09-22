@@ -59,13 +59,13 @@
               @"(?:\\/\\/.*(\\r?\\n|$))"
               options:0
               error:NULL];
-        
+
         nonWhitespaceAndNewlineCharacterSet = [[NSCharacterSet whitespaceAndNewlineCharacterSet]
-                                                invertedSet];
+                                               invertedSet];
     });
-    
+
     NSMutableString *replaced = [source mutableCopy];
-    
+
     [re enumerateMatchesInString:source
                          options:0 range:NSMakeRange(0, [source length])
                       usingBlock:
@@ -74,14 +74,14 @@
          if ([result rangeAtIndex:1].location != NSNotFound) {
              return;
          }
-         
+
          [replaced
           replaceCharactersInRange:result.range
           withString:[[replaced substringWithRange:result.range]
                       respect_stringByReplacingCharactersInSet:nonWhitespaceAndNewlineCharacterSet
                       withCharacter:' ']];
      }];
-    
+
     return replaced;
 }
 
@@ -90,11 +90,11 @@
     if (self == nil) {
         return nil;
     }
-    
+
     self.path = path;
     self.text = text;
     self.lineRanges = [text lineNumber_lineRanges];
-    
+
     return self;
 }
 
@@ -104,7 +104,7 @@
     if (text == nil) {
         return nil;
     }
-    
+
     return [self initWithText:text path:file];
 }
 
@@ -114,7 +114,7 @@
         self.whitedoutCommentsText = [[self class]
                                       stringWithCommentTextWhitedoutInSource:self.text];
     }
-    
+
     return _whitedoutCommentsText;
 }
 

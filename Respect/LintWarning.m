@@ -22,14 +22,14 @@
              textLocation:(TextLocation)textLocation
                   message:(NSString *)message {
     return [[self alloc] initWithFile:file
-                          textLocation:textLocation
-                               message:message];
+                         textLocation:textLocation
+                              message:message];
 }
 
 + (id)lintWarningWithFile:(NSString *)file
                   message:(NSString *)message {
     return [[self alloc] initWithFile:file
-                          textLocation:MakeTextLineLocation(0)
-                               message:message];
+                         textLocation:MakeTextLineLocation(0)
+                              message:message];
 }
 @end

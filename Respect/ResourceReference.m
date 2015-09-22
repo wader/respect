@@ -39,14 +39,14 @@
     if (self == nil) {
         return nil;
     }
-    
+
     self.resourcePath = resourcePath;
     self.referencePath = referencePath;
     self.referenceHint = referenceHint;
     self.referenceLocation = referenceLocation;
     self.bundleResources = [NSMutableArray array];
     self.missingResourceHint = missingResourceHint;
-    
+
     return self;
 }
 

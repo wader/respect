@@ -25,12 +25,12 @@
     ExpressionSignatureToken *token = [tokens nextObject];
     if (token.type == SIGNATURE_TOKEN_AT) {
         return [[ExpressionSignatureArgument alloc]
-                 initWithType:SIGNATURE_ARGUMENT_STRING];
+                initWithType:SIGNATURE_ARGUMENT_STRING];
     } else if (token.type == SIGNATURE_TOKEN_DOLLAR) {
         return [[ExpressionSignatureArgument alloc]
-                 initWithType:SIGNATURE_ARGUMENT_NAME];
+                initWithType:SIGNATURE_ARGUMENT_NAME];
     }
-    
+
     return nil;
 }
 
@@ -39,9 +39,9 @@
     if (self == nil) {
         return nil;
     }
-    
+
     self.type = type;
-    
+
     return self;
 }
 
@@ -59,7 +59,7 @@
     } else {
         NSAssert(0, @"");
     }
-    
+
     return nil;
 }
 
@@ -71,7 +71,7 @@
     } else if (self.type == SIGNATURE_ARGUMENT_SKIP) {
         return @"";
     }
-    
+
     return nil;
 }
 

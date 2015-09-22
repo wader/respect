@@ -32,11 +32,11 @@
     if (self == nil) {
         return nil;
     }
-    
+
     self.file = file;
     self.textLocation = textLocation;
     self.message = message;
-    
+
     return self;
 }
 

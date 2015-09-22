@@ -35,16 +35,16 @@
     if (self == nil) {
         return nil;
     }
-    
+
     NSDictionary *pbxDict = [NSDictionary dictionaryWithContentsOfFile:path];
     if (pbxDict == nil) {
         return nil;
     }
-    
+
     self.rootObjectId = [pbxDict objectForKey:@"rootObject"];
     self.objects = [pbxDict objectForKey:@"objects"];
     self.objectIdMap = [NSMutableDictionary dictionary];
-    
+
     return self;
 }
 
@@ -60,7 +60,7 @@
                 return nil;
             }
             [self.objectIdMap setObject:object forKey:value];
-            
+
             return object;
         } else {
             return value;
@@ -72,10 +72,10 @@
             if (decodedObject == nil) {
                 continue;
             }
-            
+
             [decodedArray addObject:decodedObject];
         }
-        
+
         return decodedArray;
     } else if ([value isKindOfClass:[NSDictionary class]]) {
         NSMutableDictionary *decodedDict = [NSMutableDictionary dictionary];
@@ -84,13 +84,13 @@
             if (decodedObject == nil) {
                 continue;
             }
-            
+
             [decodedDict setObject:decodedObject forKey:key];
         }
-        
+
         return decodedDict;
     }
-    
+
     return nil;
 }
 
@@ -98,33 +98,33 @@
     if (objectDict == nil || ![objectDict isKindOfClass:[NSDictionary class]]) {
         return nil;
     }
-    
+
     NSString *objectIsa = [objectDict objectForKey:@"isa"];
     if (objectIsa == nil || ![objectIsa isKindOfClass:[NSString class]]) {
         return nil;
     }
-    
+
     Class objectClass = NSClassFromString(objectIsa);
     if (objectClass == nil) {
         return nil;
     }
-    
+
     if (self.allowedClasses != nil &&
         ![self.allowedClasses containsObject:objectClass]) {
         return nil;
     }
-    
+
     id objectInstance = [[objectClass alloc] init];
-    
+
     for (NSString *key in objectDict) {
         if (class_getProperty(objectClass, [key UTF8String]) == NULL) {
             continue;
         }
-        
+
         [objectInstance setValue:[self decodeValue:[objectDict objectForKey:key]]
                           forKey:key];
     }
-    
+
     return objectInstance;
 }
 
@@ -135,7 +135,7 @@
         ![self.objects isKindOfClass:[NSDictionary class]]) {
         return nil;
     }
-    
+
     return [self decodeValue:self.rootObjectId];
 }
 

@@ -30,10 +30,10 @@
     if (self == nil) {
         return nil;
     }
-    
+
     self.signature = signature;
     self.index = 0;
-    
+
     return self;
 }
 
@@ -41,27 +41,27 @@
     if (self.index == NSNotFound) {
         return nil;
     }
-    
+
     ExpressionSignatureToken *token = [ExpressionSignatureToken
                                        tokenizeString:self.signature
                                        fromIndex:self.index];
     if (token.type == SIGNATURE_TOKEN_END) {
         return nil;
     }
-    
+
     self.index = NSMaxRange(token.range);
-    
+
     return token;
 }
 
 - (NSArray *)allObjects {
     NSMutableArray *objects = [NSMutableArray array];
-    
+
     id object = nil;
     while ((object = [self nextObject])) {
         [objects addObject:object];
     }
-    
+
     return objects;
 }
 

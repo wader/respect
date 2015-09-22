@@ -35,7 +35,7 @@
     NSEnumerator *lineRangesEnumerator = [lineRanges objectEnumerator];
     __block NSValue *lineRangeValue = [lineRangesEnumerator nextObject];
     __block NSUInteger lineNumber = 1;
-    
+
     [self enumerateMatchesInString:string
                            options:options
                              range:range
@@ -46,11 +46,11 @@
              lineRangeValue = [lineRangesEnumerator nextObject];
              lineNumber++;
          }
-         
+
          NSRange inLineRange = result.range;
          // range inside current line starting from 1
          inLineRange.location -= [lineRangeValue rangeValue].location-1;
-         
+
          block(result, lineNumber, inLineRange, flags, stop);
      }];
 }

@@ -29,7 +29,7 @@
 
     NSRange start = [patternAndFlags rangeOfString:@"/" options:0];
     NSRange end = [patternAndFlags rangeOfString:@"/" options:NSBackwardsSearch];
-    
+
     if (start.location != 0 ||
         end.location == NSNotFound ||
         start.location == end.location) {
@@ -40,12 +40,12 @@
                                            forKey:NSLocalizedDescriptionKey]];
         return nil;
     }
-    
+
     NSString *pattern = [patternAndFlags substringWithRange:
                          NSMakeRange(NSMaxRange(start),
                                      end.location-NSMaxRange(start))];
     NSString *flags = [patternAndFlags substringFromIndex:NSMaxRange(end)];
-    
+
     NSRegularExpressionOptions flagsOptions = 0;
     for (NSUInteger i = 0; i < [flags length]; i++) {
         unichar c = [flags characterAtIndex:i];
@@ -68,7 +68,7 @@
             return nil;
         }
     }
-    
+
     return [NSRegularExpression regularExpressionWithPattern:pattern
                                                      options:flagsOptions|options
                                                        error:error];

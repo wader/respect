@@ -30,13 +30,13 @@
     if (self == nil) {
         return nil;
     }
-    
+
     [self addLine:
      @"Report for project %@ target %@ using build configuration %@",
      [self.linter.linterSource projectName],
      [self.linter.linterSource targetName],
      [self.linter.linterSource configurationName]];
-    
+
     if ([self.linter.lintErrors count] > 0) {
         [self addLine:@"Lint errors:"];
         for (LintError *lintError in self.linter.lintErrors) {
@@ -46,7 +46,7 @@
              lintError.message];
         }
     }
-    
+
     if ([self.linter.configErrors count] > 0) {
         [self addLine:@"Config errors:"];
         for (ConfigError *configError in self.linter.configErrors) {
@@ -57,7 +57,7 @@
              configError.message];
         }
     }
-    
+
     if ([self.linter.missingReferences count] > 0) {
         [self addLine:@"Missing resources:"];
         for (ResourceReference *resourceRef in self.linter.missingReferences) {
@@ -74,14 +74,14 @@
               resourceRef.missingResourceHint]];
         }
     }
-    
+
     if ([self.linter.unusedResources count] > 0) {
         [self addLine:@"Unused resources:"];
         for (BundleResource *bundleRes in self.linter.unusedResources) {
             [self addLine:@"  %@", bundleRes.path];
         }
     }
-    
+
     if ([self.linter.lintWarnings count] > 0) {
         [self addLine:@"Resource warnings:"];
         for (LintWarning *lintWarning in self.linter.lintWarnings) {
@@ -92,7 +92,7 @@
              lintWarning.message];
         }
     }
-    
+
     if ([self.linter.lintErrors count] +
         [self.linter.configErrors count] +
         [self.linter.missingReferences count] +
@@ -102,7 +102,7 @@
     } else {
         [self addLine:@"No issues found."];
     }
-    
+
     [self addLine:@"%ld source files scanned",
      [[self.linter.linterSource sourceTextFiles] count]];
     [self addLine:@"%ld resources, %ld unused (%ld ignored)",
@@ -118,7 +118,7 @@
      [self.linter.lintErrorsIgnored count],
      [self.linter.lintWarnings count],
      [self.linter.lintWarningsIgnored count]];
-    
+
     return self;
 }
 @end

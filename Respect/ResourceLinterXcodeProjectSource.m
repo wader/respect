@@ -47,7 +47,7 @@
     if (self == nil) {
         return nil;
     }
-    
+
     self.pbxProject = pbxProject;
     self.nativeTarget = nativeTarget;
     self.buildConfiguration = buildConfiguration;
@@ -55,11 +55,11 @@
     self.resources = [NSMutableDictionary dictionary];
     self.lintWarnings = [NSMutableArray array];
     self.lintErrors = [NSMutableArray array];
-    
+
     NSArray *headerSearchPaths = [self.buildConfiguration
                                   resolveConfigPathsNamed:@"HEADER_SEARCH_PATHS"
                                   usingWorkingDirectory:[self sourceRoot]];
-    
+
     // add precompiled header as source if found
     NSString *precompiledHeaderPath = [self.buildConfiguration
                                        resolveConfigValueNamed:@"GCC_PREFIX_HEADER"];
@@ -77,7 +77,7 @@
                                   message:@"Failed to read precompiled header"]];
         }
     }
-    
+
     // add Info.plist to resources
     NSString *infoPlistBuildPath = [self.buildConfiguration
                                     resolveConfigValueNamed:@"INFOPLIST_FILE"];
@@ -86,10 +86,10 @@
                                            stringByAppendingPathComponent:infoPlistBuildPath];
         [self.resources setObject:absInfoPlistBuildPath forKey:@"Info.plist"];
     }
-    
+
     for (id buildPhase in self.nativeTarget.buildPhases) {
         // TODO: copy phase?
-        
+
         if ([buildPhase isKindOfClass:[PBXSourcesBuildPhase class]]) {
             [self addSourcesBuildPhase:buildPhase
                      headerSearchPaths:headerSearchPaths];
@@ -97,7 +97,7 @@
             [self addResourcesBuildPhase:buildPhase];
         }
     }
-    
+
     return self;
 }
 
@@ -115,7 +115,7 @@
                                            buildFile.fileRef.path]]];
             continue;
         }
-        
+
         // A build file can have a file ref that points to a directoary and
         // not a source file (e.g. wrapper.xcmappingmodel). Just ignore if so.
         BOOL isDir = NO;
@@ -124,7 +124,7 @@
             isDir) {
             continue;
         }
-        
+
         TextFile *sourceTextFile = [TextFile textFileWithContentOfFile:buildPath];
         if (sourceTextFile == nil) {
             [self.lintErrors addObject:
@@ -132,7 +132,7 @@
                                   message:@"Failed to read source file"]];
             continue;
         }
-        
+
         [self.sourceTextFiles setObject:sourceTextFile forKey:buildPath];
         [self parseAndAddImportAndIncludesInTextFile:sourceTextFile
                                    headerSearchPaths:headerSearchPaths];
@@ -142,12 +142,12 @@
 - (void)addResourcesBuildPhase:(PBXResourcesBuildPhase *)resourcesBuildPhase {
     for (PBXBuildFile *buildFile in resourcesBuildPhase.files) {
         NSDictionary *buildResources = nil;
-        
+
         // use name if present (relative path etc?), otherwise use path
-        
+
         if ([buildFile.fileRef isKindOfClass:[PBXVariantGroup class]]) {
             PBXVariantGroup *variantGroup = (id)buildFile.fileRef;
-            
+
             NSMutableDictionary *variantResources = [NSMutableDictionary dictionary];
             for (PBXFileReference *fileRef in variantGroup.children) {
                 NSString *bundlePath = fileRef.path;
@@ -155,29 +155,29 @@
                                      forKey:bundlePath];
             }
             buildResources = variantResources;
-            
+
         } else if ([buildFile.fileRef isKindOfClass:[PBXFileReference class]]) {
             PBXFileReference *fileRef = (id)buildFile.fileRef;
             NSString *bundlePath = fileRef.name ?: fileRef.path;
             NSString *buildPath = [fileRef buildPath];
-            
+
             if ([fileRef isFolderReference]) {
                 NSMutableDictionary *folderResources = [NSMutableDictionary dictionary];
                 NSArray *folderSubPahts = [fileRef subPathsForFolderReference];
-                
+
                 if (folderSubPahts == nil) {
                     [self.lintErrors addObject:
                      [LintError lintErrorWithFile:buildPath
                                           message:@"Failed to read folder reference"]];
                     continue;
                 }
-                
+
                 for (NSString *folderSubPath in folderSubPahts) {
                     [folderResources setObject:[buildPath stringByAppendingPathComponent:folderSubPath]
                                         forKey:[bundlePath stringByAppendingPathComponent:folderSubPath]];
                 }
                 buildResources = folderResources;
-                
+
             } else {
                 if (![[NSFileManager defaultManager] isReadableFileAtPath:buildPath]) {
                     [self.lintErrors addObject:
@@ -185,13 +185,13 @@
                                           message:@"Failed to open file or folder reference"]];
                     continue;
                 }
-                
+
                 buildResources = [NSDictionary
                                   dictionaryWithObject:buildPath
                                   forKey:bundlePath];
             }
         }
-        
+
         [self addBuildResourcesDict:buildResources];
     }
 }
@@ -199,18 +199,18 @@
 - (void)addBuildResourcesDict:(NSDictionary *)buildResources {
     for (__strong NSString *resourcePath in buildResources) {
         NSString *buildPath = [buildResources objectForKey:resourcePath];
-        
+
         // TODO: more proper way? xib -> nib
         if ([resourcePath hasSuffix:@"xib"]) {
             resourcePath = [[resourcePath stringByDeletingPathExtension]
                             stringByAppendingPathExtension:@"nib"];
         }
-        
+
         NSString *collisionBuildPath = [self.resources objectForKey:resourcePath];
         if (collisionBuildPath != nil) {
             NSString *relativeCollisionPath = [collisionBuildPath
                                                respect_stringRelativeToPathPrefix:self.sourceRoot];
-            
+
             if ([buildPath isEqualToString:collisionBuildPath]) {
                 [self.lintWarnings addObject:
                  [LintWarning lintWarningWithFile:buildPath
@@ -224,10 +224,10 @@
                                                    @"Bundle path \"%@\" collides with %@",
                                                    resourcePath, relativeCollisionPath]]];
             }
-            
+
             continue;
         }
-        
+
         [self.resources setObject:buildPath forKey:resourcePath];
     }
 }
@@ -261,11 +261,11 @@
     if (sdkRoot == nil) {
         return ResourceLinterSourceTargetTypeUnknown;
     }
-    
+
     if ([sdkRoot isEqualToString:@"iphoneos"]) {
         return ResourceLinterSourceTargetTypeIOS;
     }
-    
+
     return ResourceLinterSourceTargetTypeUnknown;
 }
 
@@ -273,17 +273,17 @@
     if ([self targetType] == ResourceLinterSourceTargetTypeIOS) {
         return [self.buildConfiguration resolveConfigValueNamed:@"IPHONEOS_DEPLOYMENT_TARGET"];
     }
-    
+
     return @"";
 }
 
 + (NSString *)IOSDefultConfigString {
     // auto generated by run script from IOSDefault.config
 #include "IOSDefault.config.generated.c"
-    
+
     return [[NSString alloc] initWithBytes:IOSDefault_config
-                                     length:IOSDefault_config_len
-                                   encoding:NSUTF8StringEncoding];
+                                    length:IOSDefault_config_len
+                                  encoding:NSUTF8StringEncoding];
 }
 
 - (TextFile *)defaultConfigTextFile {
@@ -321,46 +321,46 @@
               options:0
               error:NULL];
     });
-    
+
     // TODO: maxDepth limit needed?
     if (maxDepth == 0) {
         return;
     }
-    
+
     NSString *pathDir = [textFile.path stringByDeletingLastPathComponent];
-    
+
     [re enumerateMatchesInString:textFile.text
                          options:0
                            range:NSMakeRange(0, [textFile.text length])
                       usingBlock:
      ^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
          NSString *includePath = [textFile.text substringWithRange:[result rangeAtIndex:1]];
-         
+
          NSString *absIncludePath = [includePath respect_stringByResolvingPathRealtiveTo:pathDir];
          // skip if already added
          if ([self.sourceTextFiles objectForKey:absIncludePath]) {
              return;
          }
-         
+
          TextFile *includeTextFile = [TextFile textFileWithContentOfFile:absIncludePath];
          if (includeTextFile == nil) {
              // TODO: refactor code. but keep in mind that we might dont want to
              // refactor by building a an array with all search paths for each iteration
              for (NSString *headerSearchPath in headerSearchPaths) {
                  absIncludePath = [includePath respect_stringByResolvingPathRealtiveTo:headerSearchPath];
-                 
+
                  // already added
                  if ([self.sourceTextFiles objectForKey:absIncludePath]) {
                      return;
                  }
-                 
+
                  includeTextFile = [TextFile textFileWithContentOfFile:absIncludePath];
                  if (includeTextFile != nil) {
                      break;
                  }
              }
          }
-         
+
          if (includeTextFile == nil) {
              // ignore include errors for now
              /*
@@ -373,7 +373,7 @@
               */
              return;
          }
-         
+
          [self.sourceTextFiles setObject:includeTextFile forKey:absIncludePath];
          [self _parseAndAddImportAndIncludesInTextFile:includeTextFile
                                      headerSearchPaths:headerSearchPaths
@@ -403,7 +403,7 @@
                                        [error localizedDescription]]]];
         return;
     }
-    
+
     NSArray *featureNativeTargets = [featurePbxProject nativeTargets];
     if ([featureNativeTargets count] == 0) {
         [self.lintErrors addObject:
@@ -412,7 +412,7 @@
                               message:@"No native tagets found in Spotify feature project"]];
         return;
     }
-    
+
     PBXNativeTarget *featureNativeTarget = [featureNativeTargets objectAtIndex:0];
     XCBuildConfiguration *featureBuildConfiguration = [featureNativeTarget
                                                        configurationNamed:self.buildConfiguration.name];
@@ -428,11 +428,11 @@
                                        [error localizedDescription]]]];
         return;
     }
-    
+
     NSArray *headerSearchPaths = [featureBuildConfiguration
                                   resolveConfigPathsNamed:@"HEADER_SEARCH_PATHS"
                                   usingWorkingDirectory:[featurePbxProject sourceRoot]];
-    
+
     // add precompiled header as source if found
     NSString *precompiledHeaderPath = [featureBuildConfiguration
                                        resolveConfigValueNamed:@"GCC_PREFIX_HEADER"];
@@ -450,26 +450,26 @@
                                   message:@"Failed to read precompiled header"]];
         }
     }
-    
+
     for (id buildPhase in featureNativeTarget.buildPhases) {
         if ([buildPhase isKindOfClass:[PBXSourcesBuildPhase class]]) {
             [self addSourcesBuildPhase:buildPhase
                      headerSearchPaths:headerSearchPaths];
         }
     }
-    
+
     NSString *buildResourcesPath = [[featurePbxProject sourceRoot]
                                     stringByAppendingPathComponent:@"Resources"];
     NSArray *bundleSubpaths = [[NSFileManager defaultManager]
                                subpathsOfDirectoryAtPath:buildResourcesPath
                                error:NULL];
-    
+
     if (bundleSubpaths != nil) {
         NSMutableDictionary *buildResources = [NSMutableDictionary dictionary];
         for (NSString *bundleSubpath in bundleSubpaths) {
             NSString *buildPath = [buildResourcesPath
                                    stringByAppendingPathComponent:bundleSubpath];
-            
+
             BOOL isDir = NO;
             // skip dot files and directories
             if ([[bundleSubpath lastPathComponent] hasPrefix:@"."] ||
@@ -478,10 +478,10 @@
                 isDir) {
                 continue;
             }
-            
+
             [buildResources setObject:buildPath forKey:bundleSubpath];
         }
-        
+
         [self addBuildResourcesDict:buildResources];
     }
 }
@@ -496,12 +496,12 @@
                               message:@"Failed to access Spotify features path"]];
         return;
     }
-    
+
     for (NSString *featureSubpath in featuresSubpaths) {
         if (![[featureSubpath lastPathComponent] hasSuffix:@"Feature.xcodeproj"]) {
             continue;
         }
-        
+
         NSString *fullFeaturePath = [featuresPath
                                      stringByAppendingPathComponent:featureSubpath];
         BOOL isDir = NO;
@@ -510,7 +510,7 @@
             !isDir) {
             continue;
         }
-        
+
         [self addSpotifyFeatureProjectWithPath:fullFeaturePath];
     }
 }

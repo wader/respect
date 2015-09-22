@@ -37,7 +37,7 @@
                       @"xbm",
                       nil];
     });
-    
+
     return extensions;
 }
 
@@ -49,10 +49,10 @@
         for (NSString *ext in [self respect_arrayWithIOSImageExtensionNames]) {
             [extWithDots addObject:[@"." stringByAppendingString:ext]];
         }
-        
+
         dotExtensions = [NSArray arrayWithArray:extWithDots];
     });
-    
+
     return dotExtensions;
 }
 
@@ -62,7 +62,7 @@
     dispatch_once(&onceToken, ^{
         scales = [[NSArray alloc] initWithObjects:@"@2x", nil];
     });
-    
+
     return scales;
 }
 
@@ -72,7 +72,7 @@
     dispatch_once(&onceToken, ^{
         devices = [[NSArray alloc] initWithObjects:@"~ipad", @"~iphone", nil];
     });
-    
+
     return devices;
 }
 
@@ -88,17 +88,17 @@
                    @"Landscape",
                    nil];
     });
-    
+
     return devices;
 }
 
 - (NSString *)respect_componentsJoinedByWhitespaceQuoteAndEscapeIfNeeded {
     NSMutableArray *quoteAndEscaped = [NSMutableArray array];
-    
+
     for (NSString *component in self) {
         [quoteAndEscaped addObject:[component respect_stringByQuoteAndEscapeIfNeeded]];
     }
-    
+
     return [quoteAndEscaped componentsJoinedByString:@" "];
 }
 

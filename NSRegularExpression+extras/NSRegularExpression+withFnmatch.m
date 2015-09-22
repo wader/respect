@@ -32,7 +32,7 @@ static NSString *fnmatchRePattern(NSString *fnmatch);
 // is also the reason for only separate on balancing {} pairs
 static NSString *fnmatchRePatternBrace(NSString *fnmatchBrace) {
     NSMutableString *braceRePattern = [NSMutableString string];
-    
+
     NSArray *braceParts = [fnmatchBrace withFnmatch_componentsSeparatedByCharactersInSet:
                            [NSCharacterSet characterSetWithCharactersInString:@","]
                                                                              allowEscape:YES
@@ -45,7 +45,7 @@ static NSString *fnmatchRePatternBrace(NSString *fnmatchBrace) {
         }
     }
     [braceRePattern appendString:@")"];
-    
+
     return braceRePattern;
 }
 
@@ -73,7 +73,7 @@ static NSString *fnmatchRePatternSeq(NSString *fnmatchSeq) {
                        withFnmatch_stringByEscapingCharactesInSet:
                        [NSCharacterSet characterSetWithCharactersInString:@"[]^"]]];
                      [seqRePattern appendString:@"]"];
-                     
+
                      return seqRePattern;
                  } else {
                      return [[[string withFnmatch_stringByEscapingCharactesInSet:
@@ -123,7 +123,7 @@ static NSString *fnmatchRePattern(NSString *fnmatch) {
                                            dictionaryWithObject:@"Invalid fnmatch pattern"
                                            forKey:NSLocalizedDescriptionKey]];
     }
-    
+
     return fnmatchRe;
 }
 

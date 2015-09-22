@@ -46,21 +46,21 @@ static NSComparator resourceReferenceComparator = ^NSComparisonResult(id a, id b
     if (r == NSOrderedSame) {
         r = aRef.referenceLocation.lineNumber - bRef.referenceLocation.lineNumber;
     }
-    
+
     if (r == NSOrderedSame && aRef.referenceHint != nil && bRef.referenceHint != nil) {
         r = [aRef.referenceHint compare:bRef.referenceHint
                                 options:NSCaseInsensitiveSearch|NSNumericSearch];
     }
-    
+
     if (r == NSOrderedSame) {
         r = aRef.referenceLocation.inLineRange.location - bRef.referenceLocation.inLineRange.location;
     }
-    
+
     if (r == NSOrderedSame) {
         r = [aRef.resourcePath compare:bRef.resourcePath
                                options:NSCaseInsensitiveSearch|NSNumericSearch];
     }
-    
+
     return r;
 };
 
@@ -69,7 +69,7 @@ static NSComparator bundleResourceComparator = ^NSComparisonResult(id a, id b) {
     BundleResource *bRes = b;
     return [aRes.path compare:bRes.path
                       options:NSCaseInsensitiveSearch|NSNumericSearch];
-    
+
 };
 
 static NSComparator lintWarningComparator = ^NSComparisonResult(id a, id b) {
@@ -84,7 +84,7 @@ static NSComparator fileSourcedErrorComparator = ^NSComparisonResult(id a, id b)
     TextFileError *bError = b;
     return [aError.file compare:bError.file
                         options:NSCaseInsensitiveSearch|NSNumericSearch];
-    
+
 };
 
 
@@ -123,13 +123,13 @@ static NSComparator fileSourcedErrorComparator = ^NSComparisonResult(id a, id b)
     if (self == nil) {
         return nil;
     }
-    
+
     self.linterSource = linterSource;
-    
+
     self.configPath = configPath;
     self.parseDefaultConfig = parseDefaultConfig;
     self.staticMatcher = [[StaticMatch alloc] initWithLinter:self];
-    
+
     self.defaultConfigs = [NSMutableArray array];
     self.matchers = [NSMutableArray array];
     self.bundleResources = [NSMutableDictionary dictionary];
@@ -148,12 +148,12 @@ static NSComparator fileSourcedErrorComparator = ^NSComparisonResult(id a, id b)
     self.missingIgnoreConfigs = [NSMutableArray array];
     self.warningIgnoreConfigs = [NSMutableArray array];
     self.errorIgnoreConfigs = [NSMutableArray array];
-    
+
     // used for actions not associated with any matcher
     [self.matchers addObject:self.staticMatcher];
-    
+
     [self lint];
-    
+
     return self;
 }
 
@@ -177,17 +177,17 @@ static NSComparator fileSourcedErrorComparator = ^NSComparisonResult(id a, id b)
                        [IgnoreConfig class], @"IgnoreWarning",
                        [IgnoreConfig class], @"IgnoreError",
                        nil];
-        
+
         re = [NSRegularExpression
-               // capture group 1 is name
-               // capture group 2 is "Default" optionally
-               // capture group 3 is separator
-               // capture group 4 is argument
-               regularExpressionWithPattern:@"@Lint([A-Za-z]+?)(Default)?(:| )(.*+)"
-               options:0
-               error:NULL];
+              // capture group 1 is name
+              // capture group 2 is "Default" optionally
+              // capture group 3 is separator
+              // capture group 4 is argument
+              regularExpressionWithPattern:@"@Lint([A-Za-z]+?)(Default)?(:| )(.*+)"
+              options:0
+              error:NULL];
     });
-    
+
     __block AbstractMatch *currentMatcher = nil;
     __block NSUInteger prevConfigLine = 0;
     [re enumerateMatchesWithLineNumberInString:textFile.text
@@ -203,7 +203,7 @@ static NSComparator fileSourcedErrorComparator = ^NSComparisonResult(id a, id b)
          NSString *separator = [textFile.text substringWithRange:[result rangeAtIndex:3]];
          NSString *argument = [[textFile.text substringWithRange:[result rangeAtIndex:4]]
                                respect_stringByTrimmingWhitespace];
-         
+
          if (![separator isEqualToString:@":"]) {
              NSString *message = [NSString stringWithFormat:
                                   @"Missing colon, did you mean @Lint%@: %@?",
@@ -214,7 +214,7 @@ static NSComparator fileSourcedErrorComparator = ^NSComparisonResult(id a, id b)
                                        message:message]];
              return;
          }
-         
+
          Class nameClass = [nameToClass objectForKey:name];
          if (nameClass != nil) {
              if (isDefault) {
@@ -222,7 +222,7 @@ static NSComparator fileSourcedErrorComparator = ^NSComparisonResult(id a, id b)
                  NSString *errorMessage = nil;
                  defaultValue = [nameClass defaultConfigValueFromArgument:argument
                                                              errorMessage:&errorMessage];
-                 
+
                  [self.defaultConfigs addObject:[DefaultConfig
                                                  defaultWithLinter:self
                                                  file:textFile.path
@@ -233,23 +233,23 @@ static NSComparator fileSourcedErrorComparator = ^NSComparisonResult(id a, id b)
                                                  errorMessage:errorMessage]];
              } else {
                  id nameObject = [nameClass alloc];
-                 
+
                  if ([nameObject isKindOfClass:[AbstractMatch class]]) {
                      currentMatcher = [nameObject
-                                        initWithLinter:self
-                                        file:textFile.path
-                                        textLocation:textLocation
-                                        argumentString:argument
-                                        isDefaultConfig:isDefaultConfigFile];
+                                       initWithLinter:self
+                                       file:textFile.path
+                                       textLocation:textLocation
+                                       argumentString:argument
+                                       isDefaultConfig:isDefaultConfigFile];
                      [self.matchers addObject:currentMatcher];
                  } else if ([nameObject isKindOfClass:[AbstractAction class]]) {
                      AbstractAction *action = [nameObject
-                                                initWithLinter:self
-                                                file:textFile.path
-                                                textLocation:textLocation
-                                                argumentString:argument
-                                                isDefaultConfig:isDefaultConfigFile];
-                     
+                                               initWithLinter:self
+                                               file:textFile.path
+                                               textLocation:textLocation
+                                               argumentString:argument
+                                               isDefaultConfig:isDefaultConfigFile];
+
                      // if no current matcher or current line is not directly
                      // after a matcher or action line then add as static
                      if (currentMatcher == nil || prevConfigLine != lineNumber-1) {
@@ -260,11 +260,11 @@ static NSComparator fileSourcedErrorComparator = ^NSComparisonResult(id a, id b)
                      }
                  } else {
                      IgnoreConfig *ignoreConfig = [nameObject
-                                                    initWithLinter:self
-                                                    file:textFile.path
-                                                    textLocation:textLocation
-                                                    type:name
-                                                    argumentString:argument];
+                                                   initWithLinter:self
+                                                   file:textFile.path
+                                                   textLocation:textLocation
+                                                   type:name
+                                                   argumentString:argument];
                      if ([name isEqualToString:@"IgnoreMissing"]) {
                          [self.missingIgnoreConfigs addObject:ignoreConfig];
                      } else if ([name isEqualToString:@"IgnoreUnused"]) {
@@ -291,7 +291,7 @@ static NSComparator fileSourcedErrorComparator = ^NSComparisonResult(id a, id b)
                                   textLocation:textLocation
                                        message:message]];
          }
-         
+
          prevConfigLine = lineNumber;
      }];
 }
@@ -303,13 +303,13 @@ static NSComparator fileSourcedErrorComparator = ^NSComparisonResult(id a, id b)
             return YES;
         }
     }
-    
+
     return NO;
 }
 
 - (void)parseConfig {
     TextFile *configTextFile = nil;
-    
+
     if (self.configPath == nil) {
         configTextFile = [TextFile textFileWithContentOfFile:
                           [[self.linterSource sourceRoot]
@@ -321,7 +321,7 @@ static NSComparator fileSourcedErrorComparator = ^NSComparisonResult(id a, id b)
     } else {
         configTextFile = [TextFile textFileWithContentOfFile:self.configPath];
     }
-    
+
     if (configTextFile == nil) {
         // give error if fail to read specified project config
         [self.lintErrors addObject:
@@ -329,48 +329,48 @@ static NSComparator fileSourcedErrorComparator = ^NSComparisonResult(id a, id b)
                               message:@"Failed to read config file"]];
         return;
     }
-    
+
     [self parseConfigInTextFile:configTextFile isDefaultConfigFile:NO];
 }
 
 - (void)lint {
     NSDictionary *resources = [self.linterSource resources];
-    
+
     // add all bundle resources
     for (NSString *bundlePath in resources) {
         BundleResource *bundleRes = [[BundleResource alloc]
-                                      initWithBuildSourcePath:[resources objectForKey:bundlePath]
-                                      path:bundlePath];
-        
+                                     initWithBuildSourcePath:[resources objectForKey:bundlePath]
+                                     path:bundlePath];
+
         [self.bundleResources setObject:bundleRes forKey:bundlePath];
         [self.lowercaseBundleResources setObject:bundleRes
                                           forKey:[bundlePath lowercaseString]];
     }
-    
+
     // find matchers, actions and ignore config
     if (self.parseDefaultConfig) {
         [self parseConfigInTextFile:[self.linterSource defaultConfigTextFile]
                 isDefaultConfigFile:YES];
     }
-    
+
     [self parseConfig];
-    
+
     for (TextFile *sourceTextFile in [[self.linterSource sourceTextFiles]
                                       objectEnumerator]) {
         [self parseConfigInTextFile:sourceTextFile isDefaultConfigFile:NO];
     }
-    
+
     // run matchers and trigger actions
     for (AbstractMatch *matcher in self.matchers) {
         [matcher performMatch];
     }
-    
+
     // collect missing references
     for (ResourceReference *resourceRef in self.resourceReferences) {
         if ([resourceRef.bundleResources count] > 0) {
             continue;
         }
-        
+
         if ([[self class] matchesSomeIgnoreConfig:self.missingIgnoreConfigs
                                       usingString:resourceRef.resourcePath]) {
             [self.missingReferencesIgnored addObject:resourceRef];
@@ -380,13 +380,13 @@ static NSComparator fileSourcedErrorComparator = ^NSComparisonResult(id a, id b)
     }
     [self.missingReferences sortUsingComparator:resourceReferenceComparator];
     [self.missingReferencesIgnored sortUsingComparator:resourceReferenceComparator];
-    
+
     // collect unused resources
     for (BundleResource *bundleRes in [self.bundleResources objectEnumerator]) {
         if ([bundleRes.resourceReferences count] > 0) {
             continue;
         }
-        
+
         if ([[self class] matchesSomeIgnoreConfig:self.unusedIgnoreConfigs
                                       usingString:bundleRes.path]) {
             [self.unusedResourcesIgnored addObject:bundleRes];
@@ -396,9 +396,9 @@ static NSComparator fileSourcedErrorComparator = ^NSComparisonResult(id a, id b)
     }
     [self.unusedResources sortUsingComparator:bundleResourceComparator];
     [self.unusedResourcesIgnored sortUsingComparator:bundleResourceComparator];
-    
+
     // move ignored errors and warnings into *Ignored array
-    
+
     // add lint warnings from source
     [self.lintWarnings addObjectsFromArray:[self.linterSource lintWarnings]];
     for (LintWarning *lintWarning in self.lintWarnings) {
@@ -412,7 +412,7 @@ static NSComparator fileSourcedErrorComparator = ^NSComparisonResult(id a, id b)
     [self.lintWarnings removeObjectsInArray:self.lintWarningsIgnored];
     [self.lintWarnings sortUsingComparator:lintWarningComparator];
     [self.lintWarningsIgnored sortUsingComparator:lintWarningComparator];
-    
+
     // add lint errors from source
     [self.lintErrors addObjectsFromArray:[self.linterSource lintErrors]];
     for (LintError *lintError in self.lintErrors) {
@@ -426,7 +426,7 @@ static NSComparator fileSourcedErrorComparator = ^NSComparisonResult(id a, id b)
     [self.lintErrors removeObjectsInArray:self.lintErrorsIgnored];
     [self.lintErrors sortUsingComparator:fileSourcedErrorComparator];
     [self.lintErrorsIgnored sortUsingComparator:fileSourcedErrorComparator];
-    
+
     [self.configErrors sortUsingComparator:fileSourcedErrorComparator];
 }
 
@@ -437,7 +437,7 @@ static NSComparator fileSourcedErrorComparator = ^NSComparisonResult(id a, id b)
             return defaultConfig.configValue;
         }
     }
-    
+
     return nil;
 }
 

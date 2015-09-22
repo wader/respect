@@ -59,7 +59,7 @@ int main(int argc,  char *const argv[]) {
     BOOL parseDefaultConfig = YES;
     BOOL dumpConfig = NO;
     NSString *spFeaturesPath = NULL;
-    
+
     static struct option longopts[] = {
         {"help", no_argument, NULL, 'h'},
         {"config", required_argument, NULL, 'c'},
@@ -68,7 +68,7 @@ int main(int argc,  char *const argv[]) {
         {"spfeatures", required_argument, NULL, 's'},
         {NULL, 0, NULL, 0}
     };
-    
+
     int c;
     while ((c = getopt_long(argc, argv, "hc:nds:", longopts, NULL)) != -1) {
         if (c == 'h') {
@@ -86,10 +86,10 @@ int main(int argc,  char *const argv[]) {
             return EXIT_FAILURE;
         }
     }
-    
+
     argc -= optind;
     argv += optind;
-    
+
     // try to get configuration from env
     NSDictionary *env = [[NSProcessInfo processInfo] environment];
     NSString *xcodeProjectPath = [env objectForKey:@"PROJECT_FILE_PATH"];
@@ -99,11 +99,11 @@ int main(int argc,  char *const argv[]) {
     Class lintReportClass = (xcodeProjectPath != nil ?
                              [ResourceLinterXcodeReport class] :
                              [ResourceLinterCliReport class]);
-    
+
     if (dumpConfig) {
         lintReportClass = [ResourceLinterConfigReport class];
     }
-    
+
     if (argc > 0) {
         xcodeProjectPath = [NSString stringWithCString:argv[0]
                                               encoding:NSUTF8StringEncoding];
@@ -111,17 +111,17 @@ int main(int argc,  char *const argv[]) {
         help(argv0);
         return EXIT_FAILURE;
     }
-    
+
     if (argc > 1) {
         targetName = [NSString stringWithCString:argv[1]
                                         encoding:NSUTF8StringEncoding];
     }
-    
+
     if (argc > 2) {
         configurationName = [NSString stringWithCString:argv[2]
                                                encoding:NSUTF8StringEncoding];
     }
-    
+
     NSError *error = nil;
     PBXProject *pbxProject = [PBXProject pbxProjectFromPath:xcodeProjectPath
                                                       error:&error];
@@ -129,14 +129,14 @@ int main(int argc,  char *const argv[]) {
         print_error(@"Failed to read %@: %@", xcodeProjectPath, [error localizedDescription]);
         return EXIT_FAILURE;
     }
-    
+
     NSArray *nativeTargetNames = [pbxProject nativeTargetNames];
     if (targetName == nil) {
         if ([nativeTargetNames count] == 0) {
             print_error(@"No native targets found in project file.");
             return EXIT_FAILURE;
         }
-        
+
         targetName = [nativeTargetNames objectAtIndex:0];
     } else {
         if (![nativeTargetNames containsObject:targetName]) {
@@ -146,7 +146,7 @@ int main(int argc,  char *const argv[]) {
             return EXIT_FAILURE;
         }
     }
-    
+
     PBXNativeTarget *nativeTarget = [pbxProject nativeTargetNamed:targetName];
     XCBuildConfiguration *buildConfiguration = [nativeTarget configurationNamed:configurationName];
     if (buildConfiguration == nil) {
@@ -157,8 +157,8 @@ int main(int argc,  char *const argv[]) {
                     [configurationNames componentsJoinedByString:@", "]);
         return EXIT_FAILURE;
     }
-    
-    
+
+
     // prepare sets up fallback build environment used if a variable can't be found in
     // the normal environment which normally is based on the current process environment.
     // this it to support running from CLI where Xcode has not exported things for us.
@@ -170,24 +170,24 @@ int main(int argc,  char *const argv[]) {
         print_error(@"%@: %@", xcodeProjectPath, [error localizedDescription]);
         return EXIT_FAILURE;
     }
-    
+
     ResourceLinterXcodeProjectSource *projectSource = [[ResourceLinterXcodeProjectSource alloc]
-                                                        initWithPBXProject:pbxProject
-                                                        nativeTarget:nativeTarget
-                                                        buildConfiguration:buildConfiguration];
+                                                       initWithPBXProject:pbxProject
+                                                       nativeTarget:nativeTarget
+                                                       buildConfiguration:buildConfiguration];
     if (spFeaturesPath != nil) {
         [projectSource addSpotifyFeaturesAtPath:spFeaturesPath];
     }
-    
+
     ResourceLinter *linter = [[ResourceLinter alloc]
-                               initWithResourceLinterSource:projectSource
-                               configPath:configPath
-                               parseDefaultConfig:parseDefaultConfig];
-    
+                              initWithResourceLinterSource:projectSource
+                              configPath:configPath
+                              parseDefaultConfig:parseDefaultConfig];
+
     ResourceLinterAbstractReport *lintReport = [[lintReportClass alloc]
-                                                 initWithLinter:linter];
-    
+                                                initWithLinter:linter];
+
     fprintf(stdout, "%s", [lintReport.outputBuffer UTF8String]);
-    
+
     return EXIT_SUCCESS;
 }

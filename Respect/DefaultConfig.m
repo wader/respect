@@ -40,12 +40,12 @@
             configValue:(id)configValue
            errorMessage:(NSString *)errorMessage {
     return [[self alloc] initWithLinter:linter
-                                    file:file
-                            textLocation:textLocation
-                                    name:name
-                          argumentString:argumentString
-                             configValue:configValue
-                            errorMessage:errorMessage];
+                                   file:file
+                           textLocation:textLocation
+                                   name:name
+                         argumentString:argumentString
+                            configValue:configValue
+                           errorMessage:errorMessage];
 }
 
 - (id)initWithLinter:(ResourceLinter *)linter
@@ -59,7 +59,7 @@
     if (self == nil) {
         return nil;
     }
-    
+
     self.linter = linter;
     self.file = file;
     self.textLocation = textLocation;
@@ -68,14 +68,14 @@
     self.configValue = configValue;
     self.errorMessage = errorMessage;
     self.hasError = errorMessage != nil;
-    
+
     if (self.hasError) {
         [linter.configErrors addObject:
          [ConfigError configErrorWithFile:file
                              textLocation:textLocation
                                   message:errorMessage]];
     }
-    
+
     return self;
 }
 
@@ -85,13 +85,13 @@
     [lines addObject:[NSString stringWithFormat:@"// %@:%@",
                       [self.file respect_stringRelativeToPathPrefix:[self.linter.linterSource sourceRoot]],
                       NSStringFromTextLocation(self.textLocation)]];
-    
+
     if (self.hasError) {
         [lines addObject:[NSString stringWithFormat:@"// %@", self.errorMessage]];
     }
-    
+
     [lines addObject:[NSString stringWithFormat:@"@Lint%@Default: %@", self.name, self.argument]];
-    
+
     return lines;
 }
 

@@ -22,7 +22,7 @@
              textLocation:(TextLocation)textLocation
                   message:(NSString *)message {
     return [[self alloc] initWithFile:file
-                          textLocation:textLocation
-                               message:message];
+                         textLocation:textLocation
+                              message:message];
 }
 @end

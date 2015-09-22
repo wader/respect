@@ -24,23 +24,23 @@
 - (NSString *)respect_stringByEscapingCharactesInSet:(NSCharacterSet *)set {
     NSMutableString *escaped = [NSMutableString string];
     NSUInteger length = [self length];
-    
+
     for (NSUInteger i = 0; i < length; i++) {
         unichar c = [self characterAtIndex:i];
         if ([set characterIsMember:c]) {
             [escaped appendString:@"\\"];
         }
-        
+
         [escaped appendFormat:@"%C", c];
     }
-    
+
     return escaped;
 }
 
 - (NSString *)respect_stringByUnEscapingCharactersInSet:(NSCharacterSet *)set {
     NSMutableString *unescaped = [NSMutableString string];
     NSUInteger length = [self length];
-    
+
     for (NSUInteger i = 0; i < length; i++) {
         unichar c = [self characterAtIndex:i];
         if (c == '\\' && i < length - 1 &&
@@ -48,10 +48,10 @@
             i++;
             c = [self characterAtIndex:i];
         }
-        
+
         [unescaped appendFormat:@"%C", c];
     }
-    
+
     return unescaped;
 }
 
@@ -76,7 +76,7 @@
             return source;
         }
     }
-    
+
     return [NSString stringWithContentsOfFile:path
                                  usedEncoding:NULL
                                         error:error];
@@ -96,7 +96,7 @@
             return [self substringToIndex:[self length] - [suffix length]];
         }
     }
-    
+
     return self;
 }
 
@@ -106,7 +106,7 @@
             return [self substringFromIndex:[prefix length]];
         }
     }
-    
+
     return self;
 }
 
@@ -116,7 +116,7 @@
             return suffix;
         }
     }
-    
+
     return nil;
 }
 
@@ -125,14 +125,14 @@
     if (relPath != self && [relPath hasPrefix:@"/"]) {
         return [relPath substringFromIndex:1];
     }
-    
+
     return relPath;
 }
 
 - (NSString *)respect_stringByReplacingParameters:(NSArray *)parameters {
     NSMutableString *replaced = [NSMutableString stringWithString:self];
     NSUInteger displace = 0;
-    
+
     NSRegularExpression *re = [NSRegularExpression
                                regularExpressionWithPattern:@"\\$(\\d+)"
                                options:0
@@ -147,14 +147,14 @@
         if (paramNumber >= [parameters count]) {
             continue;
         }
-        
+
         NSString *replacement = [parameters objectAtIndex:paramNumber];
-        
+
         r.location -= displace;
         [replaced replaceCharactersInRange:r withString:replacement];
         displace += r.length - [replacement length];
     }
-    
+
     return replaced;
 }
 
@@ -166,7 +166,7 @@
         [permutations addObject:prefix];
         return;
     }
-    
+
     for (NSString *part in [parts objectAtIndex:currentIndex]) {
         [self respect_permutationsCollectWithParts:parts
                                       permutations:permutations
@@ -179,7 +179,7 @@
                                           withSeparators:(NSString *)separators {
     NSCharacterSet *separatorSet = [NSCharacterSet
                                     characterSetWithCharactersInString:separators];
-    
+
     NSArray *parts = [self
                       withFnmatch_componentsSeparatedByCharacterPair:pair
                       allowEscape:YES
@@ -192,25 +192,25 @@
                                                      withFnmatch_componentsSeparatedByCharactersInSet:separatorSet
                                                      allowEscape:YES
                                                      balanceCharacterPair:pair];
-                              
+
                               for (NSString *component in components) {
                                   [permutations addObjectsFromArray:
                                    [component respect_permutationsUsingGroupCharacterPair:pair
                                                                            withSeparators:separators]];
                               }
-                              
+
                               return permutations;
                           } else {
                               return [NSArray arrayWithObject:string];
                           }
                       }];
-    
+
     NSMutableArray *permutations = [NSMutableArray array];
     [[self class] respect_permutationsCollectWithParts:parts
                                           permutations:permutations
                                                 prefix:@""
                                           currentIndex:0];
-    
+
     return permutations;
 }
 
@@ -235,14 +235,14 @@
     NSMutableString *replaced = [self mutableCopy];
     NSString *replaceString = [NSString stringWithFormat:@"%C", character];
     NSUInteger len = [replaced length];
-    
+
     for (NSUInteger i = 0; i < len; i++) {
         if ([set characterIsMember:[replaced characterAtIndex:i]]) {
             [replaced replaceCharactersInRange:NSMakeRange(i, 1)
                                     withString:replaceString];
         }
     }
-    
+
     return replaced;
 }
 
@@ -250,7 +250,7 @@
     NSUInteger sl = [self length];
     NSUInteger tl = [string length];
     NSUInteger *d = calloc(sizeof(*d), (sl+1) * (tl+1));
-    
+
 #define d(i, j) d[((j) * sl) + (i)]
     for (NSUInteger i = 0; i <= sl; i++) {
         d(i, 0) = i;
@@ -267,12 +267,12 @@
             }
         }
     }
-    
+
     NSUInteger r = d(sl, tl);
 #undef d
-    
+
     free(d);
-    
+
     return r;
 }
 
@@ -281,7 +281,7 @@
     NSString *bestSuggestion = nil;
     NSString *lowercased = [self lowercaseString];
     NSUInteger lowestDistance = NSUIntegerMax;
-    
+
     for (NSString *suggestion in suggestions) {
         NSUInteger distance = [lowercased respect_levenshteinDistanceToString:
                                [suggestion lowercaseString]];
@@ -290,7 +290,7 @@
             lowestDistance = distance;
         }
     }
-    
+
     return bestSuggestion;
 }
 
@@ -303,22 +303,22 @@
     BOOL inQuote = NO;
     unichar c = 0;
     unichar prev = 0;
-    
+
     for (NSUInteger i = 0; i < length; i++, prev = c) {
         c = [self characterAtIndex:i];
-        
+
         if (inArgument) {
             if (prev == '\\' && c == '"') {
                 continue;
             }
-            
+
             if ((!inQuote && [whitespaceSet characterIsMember:c]) ||
                 (inQuote && c == '"')) {
-                
+
                 NSString *component = [self substringWithRange:
                                        NSMakeRange(startIndex, i - startIndex)];
                 [components addObject:[component respect_stringByUnEscaping]];
-                
+
                 inQuote = NO;
                 inArgument = NO;
                 startIndex = -1;
@@ -330,27 +330,27 @@
             if ([whitespaceSet characterIsMember:c]) {
                 continue;
             }
-            
+
             inArgument = YES;
             startIndex = i;
-            
+
             if (prev != '\\' && c == '"') {
                 inQuote = YES;
                 startIndex++;
             }
         }
     }
-    
+
     if (inQuote) {
         // quote not ended
         return nil;
     }
-    
+
     if (inArgument) {
         NSString *component = [self substringFromIndex:startIndex];
         [components addObject:[component respect_stringByUnEscaping]];
     }
-    
+
     return components;
 }
 
@@ -359,16 +359,16 @@
     BOOL hasEscaped = [self rangeOfCharacterFromSet:escapeSet].location != NSNotFound;
     BOOL hasSpace = [self rangeOfCharacterFromSet:
                      [NSCharacterSet whitespaceCharacterSet]].location != NSNotFound;
-    
+
     if (!hasSpace && !hasEscaped) {
         return self;
     }
-    
+
     NSString *escaped = [self respect_stringByEscapingCharactesInSet:escapeSet];
     if (!hasSpace) {
         return escaped;
     }
-    
+
     return [NSString stringWithFormat:@"\"%@\"", escaped];
 }
 

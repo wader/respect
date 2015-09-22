@@ -31,11 +31,11 @@
     if (self == nil) {
         return nil;
     }
-    
+
     self.buildSourcePath = buildSourcePath;
     self.path = path;
     self.resourceReferences = [NSMutableArray array];
-    
+
     return self;
 }
 

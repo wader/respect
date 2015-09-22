@@ -29,10 +29,10 @@
     if (self == nil) {
         return nil;
     }
-    
+
     self.enumerator = enumerator;
     self.peekedObjects = [NSMutableArray array];
-    
+
     return self;
 }
 
@@ -41,10 +41,10 @@
     if ([self.peekedObjects count] == 0) {
         return [self.enumerator nextObject];
     }
-    
+
     id object = [self.peekedObjects objectAtIndex:0];
     [self.peekedObjects removeObjectAtIndex:0];
-    
+
     return object;
 }
 
@@ -55,14 +55,14 @@
         if (object == nil) {
             break;
         }
-        
+
         [self.peekedObjects addObject:object];
     }
-    
+
     if (offset < [self.peekedObjects count]) {
         return [self.peekedObjects objectAtIndex:offset];
     }
-    
+
     return nil;
 }
 
@@ -72,12 +72,12 @@
 
 - (NSArray *)allObjects {
     NSMutableArray *objects = [NSMutableArray array];
-    
+
     // this will call our nextObject and drain peekedObjects first
     for (id object in self) {
         [objects addObject:object];
     }
-    
+
     return objects;
 }
 

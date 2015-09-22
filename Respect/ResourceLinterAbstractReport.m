@@ -29,17 +29,17 @@
     if (self == nil) {
         return nil;
     }
-    
+
     self.linter = linter;
     self.outputBuffer = [NSMutableString string];
-    
+
     return self;
 }
 
 
 - (void)addLine:(NSString *)format arguments:(va_list)va {
     [self.outputBuffer appendString:[[NSString alloc] initWithFormat:format
-                                                            arguments:va]];
+                                                           arguments:va]];
     [self.outputBuffer appendString:@"\n"];
 }
 

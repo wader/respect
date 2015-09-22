@@ -30,13 +30,13 @@
 - (NSUInteger)indexOfFirstFromIndex:(NSUInteger)index
                      inCharacterSet:(NSCharacterSet *)characterSet {
     NSUInteger length = [self length];
-    
+
     for (; index < length; index++) {
         if ([characterSet characterIsMember:[self characterAtIndex:index]]) {
             return index;
         }
     }
-    
+
     return NSNotFound;
 }
 
@@ -46,7 +46,7 @@
     if (index == NSNotFound) {
         return [self length];
     }
-    
+
     return index;
 }
 @end
@@ -56,10 +56,10 @@
 + (id)tokenWithRange:(NSRange)range
             inString:(NSString *)string
                 type:(ExpressionSignatureTokenType)type {
-    
+
     return [[ExpressionSignatureToken alloc] initWithRange:range
-                                                   inString:string
-                                                       type:type];
+                                                  inString:string
+                                                      type:type];
 }
 
 + (ExpressionSignatureToken *)tokenizeString:(NSString *)string
@@ -88,7 +88,7 @@
                        [NSNumber numberWithInt:SIGNATURE_TOKEN_DOLLAR], @"$",
                        nil];
     });
-    
+
     index = [string indexOfFirstFromIndex:index
                            inCharacterSet:[whitespaceCharacterSet invertedSet]];
     if (index == NSNotFound) {
@@ -96,7 +96,7 @@
                                                inString:@""
                                                    type:SIGNATURE_TOKEN_END];
     }
-    
+
     NSString *c = [string substringWithRange:NSMakeRange(index, 1)];
     NSNumber *token = [charToToken objectForKey:c];
     if (token != nil) {
@@ -114,7 +114,7 @@
                                                inString:string
                                                    type:SIGNATURE_TOKEN_IDENT];
     }
-    
+
     NSRange r = NSMakeRange(index, [string length] - index);
     return [ExpressionSignatureToken tokenWithRange:r
                                            inString:string
@@ -128,11 +128,11 @@
     if (self == nil) {
         return nil;
     }
-    
+
     self.range = range;
     self.string = [string substringWithRange:range];
     self.type = type;
-    
+
     return self;
 }
 

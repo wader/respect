@@ -42,38 +42,38 @@ static NSComparator pathStringComparator = ^NSComparisonResult(id a, id b) {
     if (self == nil) {
         return nil;
     }
-    
+
     // Xcode run script warning/error messages seems to need to be
     // grouped per file to work properly so collect issues per file.
-    
+
     self.fileIssues = [NSMutableDictionary dictionary];
-    
+
     for (LintError *lintError in linter.lintErrors) {
         [self addIssue:lintError forFile:lintError.file];
     }
-    
+
     for (ConfigError *configError in linter.configErrors) {
         [self addIssue:configError forFile:configError.file];
     }
-    
+
     for (ResourceReference *resourceRef in [linter missingReferences]) {
         [self addIssue:resourceRef forFile:resourceRef.resourcePath];
     }
-    
+
     for (BundleResource *bundleRes in [linter unusedResources]) {
         [self addIssue:bundleRes forFile:bundleRes.buildSourcePath];
     }
-    
+
     for (LintWarning *lintWarning in [linter lintWarnings]) {
         [self addIssue:lintWarning forFile:lintWarning.file];
     }
-    
+
     for (NSString *file in [[self.fileIssues allKeys]
                             sortedArrayUsingComparator:pathStringComparator]) {
         for (id issue in [self.fileIssues objectForKey:file]) {
             if ([issue isKindOfClass:[ResourceReference class]]) {
                 ResourceReference *resourceRef = issue;
-                
+
                 [self addXcodeWarning:resourceRef.referencePath
                          textLocation:resourceRef.referenceLocation
                                format:
@@ -111,7 +111,7 @@ static NSComparator pathStringComparator = ^NSComparisonResult(id a, id b) {
             }
         }
     }
-    
+
     return self;
 }
 
@@ -122,7 +122,7 @@ static NSComparator pathStringComparator = ^NSComparisonResult(id a, id b) {
         issues = [NSMutableArray array];
         [self.fileIssues setObject:issues forKey:file];
     }
-    
+
     [issues addObject:issue];
 }
 
@@ -136,5 +136,5 @@ static NSComparator pathStringComparator = ^NSComparisonResult(id a, id b) {
         arguments:va];
     va_end(va);
 }
-                 
+
 @end

@@ -27,16 +27,16 @@
     NSString *template = self;
     NSString *replaced = nil;
     const NSUInteger maxDepth = 10;
-    
+
     for (NSUInteger i = 0 ; i < maxDepth; i++) {
         replaced = [template pbx_stringByReplacingVariablesUsingBlock:block];
         if ([replaced isEqualToString:template]) {
             break;
         }
-        
+
         template = replaced;
     }
-    
+
     return replaced;
 }
 
@@ -44,7 +44,7 @@
                                                         (NSString *variableName))block {
     NSMutableString *replaced = [NSMutableString stringWithString:self];
     NSUInteger displace = 0;
-    
+
     NSRegularExpression *re = [NSRegularExpression
                                regularExpressionWithPattern:
                                // match $ (...) or ...
@@ -69,17 +69,17 @@
         } else {
             varaibleName = [self substringWithRange:[result rangeAtIndex:2]];
         }
-        
+
         NSString *replacement = block(varaibleName);
         if (replacement == nil) {
             continue;
         }
-        
+
         r.location -= displace;
         [replaced replaceCharactersInRange:r withString:replacement];
         displace += r.length - [replacement length];
     }
-    
+
     return replaced;
 }
 
@@ -94,7 +94,7 @@
     if ([self isAbsolutePath]) {
         return [self stringByStandardizingPath];
     }
-    
+
     // current work directory + realtive path
     return [[NSString pathWithComponents:
              [NSArray arrayWithObjects:path, self, nil]]

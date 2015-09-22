@@ -26,17 +26,17 @@
 + (id<ExpressionSignature>)parseTokens:(PeekableEnumerator *)tokens
                                  error:(NSError **)error {
     error = error ?: &(NSError * __autoreleasing){nil};
-    
+
     ExpressionSignatureToken *current = [tokens nextObject];
-    
+
     ExpressionSignatureCall *call = [[ExpressionSignatureCall alloc] init];
     call.name = [[ExpressionSignatureIdent alloc] initWithName:current.string];
     NSMutableArray *arguments = [NSMutableArray array];
     call.arguments = arguments;
-    
+
     // consume open parentehses
     [tokens nextObject];
-    
+
     ExpressionSignatureToken *peeked;
     BOOL emptyArgument = YES;
     while ((peeked = [tokens peekObject])) {
@@ -44,17 +44,17 @@
             [tokens nextObject];
             break;
         }
-        
+
         if (peeked.type == SIGNATURE_TOKEN_COMMA) {
             [arguments addObject:[[ExpressionSignatureArgument alloc]
-                                   initWithType:SIGNATURE_ARGUMENT_SKIP]];
+                                  initWithType:SIGNATURE_ARGUMENT_SKIP]];
             [tokens nextObject];
-            
+
             emptyArgument = YES;
-            
+
             continue;
         }
-        
+
         id<ExpressionSignature> exp = [ExpressionSignature parseTokens:tokens error:error];
         if (![exp isKindOfClass:[ExpressionSignatureArgument class]] &&
             ![exp isKindOfClass:[ExpressionSignatureCall class]] &&
@@ -63,31 +63,31 @@
                       current.string];
             return nil;
         }
-        
+
         [arguments addObject:exp];
-        
+
         emptyArgument = NO;
-        
+
         ExpressionSignatureToken *peeked = [tokens peekObject];
         if (peeked != nil && peeked.type == SIGNATURE_TOKEN_COMMA) {
             [tokens nextObject];
             emptyArgument = YES;
         }
     }
-    
+
     // if no arguments, add a dummy skip argument
     if (emptyArgument) {
         [arguments addObject:[[ExpressionSignatureArgument alloc]
-                               initWithType:SIGNATURE_ARGUMENT_SKIP]];
+                              initWithType:SIGNATURE_ARGUMENT_SKIP]];
     }
-    
+
     return call;
 }
 
 
 - (NSString *)description {
     NSMutableString *d = [NSMutableString string];
-    
+
     [d appendFormat:@"%@(", [self.name description]];
     NSUInteger i = 0;
     for (id<ExpressionSignature> argument in self.arguments) {
@@ -98,13 +98,13 @@
         i++;
     }
     [d appendString:@")"];
-    
+
     return d;
 }
 
 - (NSString *)toPattern {
     NSMutableString *pattern = [NSMutableString string];
-    
+
     [pattern appendFormat:@"%@\\s*\\(\\s*", [self.name toPattern]];
     NSUInteger i = 0;
     for (id<ExpressionSignature> argument in self.arguments) {
@@ -116,7 +116,7 @@
         i++;
     }
     [pattern appendString:@"\\)"];
-    
+
     return pattern;
 }
 
