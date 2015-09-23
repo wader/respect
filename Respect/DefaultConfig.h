@@ -24,8 +24,8 @@
 #import "ResourceLinter.h"
 
 @interface DefaultConfig : NSObject
-@property(nonatomic, retain, readonly) NSString *name;
-@property(nonatomic, retain, readonly) id configValue;
+@property(nonatomic, strong, readonly) NSString *name;
+@property(nonatomic, strong, readonly) id configValue;
 @property(nonatomic, assign, readonly) BOOL hasError;
 
 + (id)defaultWithLinter:(ResourceLinter *)linter
@@ -36,13 +36,14 @@
             configValue:(id)configValue
            errorMessage:(NSString *)errorMessage;
 
-- (id)initWithLinter:(ResourceLinter *)linter
-                file:(NSString *)file
-        textLocation:(TextLocation)textLocation
-                name:(NSString *)name
-      argumentString:(NSString *)argumentString
-         configValue:(id)configValue
-        errorMessage:(NSString *)errorMessage;
+- (instancetype)init NS_UNAVAILABLE;
+- (instancetype)initWithLinter:(ResourceLinter *)linter
+                          file:(NSString *)file
+                  textLocation:(TextLocation)textLocation
+                          name:(NSString *)name
+                argumentString:(NSString *)argumentString
+                   configValue:(id)configValue
+                  errorMessage:(NSString *)errorMessage NS_DESIGNATED_INITIALIZER;
 
 - (NSArray *)configLines;
 @end

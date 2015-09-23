@@ -27,16 +27,16 @@
     NSString *template = self;
     NSString *replaced = nil;
     const NSUInteger maxDepth = 10;
-    
+
     for (NSUInteger i = 0 ; i < maxDepth; i++) {
         replaced = [template pbx_stringByReplacingVariablesUsingBlock:block];
         if ([replaced isEqualToString:template]) {
             break;
         }
-        
+
         template = replaced;
     }
-    
+
     return replaced;
 }
 
@@ -44,7 +44,7 @@
                                                         (NSString *variableName))block {
     NSMutableString *replaced = [NSMutableString stringWithString:self];
     NSUInteger displace = 0;
-    
+
     NSRegularExpression *re = [NSRegularExpression
                                regularExpressionWithPattern:
                                // match $ (...) or ...
@@ -60,7 +60,7 @@
                                error:NULL];
     NSArray *results = [re matchesInString:self
                                    options:0
-                                     range:NSMakeRange(0, [self length])];
+                                     range:NSMakeRange(0, self.length)];
     for (NSTextCheckingResult *result in results) {
         NSRange r = result.range;
         NSString *varaibleName = nil;
@@ -69,35 +69,34 @@
         } else {
             varaibleName = [self substringWithRange:[result rangeAtIndex:2]];
         }
-        
+
         NSString *replacement = block(varaibleName);
         if (replacement == nil) {
             continue;
         }
-        
+
         r.location -= displace;
         [replaced replaceCharactersInRange:r withString:replacement];
-        displace += r.length - [replacement length];
+        displace += r.length - replacement.length;
     }
-    
+
     return replaced;
 }
 
 - (NSString *)pbx_stringByReplacingVariablesFromDict:(NSDictionary *)variables {
     return [self pbx_stringByReplacingVariablesUsingBlock:
             ^NSString *(NSString *name) {
-                return [variables objectForKey:name];
+                return variables[name];
             }];
 }
 
 - (NSString *)pbx_stringByStandardizingAbsolutePath:(NSString *)path {
-    if ([self isAbsolutePath]) {
-        return [self stringByStandardizingPath];
+    if (self.absolutePath) {
+        return self.stringByStandardizingPath;
     }
-    
+
     // current work directory + realtive path
-    return [[NSString pathWithComponents:
-             [NSArray arrayWithObjects:path, self, nil]]
-            stringByStandardizingPath];
+    return [NSString pathWithComponents:
+            @[path, self]].stringByStandardizingPath;
 }
 @end

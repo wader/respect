@@ -19,7 +19,16 @@
 #import "AbstractAction.h"
 
 @implementation StaticMatch
-- (id)initWithLinter:(ResourceLinter *)linter {
+
+- (instancetype)initWithLinter:(ResourceLinter *)linter
+                          file:(NSString *)file
+                  textLocation:(TextLocation)textLocation
+                argumentString:(NSString *)argumentString
+               isDefaultConfig:(BOOL)isDefaultConfig {
+    assert(0); // NS_UNAVAILABLE
+}
+
+- (instancetype)initWithLinter:(ResourceLinter *)linter {
     self = [super initWithLinter:linter
                             file:nil
                     textLocation:MakeTextLineLocation(1)

@@ -25,24 +25,24 @@
 
 - (NSString *)withFnmatch_stringByEscapingCharactesInSet:(NSCharacterSet *)set {
     NSMutableString *escaped = [NSMutableString string];
-    NSUInteger length = [self length];
-    
+    NSUInteger length = self.length;
+
     for (NSUInteger i = 0; i < length; i++) {
         unichar c = [self characterAtIndex:i];
         if ([set characterIsMember:c]) {
             [escaped appendString:@"\\"];
         }
-        
+
         [escaped appendFormat:@"%C", c];
     }
-    
+
     return escaped;
 }
 
 - (NSString *)withFnmatch_stringByUnEscapingCharactersInSet:(NSCharacterSet *)set {
     NSMutableString *unescaped = [NSMutableString string];
-    NSUInteger length = [self length];
-    
+    NSUInteger length = self.length;
+
     for (NSUInteger i = 0; i < length; i++) {
         unichar c = [self characterAtIndex:i];
         if (c == '\\' && i < length - 1 &&
@@ -50,10 +50,10 @@
             i++;
             c = [self characterAtIndex:i];
         }
-        
+
         [unescaped appendFormat:@"%C", c];
     }
-    
+
     return unescaped;
 }
 
@@ -67,25 +67,25 @@
                                          balanceCharacterPair:(NSString *)pair
                                                    usingBlock:(id (^)(NSString *string))block {
     NSMutableArray *components = [NSMutableArray array];
-    NSUInteger length = [self length];
+    NSUInteger length = self.length;
     NSUInteger nextCompStartIndex = 0;
     unichar startChar = 0;
     unichar stopChar = 0;
     NSUInteger balance = 0;
-    
+
     if (pair != nil) {
         startChar = [pair characterAtIndex:0];
         stopChar = [pair characterAtIndex:1];
     }
-    
+
     for (NSUInteger i = 0; i < length; i++) {
         if (allowEscape &&
             (i > 0 && [self characterAtIndex:i-1] == '\\')) {
             continue;
         }
-        
+
         unichar c = [self characterAtIndex:i];
-        
+
         if (pair != nil) {
             if (c == startChar) {
                 balance++;
@@ -93,7 +93,7 @@
                 balance--;
             }
         }
-        
+
         if ((pair == nil || balance == 0) &&
             [separatorSet characterIsMember:c]) {
             NSString *component = [self substringWithRange:
@@ -108,7 +108,7 @@
             i = nextCompStartIndex;
         }
     }
-    
+
     if (nextCompStartIndex <= length) {
         NSString *component = [self substringFromIndex:nextCompStartIndex];
         if (allowEscape) {
@@ -116,7 +116,7 @@
         }
         [components addObject:block(component)];
     }
-    
+
     return components;
 }
 
@@ -147,23 +147,23 @@
     unichar startChar = [pair characterAtIndex:0];
     unichar stopChar = [pair characterAtIndex:1];
     NSCharacterSet *pairSet = [NSCharacterSet characterSetWithCharactersInString:pair];
-    NSUInteger length = [self length];
+    NSUInteger length = self.length;
     NSInteger startIndex = -1;
     NSUInteger afterIndex = 0;
     NSUInteger balance = 0;
-    
+
     for (NSUInteger i = 0; i < length; i++) {
         if (allowEscape &&
             (i > 0 && [self characterAtIndex:i-1] == '\\')) {
             continue;
         }
-        
+
         unichar c = [self characterAtIndex:i];
-        
+
         if (shouldBalance && c == startChar) {
             balance++;
         }
-        
+
         if (startIndex == -1) {
             if (c == startChar) {
                 startIndex = i;
@@ -171,7 +171,7 @@
         } else if (c == stopChar) {
             if (shouldBalance) {
                 balance--;
-                
+
                 if (balance > 0) {
                     continue;
                 }
@@ -187,12 +187,12 @@
             [components addObject:block([self substringWithRange:
                                          NSMakeRange(startIndex+1, i-startIndex-1)],
                                         YES)];
-            
+
             startIndex = -1;
             afterIndex = i+1;
         }
     }
-    
+
     if (afterIndex < length) {
         NSString *after = [self substringFromIndex:afterIndex];
         if (allowEscape) {
@@ -200,7 +200,7 @@
         }
         [components addObject:block(after, NO)];
     }
-    
+
     return components;
 }
 

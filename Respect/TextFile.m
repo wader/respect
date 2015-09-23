@@ -25,22 +25,18 @@
 @interface TextFile ()
 @property(nonatomic, copy, readwrite) NSString *path;
 @property(nonatomic, copy, readwrite) NSString *text;
-@property(nonatomic, retain, readwrite) NSString *whitedoutCommentsText;
-@property(nonatomic, retain, readwrite) NSArray *lineRanges;
+@property(nonatomic, strong, readwrite) NSString *whitedoutCommentsText;
+@property(nonatomic, strong, readwrite) NSArray *lineRanges;
 @end
 
 @implementation TextFile
-@synthesize path = _path;
-@synthesize text = _text;
-@synthesize whitedoutCommentsText = _whitedoutCommentsText;
-@synthesize lineRanges = _lineRanges;
 
 + (id)textFileWithText:(NSString *)text path:(NSString *)path {
-    return [[[self alloc] initWithText:text path:path] autorelease];
+    return [[self alloc] initWithText:text path:path];
 }
 
 + (id)textFileWithContentOfFile:(NSString *)file {
-    return [[[self alloc] initWithContentOfFile:file] autorelease];
+    return [[self alloc] initWithContentOfFile:file];
 }
 
 // replace C-style comments with whitespace
@@ -63,30 +59,28 @@
               @"(?:\\/\\/.*(\\r?\\n|$))"
               options:0
               error:NULL];
-        
-        nonWhitespaceAndNewlineCharacterSet = [[[NSCharacterSet whitespaceAndNewlineCharacterSet]
-                                                invertedSet]
-                                               retain];
+
+        nonWhitespaceAndNewlineCharacterSet = [NSCharacterSet whitespaceAndNewlineCharacterSet].invertedSet;
     });
-    
-    NSMutableString *replaced = [[source mutableCopy] autorelease];
-    
+
+    NSMutableString *replaced = [source mutableCopy];
+
     [re enumerateMatchesInString:source
-                         options:0 range:NSMakeRange(0, [source length])
+                         options:0 range:NSMakeRange(0, source.length)
                       usingBlock:
      ^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
          // skip if quoted string
          if ([result rangeAtIndex:1].location != NSNotFound) {
              return;
          }
-         
+
          [replaced
           replaceCharactersInRange:result.range
           withString:[[replaced substringWithRange:result.range]
                       respect_stringByReplacingCharactersInSet:nonWhitespaceAndNewlineCharacterSet
                       withCharacter:' ']];
      }];
-    
+
     return replaced;
 }
 
@@ -95,11 +89,11 @@
     if (self == nil) {
         return nil;
     }
-    
+
     self.path = path;
     self.text = text;
     self.lineRanges = [text lineNumber_lineRanges];
-    
+
     return self;
 }
 
@@ -107,28 +101,19 @@
     NSString *text = [NSString respect_stringWithContentsOfFileTryingEncodings:file
                                                                          error:NULL];
     if (text == nil) {
-        [self release];
         return nil;
     }
-    
+
     return [self initWithText:text path:file];
 }
 
-- (void)dealloc {
-    self.path = nil;
-    self.text = nil;
-    self.whitedoutCommentsText = nil;
-    self.lineRanges = nil;
-    
-    [super dealloc];
-}
 
 - (NSString *)whitedoutCommentsText {
     if (_whitedoutCommentsText == nil) {
         self.whitedoutCommentsText = [[self class]
                                       stringWithCommentTextWhitedoutInSource:self.text];
     }
-    
+
     return _whitedoutCommentsText;
 }
 

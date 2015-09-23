@@ -32,20 +32,20 @@ static NSString *fnmatchRePattern(NSString *fnmatch);
 // is also the reason for only separate on balancing {} pairs
 static NSString *fnmatchRePatternBrace(NSString *fnmatchBrace) {
     NSMutableString *braceRePattern = [NSMutableString string];
-    
+
     NSArray *braceParts = [fnmatchBrace withFnmatch_componentsSeparatedByCharactersInSet:
                            [NSCharacterSet characterSetWithCharactersInString:@","]
                                                                              allowEscape:YES
                                                                     balanceCharacterPair:@"{}"];
     [braceRePattern appendString:@"("];
-    for (NSUInteger i = 0; i < [braceParts count]; i++) {
-        [braceRePattern appendString:fnmatchRePatternNested([braceParts objectAtIndex:i])];
-        if (i < [braceParts count]-1) {
+    for (NSUInteger i = 0; i < braceParts.count; i++) {
+        [braceRePattern appendString:fnmatchRePatternNested(braceParts[i])];
+        if (i < braceParts.count-1) {
             [braceRePattern appendString:@"|"];
         }
     }
     [braceRePattern appendString:@")"];
-    
+
     return braceRePattern;
 }
 
@@ -63,7 +63,7 @@ static NSString *fnmatchRePatternSeq(NSString *fnmatchSeq) {
                      NSMutableString *seqRePattern = [NSMutableString string];
                      NSUInteger skipFromIndex = 0;
                      [seqRePattern appendString:@"["];
-                     if ([string length] > 0 &&
+                     if (string.length > 0 &&
                          [string characterAtIndex:0] == '!') {
                          skipFromIndex = 1;
                          [seqRePattern appendString:@"^"];
@@ -73,7 +73,7 @@ static NSString *fnmatchRePatternSeq(NSString *fnmatchSeq) {
                        withFnmatch_stringByEscapingCharactesInSet:
                        [NSCharacterSet characterSetWithCharactersInString:@"[]^"]]];
                      [seqRePattern appendString:@"]"];
-                     
+
                      return seqRePattern;
                  } else {
                      return [[[string withFnmatch_stringByEscapingCharactesInSet:
@@ -119,11 +119,9 @@ static NSString *fnmatchRePattern(NSString *fnmatch) {
     if (fnmatchRe == nil && error != nil) {
         *error = [NSError errorWithDomain:NSCocoaErrorDomain
                                      code:0
-                                 userInfo:[NSDictionary
-                                           dictionaryWithObject:@"Invalid fnmatch pattern"
-                                           forKey:NSLocalizedDescriptionKey]];
+                                 userInfo:@{NSLocalizedDescriptionKey: @"Invalid fnmatch pattern"}];
     }
-    
+
     return fnmatchRe;
 }
 

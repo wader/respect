@@ -78,17 +78,15 @@ typedef enum {
 @end
 
 @implementation XCConfigParserToken
-@synthesize tokenType = _tokenType;
-@synthesize range = _range;
 @end
 
 static XCConfigParserToken *makeXCConfigParserToken(XCConfigParserTokenType tokenType,
                                                     NSUInteger location,
                                                     NSUInteger length) {
-    XCConfigParserToken *token = [[[XCConfigParserToken alloc] init] autorelease];
+    XCConfigParserToken *token = [[XCConfigParserToken alloc] init];
     token.tokenType = tokenType;
     token.range = NSMakeRange(location, length);
-    
+
     return token;
 }
 
@@ -97,7 +95,6 @@ static XCConfigParserToken *makeXCConfigParserToken(XCConfigParserTokenType toke
 @end
 
 @implementation XCConfigParserStatement
-@synthesize range = _range;
 @end
 
 @interface XCConfigParserStatementPair : XCConfigParserStatement
@@ -106,8 +103,6 @@ static XCConfigParserToken *makeXCConfigParserToken(XCConfigParserTokenType toke
 @end
 
 @implementation XCConfigParserStatementPair
-@synthesize key = _key;
-@synthesize value = _value;
 @end
 
 @interface XCConfigParserStatementInclude : XCConfigParserStatement
@@ -115,14 +110,13 @@ static XCConfigParserToken *makeXCConfigParserToken(XCConfigParserTokenType toke
 @end
 
 @implementation XCConfigParserStatementInclude
-@synthesize path = _path;
 @end
 
 static NSUInteger lineNumberFromLocation(NSString *string, NSUInteger location) {
     __block NSUInteger lineNumber = 0;
-    
+
     [string
-     enumerateSubstringsInRange:NSMakeRange(0, [string length])
+     enumerateSubstringsInRange:NSMakeRange(0, string.length)
      options:NSStringEnumerationByLines
      usingBlock:^(NSString *substring,
                   NSRange substringRange,
@@ -131,7 +125,7 @@ static NSUInteger lineNumberFromLocation(NSString *string, NSUInteger location) 
          *stop = NSLocationInRange(location, enclosingRange);
          lineNumber++;
      }];
-    
+
     return lineNumber;
 }
 
@@ -140,22 +134,15 @@ static NSError *makeParserError(NSString *string,
                                 NSString *format, ...) {
     va_list ap;
     va_start(ap, format);
-    NSString *description = [[[NSString alloc]
-                              initWithFormat:format arguments:ap]
-                             autorelease];
+    NSString *description = [[NSString alloc]
+                             initWithFormat:format arguments:ap];
     va_end(ap);
-    
+
     return [NSError errorWithDomain:XCConfigParserErrorDomain
                                code:0
-                           userInfo:[NSDictionary dictionaryWithObjectsAndKeys:
-                                     description,
-                                     NSLocalizedDescriptionKey,
-                                     [NSNumber numberWithInteger:location],
-                                     XCConfigParserCharacterLocationKey,
-                                     [NSNumber numberWithInteger:
-                                      lineNumberFromLocation(string, location)],
-                                     XCConfigParserLineNumberKey,
-                                     nil]];
+                           userInfo:@{NSLocalizedDescriptionKey: description,
+                                      XCConfigParserCharacterLocationKey: @(location),
+                                      XCConfigParserLineNumberKey: @(lineNumberFromLocation(string, location))}];
 }
 
 @interface XCConfigParser ()
@@ -192,15 +179,15 @@ static NSError *makeParserError(NSString *string,
     NSCharacterSet *whitespaceSet = [NSCharacterSet whitespaceAndNewlineCharacterSet];
     NSMutableCharacterSet *nameSet = [NSMutableCharacterSet alphanumericCharacterSet];
     [nameSet addCharactersInString:@"_"]; // hmm
-    NSUInteger length = [string length];
-    
+    NSUInteger length = string.length;
+
     NSUInteger i = 0;
     NSUInteger tokenLocation = i;
-    
+
     while (i < length) {
         unichar c  = [string characterAtIndex:i];
         unichar c1  = i < (length-1) ? [string characterAtIndex:i+1] : 0;
-        
+
         if (tokenizeState == TokenizeStateWhitespace) {
             if (c == '=') {
                 [tokens addObject:
@@ -293,13 +280,13 @@ static NSError *makeParserError(NSString *string,
             NSAssert(NO, nil);
         }
     }
-    
+
     // at end we should be in whitespace state
     if (tokenizeState != TokenizeStateWhitespace) {
         *error = makeParserError(string, length-1, @"Unexpected end");
         return nil;
     }
-    
+
     return tokens;
 }
 
@@ -307,35 +294,34 @@ static NSError *makeParserError(NSString *string,
                    string:(NSString *)string
                     error:(NSError **)error {
     NSMutableArray *statements = [NSMutableArray array];
-    
+
     // filter out comment tokens
     NSMutableArray *filteredTokens = [NSMutableArray array];
     for (XCConfigParserToken *token in tokens) {
         if (token.tokenType == XCConfigParserTokenTypeComment) {
             continue;
         }
-        
+
         [filteredTokens addObject:token];
     }
-    
-    NSUInteger tokensCount = [filteredTokens count];
+
+    NSUInteger tokensCount = filteredTokens.count;
     for (NSUInteger i = 0; i < tokensCount; ) {
-        XCConfigParserToken *token1 = [filteredTokens objectAtIndex:i];
+        XCConfigParserToken *token1 = filteredTokens[i];
         XCConfigParserToken *token2 = (i+1 < tokensCount ?
-                                       [filteredTokens objectAtIndex:i+1] : nil);
+                                       filteredTokens[i+1] : nil);
         XCConfigParserToken *token3 = (i+2 < tokensCount ?
-                                       [filteredTokens objectAtIndex:i+2] : nil);
-        
+                                       filteredTokens[i+2] : nil);
+
         if (token1.tokenType == XCConfigParserTokenTypeName &&
             token2 != nil &&
             token2.tokenType == XCConfigParserTokenTypeEquals &&
             token3 != nil &&
             token3.tokenType == XCConfigParserTokenTypeString) {
-            
+
             // name = value
-            
-            XCConfigParserStatementPair *pair = [[[XCConfigParserStatementPair alloc] init]
-                                                 autorelease];
+
+            XCConfigParserStatementPair *pair = [[XCConfigParserStatementPair alloc] init];
             pair.range = NSMakeRange(token1.range.location,
                                      NSMaxRange(token3.range) -
                                      token1.range.location);
@@ -343,27 +329,26 @@ static NSError *makeParserError(NSString *string,
             pair.value = [[string substringWithRange:token3.range]
                           stringByTrimmingCharactersInSet:
                           [NSCharacterSet whitespaceCharacterSet]];
-            
+
             [statements addObject:pair];
-            
+
             i += 3;
         } else if (token1.tokenType == XCConfigParserTokenTypeHashName &&
                    token2 != nil &&
                    token2.tokenType == XCConfigParserTokenTypeQuotedString) {
-            
+
             // #directive "argument"
-            
+
             NSString *directive = [string substringWithRange:token1.range];
             NSString *token2String = [string substringWithRange:token2.range];
             NSString *argument = [token2String substringWithRange:
-                                  NSMakeRange(1, [token2String length]-2)];
+                                  NSMakeRange(1, token2String.length-2)];
             NSRange range = NSMakeRange(token1.range.location,
                                         NSMaxRange(token2.range) -
                                         token1.range.location);
-            
+
             if ([directive isEqualToString:@"#include"]) {
-                XCConfigParserStatementInclude *include = [[[XCConfigParserStatementInclude alloc] init]
-                                                           autorelease];
+                XCConfigParserStatementInclude *include = [[XCConfigParserStatementInclude alloc] init];
                 include.range = range;
                 include.path = argument;
                 [statements addObject:include];
@@ -372,7 +357,7 @@ static NSError *makeParserError(NSString *string,
                                          @"Unknown directive %@", directive);
                 return nil;
             }
-            
+
             i += 2;
         } else {
             *error = makeParserError(string, token1.range.location,
@@ -381,7 +366,7 @@ static NSError *makeParserError(NSString *string,
             return nil;
         }
     }
-    
+
     return statements;
 }
 
@@ -393,53 +378,51 @@ static NSError *makeParserError(NSString *string,
     if (tokens == nil) {
         return nil;
     }
-    
+
     NSArray *statements = [self _parseTokens:tokens string:string error:error];
     if (statements == nil) {
         return nil;
     }
-    
+
     NSMutableDictionary *configDictionary = [NSMutableDictionary dictionary];
     for (XCConfigParserStatement *statement in statements) {
         if ([statement isKindOfClass:[XCConfigParserStatementPair class]]) {
             XCConfigParserStatementPair *pair = (id)statement;
-            [configDictionary setObject:pair.value
-                                 forKey:pair.key];
+            configDictionary[pair.key] = pair.value;
         } else if ([statement isKindOfClass:[XCConfigParserStatementInclude class]]) {
             XCConfigParserStatementInclude *include = (id)statement;
-            
+
             if (maxIncludeDepth == 0) {
                 // probably recursive include, Xcode does not give any
                 // error so just ignore the include and continue
                 continue;
             }
-            
-            NSString *includeFile = [[includeBasePath
-                                      stringByAppendingPathComponent:include.path]
-                                     stringByStandardizingPath];
+
+            NSString *includeFile = [includeBasePath
+                                     stringByAppendingPathComponent:include.path].stringByStandardizingPath;
             NSDictionary *includeConfigDictionary = [self
                                                      _dictionaryFromFile:includeFile
                                                      maxIncludeDepth:maxIncludeDepth-1
                                                      error:error];
             if (includeConfigDictionary == nil) {
-                if ([[*error domain] isEqualToString:XCConfigParserErrorDomain]) {
+                if ([(*error).domain isEqualToString:XCConfigParserErrorDomain]) {
                     // pass along error
                 } else {
                     *error = makeParserError(string, include.range.location,
                                              @"Failed to include %@: %@",
-                                             include.path, [*error localizedDescription]);
+                                             include.path, (*error).localizedDescription);
                 }
-                
+
                 return nil;
             }
-            
+
             [configDictionary addEntriesFromDictionary:includeConfigDictionary];
-            
+
         } else {
             NSAssert(NO, @"");
         }
     }
-    
+
     return configDictionary;
 }
 
@@ -449,7 +432,7 @@ static NSError *makeParserError(NSString *string,
     return [self _dictionaryFromString:string
                        maxIncludeDepth:XCConfigParserMaxIncludeDepth
                        includeBasePath:includeBasePath
-                                 error:error ?: &(NSError *){nil}];
+                                 error:error ?: &(NSError * __autoreleasing){nil}];
 }
 
 + (NSDictionary *)_dictionaryFromFile:(NSString *)file
@@ -459,26 +442,26 @@ static NSError *makeParserError(NSString *string,
     if (string == nil) {
         return nil;
     }
-    
-    NSString *standardizedFile = [file stringByStandardizingPath];
-    NSString *includeBasePath = [standardizedFile stringByDeletingLastPathComponent];
+
+    NSString *standardizedFile = file.stringByStandardizingPath;
+    NSString *includeBasePath = standardizedFile.stringByDeletingLastPathComponent;
     if ([includeBasePath isEqualToString:@""]) {
         // TODO: can this happen? only if file is not absolute
-        includeBasePath = [[NSFileManager defaultManager] currentDirectoryPath];
+        includeBasePath = [NSFileManager defaultManager].currentDirectoryPath;
     }
-    
+
     NSDictionary *configDictionary = [self _dictionaryFromString:string
                                                  maxIncludeDepth:maxIncludeDepth
                                                  includeBasePath:includeBasePath
                                                            error:error];
     if (configDictionary == nil) {
-        if ([[*error userInfo] objectForKey:XCConfigParserFileKey] == nil) {
+        if ((*error).userInfo[XCConfigParserFileKey] == nil) {
             // no file has been set in error yet, include file key.
             // this makes sure the deepest error gets reported.
-            
+
             NSMutableDictionary *userInfo = [NSMutableDictionary
-                                             dictionaryWithDictionary:[*error userInfo]];
-            [userInfo setObject:standardizedFile forKey:XCConfigParserFileKey];
+                                             dictionaryWithDictionary:(*error).userInfo];
+            userInfo[XCConfigParserFileKey] = standardizedFile;
             *error = [NSError
                       errorWithDomain:XCConfigParserErrorDomain
                       code:0
@@ -486,10 +469,10 @@ static NSError *makeParserError(NSString *string,
         } else {
             // just pass along the error unchanged
         }
-        
+
         return nil;
     }
-    
+
     return configDictionary;
 }
 
@@ -497,7 +480,7 @@ static NSError *makeParserError(NSString *string,
                                error:(NSError **)error {
     return [self _dictionaryFromFile:file
                      maxIncludeDepth:XCConfigParserMaxIncludeDepth
-                               error:error ?: &(NSError *){nil}];
+                               error:error ?: &(NSError * __autoreleasing){nil}];
 }
 
 @end

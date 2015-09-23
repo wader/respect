@@ -24,29 +24,20 @@
 @end
 
 @implementation TextFileError
-@synthesize file = _file;
-@synthesize textLocation = _textLocation;
-@synthesize message = _message;
 
-- (id)initWithFile:(NSString *)file
-      textLocation:(TextLocation)textLocation
-           message:(NSString *)message {
+- (instancetype)initWithFile:(NSString *)file
+                textLocation:(TextLocation)textLocation
+                     message:(NSString *)message {
     self = [super init];
     if (self == nil) {
         return nil;
     }
-    
+
     self.file = file;
     self.textLocation = textLocation;
     self.message = message;
-    
+
     return self;
 }
 
-- (void)dealloc {
-    self.file = nil;
-    self.message = nil;
-    
-    [super dealloc];
-}
 @end

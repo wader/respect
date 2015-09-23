@@ -29,7 +29,7 @@
                                 regularExpressionWithPatternAndFlags:@"/a/i"
                                 options:0
                                 error:&error];
-    
+
     XCTAssertTrue([re numberOfMatchesInString:@"a" options:0 range:NSMakeRange(0, 1)] > 0, @"");
     XCTAssertFalse([re numberOfMatchesInString:@"A" options:0 range:NSMakeRange(0, 1)] > 0, @"");
     XCTAssertTrue([rei numberOfMatchesInString:@"a" options:0 range:NSMakeRange(0, 1)] > 0, @"");

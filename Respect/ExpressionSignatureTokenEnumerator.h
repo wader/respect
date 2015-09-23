@@ -18,5 +18,6 @@
 #import <Foundation/Foundation.h>
 
 @interface ExpressionSignatureTokenEnumerator : NSEnumerator
-- (id)initWithSignature:(NSString *)signature;
+- (instancetype)init NS_UNAVAILABLE;
+- (instancetype)initWithSignature:(NSString *)signature NS_DESIGNATED_INITIALIZER;
 @end

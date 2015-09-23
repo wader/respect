@@ -18,9 +18,9 @@
 #import "TextFileError.h"
 
 @interface LintError : TextFileError
-+ (id)lintErrorWithFile:(NSString *)file
-               location:(TextLocation)textLocation
-                message:(NSString *)message;
-+ (id)lintErrorWithFile:(NSString *)file
-                message:(NSString *)message;
++ (instancetype)lintErrorWithFile:(NSString *)file
+                         location:(TextLocation)textLocation
+                          message:(NSString *)message;
++ (instancetype)lintErrorWithFile:(NSString *)file
+                          message:(NSString *)message;
 @end

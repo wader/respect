@@ -18,60 +18,51 @@
 #import "PeekableEnumerator.h"
 
 @interface PeekableEnumerator ()
-@property(nonatomic, retain, readwrite) NSEnumerator *enumerator;
-@property(nonatomic, retain, readwrite) NSMutableArray *peekedObjects;
+@property(nonatomic, strong, readwrite) NSEnumerator *enumerator;
+@property(nonatomic, strong, readwrite) NSMutableArray *peekedObjects;
 @end
 
 @implementation PeekableEnumerator
-@synthesize enumerator = _enumerator;
-@synthesize peekedObjects = _peekedObjects;
 
 - (id)initWithEnumerator:(NSEnumerator *)enumerator {
     self = [super init];
     if (self == nil) {
         return nil;
     }
-    
+
     self.enumerator = enumerator;
     self.peekedObjects = [NSMutableArray array];
-    
+
     return self;
 }
 
-- (void)dealloc {
-    self.enumerator = nil;
-    self.peekedObjects = nil;
-    
-    [super dealloc];
-}
 
 - (id)nextObject {
-    if ([self.peekedObjects count] == 0) {
+    if ((self.peekedObjects).count == 0) {
         return [self.enumerator nextObject];
     }
-    
-    id object = [self.peekedObjects objectAtIndex:0];
-    [[object retain] autorelease];
+
+    id object = self.peekedObjects[0];
     [self.peekedObjects removeObjectAtIndex:0];
-    
+
     return object;
 }
 
 - (id)peekObjectAtOffset:(NSUInteger)offset {
-    for (NSUInteger delta = (offset+1) - [self.peekedObjects count];
+    for (NSUInteger delta = (offset+1) - (self.peekedObjects).count;
          delta > 0; delta--) {
         id object = [self.enumerator nextObject];
         if (object == nil) {
             break;
         }
-        
+
         [self.peekedObjects addObject:object];
     }
-    
-    if (offset < [self.peekedObjects count]) {
-        return [self.peekedObjects objectAtIndex:offset];
+
+    if (offset < (self.peekedObjects).count) {
+        return self.peekedObjects[offset];
     }
-    
+
     return nil;
 }
 
@@ -81,7 +72,7 @@
 
 - (NSArray *)allObjects {
     NSMutableArray *objects = [NSMutableArray array];
-    
+
     // this will call our nextObject and drain peekedObjects first
     for (id object in self) {
         [objects addObject:object];

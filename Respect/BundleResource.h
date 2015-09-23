@@ -18,8 +18,9 @@
 @interface BundleResource : NSObject
 @property(nonatomic, copy, readonly) NSString *buildSourcePath;
 @property(nonatomic, copy, readonly) NSString *path;
-@property(nonatomic, retain, readonly) NSMutableArray *resourceReferences;
+@property(nonatomic, strong, readonly) NSMutableArray *resourceReferences;
 
-- (id)initWithBuildSourcePath:(NSString *)buildSourcePath
-                         path:(NSString *)path;
+- (instancetype)init NS_UNAVAILABLE;
+- (instancetype)initWithBuildSourcePath:(NSString *)buildSourcePath
+                                   path:(NSString *)path NS_DESIGNATED_INITIALIZER;
 @end

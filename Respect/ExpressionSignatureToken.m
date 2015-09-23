@@ -29,14 +29,14 @@
 @implementation NSString (ExpressionSignatureToken)
 - (NSUInteger)indexOfFirstFromIndex:(NSUInteger)index
                      inCharacterSet:(NSCharacterSet *)characterSet {
-    NSUInteger length = [self length];
-    
+    NSUInteger length = self.length;
+
     for (; index < length; index++) {
         if ([characterSet characterIsMember:[self characterAtIndex:index]]) {
             return index;
         }
     }
-    
+
     return NSNotFound;
 }
 
@@ -44,26 +44,22 @@
                           inCharacterSet:(NSCharacterSet *)characterSet {
     index = [self indexOfFirstFromIndex:index inCharacterSet:characterSet];
     if (index == NSNotFound) {
-        return [self length];
+        return self.length;
     }
-    
+
     return index;
 }
 @end
 
 @implementation ExpressionSignatureToken
-@synthesize range = _range;
-@synthesize string = _string;
-@synthesize type = _type;
 
 + (id)tokenWithRange:(NSRange)range
             inString:(NSString *)string
                 type:(ExpressionSignatureTokenType)type {
-    
-    return [[[ExpressionSignatureToken alloc] initWithRange:range
-                                                   inString:string
-                                                       type:type]
-            autorelease];
+
+    return [[ExpressionSignatureToken alloc] initWithRange:range
+                                                  inString:string
+                                                      type:type];
 }
 
 + (ExpressionSignatureToken *)tokenizeString:(NSString *)string
@@ -74,52 +70,50 @@
     static NSDictionary *charToToken = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        whitespaceCharacterSet = [[NSCharacterSet whitespaceCharacterSet] retain];
-        identFirstCharacerSet = [[NSMutableCharacterSet letterCharacterSet] retain];
+        whitespaceCharacterSet = [NSCharacterSet whitespaceCharacterSet];
+        identFirstCharacerSet = [NSMutableCharacterSet letterCharacterSet];
         // add "*" to allow wildcard matching
         // TODO: [0-9A-Za-z_]? \u?
         [identFirstCharacerSet addCharactersInString:@"_$*"];
-        identCharacterSet = [[NSMutableCharacterSet letterCharacterSet] retain];
+        identCharacterSet = [NSMutableCharacterSet letterCharacterSet];
         [identCharacterSet addCharactersInString:@"0123456789_$*"];
-        charToToken = [[NSDictionary alloc] initWithObjectsAndKeys:
-                       [NSNumber numberWithInt:SIGNATURE_TOKEN_OPEN_BRACKET], @"[",
-                       [NSNumber numberWithInt:SIGNATURE_TOKEN_CLOSE_BRACKET], @"]",
-                       [NSNumber numberWithInt:SIGNATURE_TOKEN_OPEN_PARENTHESES], @"(",
-                       [NSNumber numberWithInt:SIGNATURE_TOKEN_CLOSE_PARENTHESES], @")",
-                       [NSNumber numberWithInt:SIGNATURE_TOKEN_COLON], @":",
-                       [NSNumber numberWithInt:SIGNATURE_TOKEN_COMMA], @",",
-                       [NSNumber numberWithInt:SIGNATURE_TOKEN_AT], @"@",
-                       [NSNumber numberWithInt:SIGNATURE_TOKEN_DOLLAR], @"$",
-                       nil];
+        charToToken = @{@"[": @(SIGNATURE_TOKEN_OPEN_BRACKET),
+                        @"]": @(SIGNATURE_TOKEN_CLOSE_BRACKET),
+                        @"(": @(SIGNATURE_TOKEN_OPEN_PARENTHESES),
+                        @")": @(SIGNATURE_TOKEN_CLOSE_PARENTHESES),
+                        @":": @(SIGNATURE_TOKEN_COLON),
+                        @",": @(SIGNATURE_TOKEN_COMMA),
+                        @"@": @(SIGNATURE_TOKEN_AT),
+                        @"$": @(SIGNATURE_TOKEN_DOLLAR)};
     });
-    
+
     index = [string indexOfFirstFromIndex:index
-                           inCharacterSet:[whitespaceCharacterSet invertedSet]];
+                           inCharacterSet:whitespaceCharacterSet.invertedSet];
     if (index == NSNotFound) {
         return [ExpressionSignatureToken tokenWithRange:NSMakeRange(0, 0)
                                                inString:@""
                                                    type:SIGNATURE_TOKEN_END];
     }
-    
+
     NSString *c = [string substringWithRange:NSMakeRange(index, 1)];
-    NSNumber *token = [charToToken objectForKey:c];
+    NSNumber *token = charToToken[c];
     if (token != nil) {
         return [ExpressionSignatureToken
                 tokenWithRange:NSMakeRange(index, 1)
                 inString:string
-                type:[token intValue]];
+                type:token.intValue];
     } else if ([identFirstCharacerSet characterIsMember:[c characterAtIndex:0]]) {
         NSRange r;
         r.location = index;
         r.length = ([string indexOfFirstOrEndFromIndex:index
-                                        inCharacterSet:[identCharacterSet invertedSet]]
+                                        inCharacterSet:identCharacterSet.invertedSet]
                     - index);
         return [ExpressionSignatureToken tokenWithRange:r
                                                inString:string
                                                    type:SIGNATURE_TOKEN_IDENT];
     }
-    
-    NSRange r = NSMakeRange(index, [string length] - index);
+
+    NSRange r = NSMakeRange(index, string.length - index);
     return [ExpressionSignatureToken tokenWithRange:r
                                            inString:string
                                                type:SIGNATURE_TOKEN_UNKNOWN];
@@ -132,23 +126,18 @@
     if (self == nil) {
         return nil;
     }
-    
+
     self.range = range;
     self.string = [string substringWithRange:range];
     self.type = type;
-    
+
     return self;
 }
 
-- (void)dealloc {
-    self.string = nil;
-    
-    [super dealloc];
-}
 
 - (NSString *)description {
     return [NSString stringWithFormat:@"%@ type=%d string=%@",
-            [super description], self.type, self.string];
+            super.description, (int)self.type, self.string];
 }
 
 @end

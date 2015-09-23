@@ -32,37 +32,33 @@ NSString * const ExpressionSignatureErrorDomain = @"ExpressionSignatureErrorDoma
     return [NSError
             errorWithDomain:ExpressionSignatureErrorDomain
             code:0
-            userInfo:[NSDictionary dictionaryWithObjectsAndKeys:
-                      description,
-                      NSLocalizedDescriptionKey,
-                      nil]];
-    
+            userInfo:@{NSLocalizedDescriptionKey: description}];
+
 }
 
 + (NSError *)errorWithDescriptionFormat:(NSString *)descriptionFormat, ... {
     va_list va;
     va_start(va, descriptionFormat);
     NSError *error = [self errorWithDescription:
-                      [[[NSString alloc] initWithFormat:descriptionFormat
-                                              arguments:va]
-                       autorelease]];
+                      [[NSString alloc] initWithFormat:descriptionFormat
+                                             arguments:va]];
     va_end(va);
-    
+
     return error;
 }
 
 // TODO: capture group info? string unescape
 + (NSRegularExpression *)stringToRegEx:(NSString *)signature
                                  error:(NSError **)error {
-    error = error ?: &(NSError *){nil};
-    
+    error = error ?: &(NSError * __autoreleasing){nil};
+
     ExpressionSignature *exp = [ExpressionSignature
                                 signatureFromString:signature
                                 error:error];
     if (*error != nil) {
         return nil;
     }
-    
+
     return [NSRegularExpression
             regularExpressionWithPattern:[exp toPattern]
             options:0
@@ -71,42 +67,40 @@ NSString * const ExpressionSignatureErrorDomain = @"ExpressionSignatureErrorDoma
 
 + (ExpressionSignature *)signatureFromString:(NSString *)signature
                                        error:(NSError **)error {
-    error = error ?: &(NSError *){nil};
-    
-    PeekableEnumerator *peekableTokenEnumerator = [[[PeekableEnumerator alloc]
-                                                    initWithEnumerator:
-                                                    [[[ExpressionSignatureTokenEnumerator alloc]
-                                                      initWithSignature:signature]
-                                                     autorelease]]
-                                                   autorelease];
+    error = error ?: &(NSError * __autoreleasing){nil};
+
+    PeekableEnumerator *peekableTokenEnumerator = [[PeekableEnumerator alloc]
+                                                   initWithEnumerator:
+                                                   [[ExpressionSignatureTokenEnumerator alloc]
+                                                    initWithSignature:signature]];
     ExpressionSignature *exp = [self parseTokens:peekableTokenEnumerator
                                            error:error];
     if (exp == nil) {
         return nil;
     }
-    
+
     if ([peekableTokenEnumerator peekObject] != nil) {
         ExpressionSignatureToken *token = [peekableTokenEnumerator nextObject];
         *error = [self errorWithDescriptionFormat:@"Trailing characters at \"%@...\"",
                   token.string];
         return nil;
     }
-    
+
     return exp;
 }
 
 + (id<ExpressionSignature>)parseTokens:(PeekableEnumerator *)tokens
                                  error:(NSError **)error {
-    error = error ?: &(NSError *){nil};
-    
+    error = error ?: &(NSError * __autoreleasing){nil};
+
     ExpressionSignatureToken *token0 = [tokens peekObjectAtOffset:0];
     ExpressionSignatureToken *token1 = [tokens peekObjectAtOffset:1];
-    
+
     if (token0 == nil) {
         *error = [self errorWithDescriptionFormat:@"Unexpected end"];
         return nil;
     }
-    
+
     if (token0.type == SIGNATURE_TOKEN_OPEN_BRACKET) {
         return [ExpressionSignatureSend parseTokens:tokens error:error];
     } else if (token0.type == SIGNATURE_TOKEN_IDENT &&

@@ -25,29 +25,27 @@
 + (NSRegularExpression *)regularExpressionWithPatternAndFlags:(NSString *)patternAndFlags
                                                       options:(NSRegularExpressionOptions)options
                                                         error:(NSError **)error {
-    error = error ?: &(NSError *){nil};
+    error = error ?: &(NSError * __autoreleasing){nil};
 
     NSRange start = [patternAndFlags rangeOfString:@"/" options:0];
     NSRange end = [patternAndFlags rangeOfString:@"/" options:NSBackwardsSearch];
-    
+
     if (start.location != 0 ||
         end.location == NSNotFound ||
         start.location == end.location) {
         *error = [NSError errorWithDomain:NSCocoaErrorDomain
                                      code:0
-                                 userInfo:[NSDictionary
-                                           dictionaryWithObject:@"Should be in /regex/[ixsmw] format"
-                                           forKey:NSLocalizedDescriptionKey]];
+                                 userInfo:@{NSLocalizedDescriptionKey: @"Should be in /regex/[ixsmw] format"}];
         return nil;
     }
-    
+
     NSString *pattern = [patternAndFlags substringWithRange:
                          NSMakeRange(NSMaxRange(start),
                                      end.location-NSMaxRange(start))];
     NSString *flags = [patternAndFlags substringFromIndex:NSMaxRange(end)];
-    
+
     NSRegularExpressionOptions flagsOptions = 0;
-    for (NSUInteger i = 0; i < [flags length]; i++) {
+    for (NSUInteger i = 0; i < flags.length; i++) {
         unichar c = [flags characterAtIndex:i];
         if (c == 'i') {
             flagsOptions |= NSRegularExpressionCaseInsensitive;
@@ -62,13 +60,11 @@
         } else {
             *error = [NSError errorWithDomain:NSCocoaErrorDomain
                                          code:0
-                                     userInfo:[NSDictionary
-                                               dictionaryWithObject:@"Invalid flags, available flags are ixsmw"
-                                               forKey:NSLocalizedDescriptionKey]];
+                                     userInfo:@{NSLocalizedDescriptionKey: @"Invalid flags, available flags are ixsmw"}];
             return nil;
         }
     }
-    
+
     return [NSRegularExpression regularExpressionWithPattern:pattern
                                                      options:flagsOptions|options
                                                        error:error];

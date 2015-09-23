@@ -21,7 +21,7 @@
 @implementation NSRegularExpression_lineNumberTest
 - (void)testRegularExpressionlineNumber {
     NSRegularExpression *re = [NSRegularExpression regularExpressionWithPattern:@"\\d+" options:0 error:NULL];
-    
+
     NSString *lines =
     @"1 1 1\n"
     @"2 2 2\n"
@@ -31,12 +31,12 @@
     [re
      enumerateMatchesWithLineNumberInString:lines
      options:0
-     range:NSMakeRange(0, [lines length])
+     range:NSMakeRange(0, lines.length)
      usingBlock:
      ^(NSTextCheckingResult *result, NSUInteger lineNumber, NSRange inLineRange,
        NSMatchingFlags flags, BOOL *stop) {
          NSString *resultString = [lines substringWithRange:result.range];
          XCTAssertTrue([resultString integerValue] == lineNumber);
-    }];
+     }];
 }
 @end

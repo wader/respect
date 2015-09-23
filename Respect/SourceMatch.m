@@ -24,15 +24,12 @@
 #import "NSString+Respect.h"
 
 @interface SourceMatch ()
-@property(nonatomic, retain, readwrite) ExpressionSignature *experssionSignature;
-@property(nonatomic, retain, readwrite) NSRegularExpression *re;
-@property(nonatomic, retain, readwrite) NSError *error;
+@property(nonatomic, strong, readwrite) ExpressionSignature *experssionSignature;
+@property(nonatomic, strong, readwrite) NSRegularExpression *re;
+@property(nonatomic, strong, readwrite) NSError *error;
 @end
 
 @implementation SourceMatch
-@synthesize experssionSignature = _experssionSignature;
-@synthesize re = _re;
-@synthesize error = _error;
 
 + (NSString *)name {
     return @"SourceMatch";
@@ -79,26 +76,19 @@
                              textLocation:textLocation
                                   message:[NSString stringWithFormat:
                                            @"Matcher error: %@",
-                                           [self.error localizedDescription]]]];
+                                           (self.error).localizedDescription]]];
     }
     
     return self;
 }
 
-- (void)dealloc {
-    self.experssionSignature = nil;
-    self.re = nil;
-    self.error = nil;
-    
-    [super dealloc];
-}
 
 - (void)parseResourceReferencesInSourceFile:(TextFile *)textFile {
     // we can use lineRanges from textFile as comment white out only
     // replaces the comment text with whitesapce and leaves new lines alone
     [self.re enumerateMatchesWithLineNumberInString:textFile.whitedoutCommentsText
                                             options:0
-                                              range:NSMakeRange(0, [textFile.whitedoutCommentsText length])
+                                              range:NSMakeRange(0, (textFile.whitedoutCommentsText).length)
                                          lineRanges:textFile.lineRanges
                                          usingBlock:
      ^(NSTextCheckingResult *result, NSUInteger lineNumber, NSRange inLineRange,
@@ -127,7 +117,7 @@
         return;
     }
     
-    if ([self.actions count] == 0) {
+    if ((self.actions).count == 0) {
         [self.linter.configErrors addObject:
          [ConfigError configErrorWithFile:self.file
                              textLocation:self.textLocation
@@ -140,7 +130,7 @@
         [self parseResourceReferencesInSourceFile:textFile];
     }
     
-    if (!self.isDefaultConfig && [self.performParameters count] == 0) {
+    if (!self.isDefaultConfig && (self.performParameters).count == 0) {
         [self.linter.configErrors addObject:
          [ConfigError configErrorWithFile:self.file
                              textLocation:self.textLocation
@@ -156,7 +146,7 @@
             [lines addObject:[NSString stringWithFormat:@"// Translated to %@", self.re.pattern]];
         }
     } else {
-        [lines addObject:[NSString stringWithFormat:@"// %@", [self.error localizedDescription]]];
+        [lines addObject:[NSString stringWithFormat:@"// %@", (self.error).localizedDescription]];
     }
     
     [lines addObject:[NSString stringWithFormat:@"@Lint%@: %@", [[self class] name], self.argumentString]];

@@ -26,8 +26,7 @@
 @implementation NSString_RespectTest
 
 - (void)test_respect_stringWithContentsOfFileTryingEncodings {
-    NSString *testPath = [[[[NSProcessInfo processInfo] environment]
-                           objectForKey:@"TMPDIR"]
+    NSString *testPath = [[NSProcessInfo processInfo].environment[@"TMPDIR"]
                           stringByAppendingPathComponent:@"StringWithContentOfLine"];
     NSString *expected = @"åäö";
     [[expected dataUsingEncoding:NSISOLatin1StringEncoding] writeToFile:testPath
@@ -35,7 +34,7 @@
     NSString *content = [NSString respect_stringWithContentsOfFileTryingEncodings:testPath
                                                                             error:NULL];
     [[NSFileManager defaultManager] removeItemAtPath:testPath error:NULL];
-    
+
     XCTAssertEqualObjects(expected, content, @"");
 }
 
@@ -47,8 +46,8 @@
 }
 
 - (void)test_respect_stringByStripSuffixes {
-    NSArray *testSuffixes = [NSArray arrayWithObjects:@"a", @"b", nil];
-    
+    NSArray *testSuffixes = @[@"a", @"b"];
+
     XCTAssertEqualObjects([@"" respect_stringByStripSuffixes:testSuffixes], @"", @"");
     XCTAssertEqualObjects([@"aa" respect_stringByStripSuffixes:testSuffixes], @"a", @"");
     XCTAssertEqualObjects([@"ab" respect_stringByStripSuffixes:testSuffixes], @"a", @"");
@@ -56,8 +55,8 @@
 }
 
 - (void)test_respect_stringByStripPrefixes {
-    NSArray *testPrefixes = [NSArray arrayWithObjects:@"a", @"b", nil];
-    
+    NSArray *testPrefixes = @[@"a", @"b"];
+
     XCTAssertEqualObjects([@"" respect_stringByStripPrefixes:testPrefixes], @"", @"");
     XCTAssertEqualObjects([@"aa" respect_stringByStripPrefixes:testPrefixes], @"a", @"");
     XCTAssertEqualObjects([@"ba" respect_stringByStripPrefixes:testPrefixes], @"a", @"");
@@ -65,9 +64,9 @@
 }
 
 - (void)test_respect_stringSuffixInArray {
-    XCTAssertEqualObjects([@"ab" respect_stringSuffixInArray:([NSArray arrayWithObjects:@"a", @"b", nil])],
-                         @"b", @"");
-    XCTAssertNil([@"ab" respect_stringSuffixInArray:([NSArray arrayWithObjects:@"a", @"c", nil])], @"");
+    XCTAssertEqualObjects([@"ab" respect_stringSuffixInArray:(@[@"a", @"b"])],
+                          @"b", @"");
+    XCTAssertNil([@"ab" respect_stringSuffixInArray:(@[@"a", @"c"])], @"");
 }
 
 - (void)test_respect_stringRelativeToPathPrefix {
@@ -79,16 +78,16 @@
 - (void)test_respect_stringByUnEscaping {
     XCTAssertEqualObjects([@"\\\\\\a\\" respect_stringByUnEscaping], @"\\a\\", @"");
     XCTAssertEqualObjects([@"\\a\\," respect_stringByUnEscapingCharactersInSet:
-                          [NSCharacterSet characterSetWithCharactersInString:@","]],
-                         @"\\a,", @"");
+                           [NSCharacterSet characterSetWithCharactersInString:@","]],
+                          @"\\a,", @"");
     XCTAssertEqualObjects([@"\\" respect_stringByUnEscaping], @"\\", @"");
     XCTAssertEqualObjects([@"a\\" respect_stringByUnEscaping], @"a\\", @"");
 }
 
 - (void)test_respect_stringByEscaping {
     XCTAssertEqualObjects([@"ab" respect_stringByEscapingCharactesInSet:
-                          [NSCharacterSet characterSetWithCharactersInString:@"a"]],
-                         @"\\ab", @"");
+                           [NSCharacterSet characterSetWithCharactersInString:@"a"]],
+                          @"\\ab", @"");
 }
 
 - (void)test_respect_stringByEscapingAndUnEscaping {
@@ -98,7 +97,7 @@
                  respect_stringByUnEscapingCharactersInSet:escapeSet]
                 isEqualToString:string];
     };
-    
+
     XCTAssertTrue(testEscapeUnEscape(@"a", [NSCharacterSet characterSetWithCharactersInString:@"ab"]));
     XCTAssertTrue(testEscapeUnEscape(@"ab", [NSCharacterSet characterSetWithCharactersInString:@"ab"]));
     XCTAssertTrue(testEscapeUnEscape(@"abc", [NSCharacterSet characterSetWithCharactersInString:@"ab"]));
@@ -107,55 +106,55 @@
 
 - (void)test_withFnmach_componentsSeparatedByCharactersInSet {
     NSCharacterSet *sepSet = [NSCharacterSet characterSetWithCharactersInString:@","];
-    
+
     XCTAssertEqualObjects([@"a,b,c" withFnmatch_componentsSeparatedByCharactersInSet:sepSet allowEscape:YES],
-                         ([NSArray arrayWithObjects:@"a", @"b", @"c", nil]), @"");
+                          (@[@"a", @"b", @"c"]), @"");
     XCTAssertEqualObjects([@"a,b\\,c" withFnmatch_componentsSeparatedByCharactersInSet:sepSet allowEscape:YES],
-                         ([NSArray arrayWithObjects:@"a", @"b,c", nil]), @"");
+                          (@[@"a", @"b,c"]), @"");
     XCTAssertEqualObjects([@"a,b\\,c" withFnmatch_componentsSeparatedByCharactersInSet:sepSet allowEscape:NO],
-                         ([NSArray arrayWithObjects:@"a", @"b\\", @"c", nil]), @"");
+                          (@[@"a", @"b\\", @"c"]), @"");
 }
 
 - (void)test_withFnmach_componentsSeparatedByCharacterPair {
     id (^testBlock)(NSString *string, BOOL insidePair) = ^id(NSString *string, BOOL insidePair){
         return [NSString stringWithFormat:@"%@,%d", string, insidePair];
     };
-    
+
     XCTAssertEqualObjects([@"[a]bc" withFnmatch_componentsSeparatedByCharacterPair:@"[]"
-                                                                      allowEscape:YES
-                                                                       usingBlock:testBlock],
-                         ([NSArray arrayWithObjects:@"a,1", @"bc,0", nil]),
-                         @"");
+                                                                       allowEscape:YES
+                                                                        usingBlock:testBlock],
+                          (@[@"a,1", @"bc,0"]),
+                          @"");
     XCTAssertEqualObjects([@"a[b]c" withFnmatch_componentsSeparatedByCharacterPair:@"[]"
-                                                                      allowEscape:YES
-                                                                       usingBlock:testBlock],
-                         ([NSArray arrayWithObjects:@"a,0", @"b,1", @"c,0", nil]),
-                         @"");
+                                                                       allowEscape:YES
+                                                                        usingBlock:testBlock],
+                          (@[@"a,0", @"b,1", @"c,0"]),
+                          @"");
     XCTAssertEqualObjects([@"a[b][c]" withFnmatch_componentsSeparatedByCharacterPair:@"[]"
-                                                                        allowEscape:YES
-                                                                         usingBlock:testBlock],
-                         ([NSArray arrayWithObjects:@"a,0", @"b,1", @"c,1", nil]),
-                         @"");
-    XCTAssertEqualObjects([@"ab[c]" withFnmatch_componentsSeparatedByCharacterPair:@"[]"
-                                                                      allowEscape:YES
-                                                                       usingBlock:testBlock],
-                         ([NSArray arrayWithObjects:@"ab,0", @"c,1", nil]),
-                         @"");
-    XCTAssertEqualObjects([@"[a]\\[b]" withFnmatch_componentsSeparatedByCharacterPair:@"[]"
                                                                          allowEscape:YES
                                                                           usingBlock:testBlock],
-                         ([NSArray arrayWithObjects:@"a,1", @"[b],0", nil]),
-                         @"");
+                          (@[@"a,0", @"b,1", @"c,1"]),
+                          @"");
+    XCTAssertEqualObjects([@"ab[c]" withFnmatch_componentsSeparatedByCharacterPair:@"[]"
+                                                                       allowEscape:YES
+                                                                        usingBlock:testBlock],
+                          (@[@"ab,0", @"c,1"]),
+                          @"");
     XCTAssertEqualObjects([@"[a]\\[b]" withFnmatch_componentsSeparatedByCharacterPair:@"[]"
-                                                                         allowEscape:NO
-                                                                          usingBlock:testBlock],
-                         ([NSArray arrayWithObjects:@"a,1", @"\\,0", @"b,1", nil]),
-                         @"");
+                                                                          allowEscape:YES
+                                                                           usingBlock:testBlock],
+                          (@[@"a,1", @"[b],0"]),
+                          @"");
+    XCTAssertEqualObjects([@"[a]\\[b]" withFnmatch_componentsSeparatedByCharacterPair:@"[]"
+                                                                          allowEscape:NO
+                                                                           usingBlock:testBlock],
+                          (@[@"a,1", @"\\,0", @"b,1"]),
+                          @"");
 }
 
 - (void)test_respect_stringByReplacingParameters {
-    NSArray *testParameters = [NSArray arrayWithObjects:@"ab", @"a", @"b", nil];
-    
+    NSArray *testParameters = @[@"ab", @"a", @"b"];
+
     XCTAssertEqualObjects([@"$0" respect_stringByReplacingParameters:testParameters], @"ab", @"");
     XCTAssertEqualObjects([@"$1$2" respect_stringByReplacingParameters:testParameters], @"ab", @"");
     XCTAssertEqualObjects([@"$1-$2" respect_stringByReplacingParameters:testParameters], @"a-b", @"");
@@ -167,7 +166,7 @@
     NSString * (^block)(NSString *) = ^NSString * (NSString *variableName) {
         return variableName;
     };
-    
+
     XCTAssertEqualObjects([@"$(test)" pbx_stringByReplacingVariablesUsingBlock:block], @"test", @"");
     XCTAssertEqualObjects([@"c$(a)c$(b)c" pbx_stringByReplacingVariablesUsingBlock:block], @"cacbc", @"");
     XCTAssertEqualObjects([@"$(a)$(b)$(c)$(a)$(b)$(c)" pbx_stringByReplacingVariablesUsingBlock:block], @"abcabc", @"");
@@ -175,26 +174,22 @@
 }
 
 - (void)test_pbx_stringByReplacingVariablesNestedUsingBlock {
-    NSDictionary *variables = [NSDictionary dictionaryWithObjectsAndKeys:
-                               @"B", @"B",
-                               @"A$(B)", @"A",
-                               nil];
-    
+    NSDictionary *variables = @{@"B": @"B",
+                                @"A": @"A$(B)"};
+
     NSString * (^block)(NSString *) = ^NSString * (NSString *variableName) {
-        return [variables objectForKey:variableName];
+        return variables[variableName];
     };
-    
+
     XCTAssertEqualObjects([@"$(A)" pbx_stringByReplacingVariablesNestedUsingBlock:block], @"AB", @"");
 }
 
 - (void)test_pbx_stringByReplacingVariablesFromDict {
-    NSDictionary *testVariables = [NSDictionary dictionaryWithObjectsAndKeys:
-                                   @"test", @"test",
-                                   @"a", @"a",
-                                   @"b", @"b",
-                                   @"c", @"c",
-                                   nil];
-    
+    NSDictionary *testVariables = @{@"test": @"test",
+                                    @"a": @"a",
+                                    @"b": @"b",
+                                    @"c": @"c"};
+
     XCTAssertEqualObjects([@"$(test)" pbx_stringByReplacingVariablesFromDict:testVariables], @"test", @"");
     XCTAssertEqualObjects([@"$a/$b" pbx_stringByReplacingVariablesFromDict:testVariables], @"a/b", @"");
     XCTAssertEqualObjects([@"$(a)/$b" pbx_stringByReplacingVariablesFromDict:testVariables], @"a/b", @"");
@@ -205,22 +200,18 @@
 
 - (void)test_respect_PermutationsUsingGroupCharacterPair {
     XCTAssertEqualObjects([@"a{b,c}" respect_permutationsUsingGroupCharacterPair:@"{}" withSeparators:@","],
-                         ([NSArray arrayWithObjects:@"ab", @"ac", nil]), @"");
-    
+                          (@[@"ab", @"ac"]), @"");
+
     XCTAssertEqualObjects([@"a{b{c,d}}" respect_permutationsUsingGroupCharacterPair:@"{}" withSeparators:@","],
-                         ([NSArray arrayWithObjects:
-                           @"abc",
-                           @"abd",
-                           nil]), @"");
-    
+                          (@[@"abc",
+                             @"abd"]), @"");
+
     XCTAssertEqualObjects([@"a{b{c,d}b}a" respect_permutationsUsingGroupCharacterPair:@"{}" withSeparators:@","],
-                         ([NSArray arrayWithObjects:
-                           @"abcba",
-                           @"abdba",
-                           nil]), @"");
-    
+                          (@[@"abcba",
+                             @"abdba"]), @"");
+
     XCTAssertEqualObjects([@"a{b,c}{d,e}" respect_permutationsUsingGroupCharacterPair:@"{}" withSeparators:@","],
-                         ([NSArray arrayWithObjects:@"abd", @"abe", @"acd", @"ace", nil]), @"");
+                          (@[@"abd", @"abe", @"acd", @"ace"]), @"");
 }
 
 - (void)test_respect_stringByResolvingPathRealtiveTo {
@@ -247,33 +238,29 @@
     @" 2\n"
     @"  3\n"
     @"";
-    NSArray *exceptedLineRanges1 = [NSArray arrayWithObjects:
-                                    [NSValue valueWithRange:NSMakeRange(0, 2)],
-                                    [NSValue valueWithRange:NSMakeRange(2, 3)],
-                                    [NSValue valueWithRange:NSMakeRange(5, 4)],
-                                    nil];
+    NSArray *exceptedLineRanges1 = @[[NSValue valueWithRange:NSMakeRange(0, 2)],
+                                     [NSValue valueWithRange:NSMakeRange(2, 3)],
+                                     [NSValue valueWithRange:NSMakeRange(5, 4)]];
     XCTAssertEqualObjects([lines1 lineNumber_lineRanges], exceptedLineRanges1);
-    
+
     NSString *lines2 =
     @"1\n"
     @" 2\n"
     @"  3\n"
     @"     "
     @"";
-    
-    NSArray *exceptedLineRanges2 = [NSArray arrayWithObjects:
-                                    [NSValue valueWithRange:NSMakeRange(0, 2)],
-                                    [NSValue valueWithRange:NSMakeRange(2, 3)],
-                                    [NSValue valueWithRange:NSMakeRange(5, 4)],
-                                    [NSValue valueWithRange:NSMakeRange(9, 5)],
-                                    nil];
+
+    NSArray *exceptedLineRanges2 = @[[NSValue valueWithRange:NSMakeRange(0, 2)],
+                                     [NSValue valueWithRange:NSMakeRange(2, 3)],
+                                     [NSValue valueWithRange:NSMakeRange(5, 4)],
+                                     [NSValue valueWithRange:NSMakeRange(9, 5)]];
     XCTAssertEqualObjects([lines2 lineNumber_lineRanges], exceptedLineRanges2);
 }
 
 - (void)test_respect_stringByReplacingCharactersInSet {
     XCTAssertEqualObjects([@"aba" respect_stringByReplacingCharactersInSet:
-                          [NSCharacterSet characterSetWithCharactersInString:@"a"] withCharacter:' '],
-                         @" b ");
+                           [NSCharacterSet characterSetWithCharactersInString:@"a"] withCharacter:' '],
+                          @" b ");
 }
 
 - (void)test_respect_levenshteinDistanceToString {
@@ -285,31 +272,31 @@
 }
 
 - (void)test_respect_stringBySuggestingFromArray {
-    NSArray *suggestions = [NSArray arrayWithObjects:@"ts", @"t", nil];
+    NSArray *suggestions = @[@"ts", @"t"];
     XCTAssertEqualObjects([@"test" respect_stringBySuggestionFromArray:suggestions maxDistanceThreshold:3], @"ts");
     XCTAssertEqualObjects([@"test" respect_stringBySuggestionFromArray:suggestions maxDistanceThreshold:2], @"ts");
     XCTAssertNil([@"test" respect_stringBySuggestionFromArray:suggestions maxDistanceThreshold:1]);
 }
 
 - (void)test_respect_componentsSeparatedByWhitespaceAllowingQuotes {
-    NSArray *a = [NSArray arrayWithObjects:@"a", nil];
-    NSArray *aq = [NSArray arrayWithObjects:@"a\"", nil];
-    NSArray *a_b = [NSArray arrayWithObjects:@"a", @"b", nil];
-    NSArray *aa_bb = [NSArray arrayWithObjects:@"aa", @"bb", nil];
-    NSArray *aa_bb_cc = [NSArray arrayWithObjects:@"aa", @"bb", @"cc", nil];
-    NSArray *aa_bbcc = [NSArray arrayWithObjects:@"aa", @"bb cc", nil];
-    NSArray *a_q_a = [NSArray arrayWithObjects:@"a", @"\"", @"a", nil];
-    NSArray *a_qq_a = [NSArray arrayWithObjects:@"a", @"\"\"", @"a", nil];
-    NSArray *a_qqq_a = [NSArray arrayWithObjects:@"a", @"\"\"\"", @"a", nil];
-    NSArray *qa_aq = [NSArray arrayWithObjects:@"\"a", @"a\"", nil];
-    
+    NSArray *a = @[@"a"];
+    NSArray *aq = @[@"a\""];
+    NSArray *a_b = @[@"a", @"b"];
+    NSArray *aa_bb = @[@"aa", @"bb"];
+    NSArray *aa_bb_cc = @[@"aa", @"bb", @"cc"];
+    NSArray *aa_bbcc = @[@"aa", @"bb cc"];
+    NSArray *a_q_a = @[@"a", @"\"", @"a"];
+    NSArray *a_qq_a = @[@"a", @"\"\"", @"a"];
+    NSArray *a_qqq_a = @[@"a", @"\"\"\"", @"a"];
+    NSArray *qa_aq = @[@"\"a", @"a\""];
+
     XCTAssertEqualObjects([@"" respect_componentsSeparatedByWhitespaceAllowingQuotes],
-                         [NSArray array]);
+                          [NSArray array]);
     XCTAssertEqualObjects([@"a" respect_componentsSeparatedByWhitespaceAllowingQuotes], a);
     XCTAssertEqualObjects([@"a b" respect_componentsSeparatedByWhitespaceAllowingQuotes], a_b);
     XCTAssertEqualObjects([@"aa bb" respect_componentsSeparatedByWhitespaceAllowingQuotes], aa_bb);
     XCTAssertEqualObjects([@"  aa   bb  " respect_componentsSeparatedByWhitespaceAllowingQuotes], aa_bb);
-    XCTAssertEqualObjects([@"\"\"" respect_componentsSeparatedByWhitespaceAllowingQuotes], [NSArray arrayWithObject:@""]);
+    XCTAssertEqualObjects([@"\"\"" respect_componentsSeparatedByWhitespaceAllowingQuotes], @[@""]);
     XCTAssertEqualObjects([@"\"a\"" respect_componentsSeparatedByWhitespaceAllowingQuotes], a);
     XCTAssertEqualObjects([@"aa \"bb\" cc" respect_componentsSeparatedByWhitespaceAllowingQuotes], aa_bb_cc);
     XCTAssertEqualObjects([@"aa \"bb cc\"" respect_componentsSeparatedByWhitespaceAllowingQuotes], aa_bbcc);

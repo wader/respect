@@ -22,13 +22,11 @@
 #import "NSArray+Respect.h"
 
 @interface ImageAction ()
-@property(nonatomic, retain, readwrite) ImageNamedFinder *imageNamedFinder;
-@property(nonatomic, retain, readwrite) NSOrderedSet *actionOptions;
+@property(nonatomic, strong, readwrite) ImageNamedFinder *imageNamedFinder;
+@property(nonatomic, strong, readwrite) NSOrderedSet *actionOptions;
 @end
 
 @implementation ImageAction
-@synthesize imageNamedFinder = _imageNamedFinder;
-@synthesize actionOptions = _actionOptions;
 
 + (NSString *)name {
     return @"Image";
@@ -44,9 +42,9 @@
     
     NSOrderedSet *options = [NSOrderedSet orderedSetWithArray:components];
     NSOrderedSet *unknownOptions = [ImageNamedOptions unknownOptionsFromOptions:options];
-    if ([unknownOptions count] > 0) {
+    if (unknownOptions.count > 0) {
         *errorMessage = [NSString stringWithFormat:@"Unknown options %@",
-                         [[unknownOptions array]
+                         [unknownOptions.array
                           componentsJoinedByString:@", "]];
         return nil;
     }
@@ -54,16 +52,11 @@
     return options;
 }
 
-- (void)dealloc {
-    self.imageNamedFinder = nil;
-    
-    [super dealloc];
-}
 
 - (void)actionOptions:(NSOrderedSet *)options {
     NSOrderedSet *unknownOptions = [ImageNamedOptions unknownOptionsFromOptions:options];
     
-    NSMutableOrderedSet *imageOptions = [[options mutableCopy] autorelease];
+    NSMutableOrderedSet *imageOptions = [options mutableCopy];
     [imageOptions minusOrderedSet:unknownOptions];
     self.actionOptions = imageOptions;
     
@@ -72,7 +65,7 @@
 
 - (NSArray *)actionResourcePaths:(NSString *)resourcePath {
     if (self.imageNamedFinder == nil) {
-        self.imageNamedFinder = [[[ImageNamedFinder alloc] init] autorelease];
+        self.imageNamedFinder = [[ImageNamedFinder alloc] init];
         
         NSOrderedSet *defaultOptions = [self.linter defaultConfigValueForName:[[self class] name]];
         if (defaultOptions != nil) {
@@ -85,7 +78,7 @@
     return [self.imageNamedFinder
             pathsForName:resourcePath
             usingFileExistsBlock:^BOOL(NSString *path) {
-                return [self.linter.bundleResources objectForKey:path] != nil;
+                return self.linter.bundleResources[path] != nil;
             }];
 }
 
@@ -93,11 +86,11 @@
     NSArray *resourcePaths = [self.imageNamedFinder
                               pathsForName:resourcePath
                               usingFileExistsBlock:^BOOL(NSString *path) {
-                                  return [self.linter.bundleResources objectForKey:path] != nil;
+                                  return self.linter.bundleResources[path] != nil;
                               }];
     // dont suggest if some image exist
     for (NSString *resourcePath in resourcePaths) {
-        if ([self.linter.bundleResources objectForKey:resourcePath]) {
+        if (self.linter.bundleResources[resourcePath]) {
             return nil;
         }
     }
@@ -107,17 +100,14 @@
     NSArray *lowerResourcePaths = [self.imageNamedFinder
                                    pathsForName:resourcePath
                                    usingFileExistsBlock:^BOOL(NSString *path) {
-                                       return [self.linter.lowercaseBundleResources
-                                               objectForKey:[path lowercaseString]] != nil;
+                                       return self.linter.lowercaseBundleResources[path.lowercaseString] != nil;
                                    }];
-    NSString *resourcePathLowerWihoutExt = [[resourcePath stringByDeletingPathExtension]
-                                            lowercaseString];
+    NSString *resourcePathLowerWihoutExt = resourcePath.stringByDeletingPathExtension.lowercaseString;
     NSMutableArray *existinSuggestions = [NSMutableArray array];
     for (NSString *resourcePath in lowerResourcePaths) {
-        BundleResource *bundleRef = [self.linter.lowercaseBundleResources
-                                     objectForKey:[resourcePath lowercaseString]];
+        BundleResource *bundleRef = self.linter.lowercaseBundleResources[resourcePath.lowercaseString];
         if (bundleRef == nil ||
-            ![[[bundleRef.path stringByDeletingPathExtension] lowercaseString]
+            ![bundleRef.path.stringByDeletingPathExtension.lowercaseString
               isEqualToString:resourcePathLowerWihoutExt]) {
                 continue;
             }
@@ -125,20 +115,19 @@
         [existinSuggestions addObject:bundleRef.path];
     }
     
-    if ([existinSuggestions count] > 0) {
-        return [existinSuggestions lastObject];
+    if (existinSuggestions.count > 0) {
+        return existinSuggestions.lastObject;
     }
     
     return nil;
 }
 
 - (NSArray *)configLines {
-    return [NSArray arrayWithObject:
-            [NSString stringWithFormat:@"@Lint%@: %@ %@ %@",
+    return @[[NSString stringWithFormat:@"@Lint%@: %@ %@ %@",
              [[self class] name],
              [self.permutationsPattern respect_stringByQuoteAndEscapeIfNeeded],
              [self conditionName],
-             [[self.actionOptions array] respect_componentsJoinedByWhitespaceQuoteAndEscapeIfNeeded]]];
+             [self.actionOptions.array respect_componentsJoinedByWhitespaceQuoteAndEscapeIfNeeded]]];
 }
 
 @end

@@ -102,24 +102,24 @@ extern NSString * const PBXProjectErrorDomain;
 
 // abstract class, does not exist in PBX files
 @interface PBXNode : NSObject
-@property(nonatomic, retain, readonly) NSString *path; // can be nil
-@property(nonatomic, retain, readonly) NSString *sourceTree;
-@property(nonatomic, assign, readonly) PBXNode *parent;
-@property(nonatomic, assign, readonly) PBXProject *project;
+@property(nonatomic, strong, readonly) NSString *path; // can be nil
+@property(nonatomic, strong, readonly) NSString *sourceTree;
+@property(nonatomic, weak, readonly) PBXNode *parent;
+@property(nonatomic, weak, readonly) PBXProject *project;
 - (NSString *)buildPath;
 @end
 
 
 @interface PBXFileReference : PBXNode
-@property(nonatomic, retain, readonly) NSString *name; // can be nil
+@property(nonatomic, strong, readonly) NSString *name; // can be nil
 - (BOOL)isFolderReference;
 - (NSArray *)subPathsForFolderReference;
 @end
 
 
 @interface PBXGroup : PBXNode
-@property(nonatomic, retain, readonly) NSString *name; // can be nil
-@property(nonatomic, retain, readonly) NSArray *children;
+@property(nonatomic, strong, readonly) NSString *name; // can be nil
+@property(nonatomic, strong, readonly) NSArray *children;
 - (void)recursivelySetParent:(PBXNode *)parent andProject:(PBXProject *)project;
 @end
 
@@ -129,25 +129,25 @@ extern NSString * const PBXProjectErrorDomain;
 
 
 @interface XCVersionGroup : PBXGroup
-@property(nonatomic, retain, readonly) PBXFileReference *currentVersion;
+@property(nonatomic, strong, readonly) PBXFileReference *currentVersion;
 @end
 
 
 @interface PBXBuildFile : NSObject
 // fileRef can be PBXFileReference or XCVersionGroup
-@property(nonatomic, retain, readonly) PBXNode *fileRef;
+@property(nonatomic, strong, readonly) PBXNode *fileRef;
 @end
 
 
 @interface XCBuildConfiguration : NSObject
-@property(nonatomic, retain, readonly) NSString *name;
-@property(nonatomic, retain, readonly) PBXFileReference *baseConfigurationReference;
-@property(nonatomic, retain, readonly) NSDictionary *buildSettings;
-@property(nonatomic, assign, readonly) XCBuildConfiguration *parent;
-@property(nonatomic, assign, readonly) PBXProject *project;
+@property(nonatomic, strong, readonly) NSString *name;
+@property(nonatomic, strong, readonly) PBXFileReference *baseConfigurationReference;
+@property(nonatomic, strong, readonly) NSDictionary *buildSettings;
+@property(nonatomic, weak, readonly) XCBuildConfiguration *parent;
+@property(nonatomic, weak, readonly) PBXProject *project;
 
 // not in project file, nil or parsed version of baseConfigurationReference
-@property(nonatomic, retain, readonly) NSDictionary *baseConfiguration;
+@property(nonatomic, strong, readonly) NSDictionary *baseConfiguration;
 
 - (id)resolveConfigValueNamed:(NSString *)configName;
 - (NSArray *)resolveConfigPathsNamed:(NSString *)configName
@@ -156,13 +156,13 @@ extern NSString * const PBXProjectErrorDomain;
 
 
 @interface XCConfigurationList : NSObject
-@property(nonatomic, retain, readonly) NSArray *buildConfigurations;
+@property(nonatomic, strong, readonly) NSArray *buildConfigurations;
 @end
 
 
 // abstract class, does not exist in PBX files
 @interface PBXBuildPhase : NSObject
-@property(nonatomic, retain, readonly) NSArray *files;
+@property(nonatomic, strong, readonly) NSArray *files;
 @end
 
 
@@ -175,22 +175,22 @@ extern NSString * const PBXProjectErrorDomain;
 
 
 @interface PBXNativeTarget : NSObject
-@property(nonatomic, retain, readonly) NSString *name;
-@property(nonatomic, retain, readonly) NSArray *buildPhases;
-@property(nonatomic, retain, readonly) XCConfigurationList *buildConfigurationList;
+@property(nonatomic, strong, readonly) NSString *name;
+@property(nonatomic, strong, readonly) NSArray *buildPhases;
+@property(nonatomic, strong, readonly) XCConfigurationList *buildConfigurationList;
 - (NSArray *)configurationNames;
 - (XCBuildConfiguration *)configurationNamed:(NSString *)buildConfigName;
 @end
 
 
 @interface PBXProject : PBXNode
-@property(nonatomic, retain, readonly) XCConfigurationList *buildConfigurationList;
-@property(nonatomic, retain, readonly) NSArray *targets;
-@property(nonatomic, retain, readonly) NSArray *knownRegions;
-@property(nonatomic, retain, readonly) PBXGroup *mainGroup;
+@property(nonatomic, strong, readonly) XCConfigurationList *buildConfigurationList;
+@property(nonatomic, strong, readonly) NSArray *targets;
+@property(nonatomic, strong, readonly) NSArray *knownRegions;
+@property(nonatomic, strong, readonly) PBXGroup *mainGroup;
 
-@property(nonatomic, retain, readonly) NSDictionary *environment;
-@property(nonatomic, retain, readonly) NSString *pbxFilePath;
+@property(nonatomic, strong, readonly) NSDictionary *environment;
+@property(nonatomic, strong, readonly) NSString *pbxFilePath;
 
 + (PBXProject *)pbxProjectFromPath:(NSString *)path
                              error:(NSError **)error;

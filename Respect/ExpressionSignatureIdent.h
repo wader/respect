@@ -18,7 +18,8 @@
 #import "ExpressionSignature.h"
 
 @interface ExpressionSignatureIdent : NSObject<ExpressionSignature>
-@property(nonatomic, retain, readwrite) NSString *name;
+@property(nonatomic, strong, readwrite) NSString *name;
 
-- (id)initWithName:(NSString *)name;
+- (instancetype)init NS_UNAVAILABLE;
+- (instancetype)initWithName:(NSString *)name NS_DESIGNATED_INITIALIZER;
 @end

@@ -24,7 +24,7 @@
 #import "PerformParameters.h"
 
 @interface AbstractAction : NSObject
-@property(nonatomic, assign, readonly) ResourceLinter *linter;
+@property(nonatomic, weak, readonly) ResourceLinter *linter;
 @property(nonatomic, copy, readonly) NSString *file;
 @property(nonatomic, assign, readonly) TextLocation textLocation;
 @property(nonatomic, copy, readonly) NSString *argumentString;
@@ -34,11 +34,12 @@
 + (id)defaultConfigValueFromArgument:(NSString *)argument
                         errorMessage:(NSString **)errorMessage;
 
-- (id)initWithLinter:(ResourceLinter *)linter
+- (instancetype)init NS_UNAVAILABLE;
+- (instancetype)initWithLinter:(ResourceLinter *)linter
                 file:(NSString *)file
         textLocation:(TextLocation)textLocation
       argumentString:(NSString *)argumentString
-     isDefaultConfig:(BOOL)isDefaultConfig;
+     isDefaultConfig:(BOOL)isDefaultConfig NS_DESIGNATED_INITIALIZER;
 - (void)performWithParameters:(PerformParameters *)parameters;
 - (NSArray *)configLines;
 @end

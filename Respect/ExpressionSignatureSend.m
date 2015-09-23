@@ -25,45 +25,34 @@
 
 @interface ExpressionSignatureSendParameter : NSObject
 @property(nonatomic, copy, readwrite) NSString *name; // TODO: ident for wildcard?
-@property(nonatomic, retain, readwrite) id argument;
+@property(nonatomic, strong, readwrite) id argument;
 @end
 
 @implementation ExpressionSignatureSendParameter
-@synthesize name = _name;
-@synthesize argument = _argument;
-
-- (void)dealloc {
-    self.name = nil;
-    self.argument = nil;
-    
-    [super dealloc];
-}
 @end
 
 
 @implementation ExpressionSignatureSend
-@synthesize receiver = _receiver;
-@synthesize parameters = _parameters;
 
 + (id<ExpressionSignature>)parseTokens:(PeekableEnumerator *)tokens
                                  error:(NSError **)error {
-    error = error ?: &(NSError *){nil};
-    
+    error = error ?: &(NSError * __autoreleasing){nil};
+
     // consume [
     [tokens nextObject];
-    
+
     ExpressionSignatureToken *current = nil;
     ExpressionSignatureToken *peeked = [tokens peekObject];
     if (peeked == nil) {
         *error = [ExpressionSignature errorWithDescription:@"Unexpected end after ["];
         return nil;
     }
-    
-    ExpressionSignatureSend *exp = [[[ExpressionSignatureSend alloc] init] autorelease];
+
+    ExpressionSignatureSend *exp = [[ExpressionSignatureSend alloc] init];
     NSMutableArray *parameters = [NSMutableArray array];
     exp.parameters = parameters;
     exp.receiver = [ExpressionSignature parseTokens:tokens error:error];
-    
+
     if (![exp.receiver isKindOfClass:[ExpressionSignatureIdent class]] &&
         ![exp.receiver isKindOfClass:[ExpressionSignatureCall class]] &&
         ![exp.receiver isKindOfClass:[ExpressionSignatureSend class]]) {
@@ -71,17 +60,16 @@
                   peeked.string];
         return nil;
     }
-    
+
     // indicates if we have seen a parameter without argument (no colon)
     BOOL noArgument = NO;
     while ((peeked = [tokens peekObject])) {
         if (peeked.type == SIGNATURE_TOKEN_IDENT) {
             current = [tokens nextObject];
-            
-            ExpressionSignatureSendParameter *parameter = [[[ExpressionSignatureSendParameter alloc] init]
-                                                           autorelease];
+
+            ExpressionSignatureSendParameter *parameter = [[ExpressionSignatureSendParameter alloc] init];
             parameter.name = current.string;
-            
+
             peeked = [tokens peekObject];
             if (peeked.type == SIGNATURE_TOKEN_COLON) {
                 if (noArgument) {
@@ -89,19 +77,18 @@
                               current.string];
                     return nil;
                 }
-                
+
                 [tokens nextObject];
-                
+
                 ExpressionSignatureToken *token0 = [tokens peekObjectAtOffset:0];
                 ExpressionSignatureToken *token1 = [tokens peekObjectAtOffset:1];
-                
+
                 if ((token0 != nil && token0.type == SIGNATURE_TOKEN_CLOSE_BRACKET) ||
                     (token0 != nil && token0.type == SIGNATURE_TOKEN_IDENT &&
                      token1 != nil && token1.type == SIGNATURE_TOKEN_COLON)
                     ) {
-                    parameter.argument = [[[ExpressionSignatureArgument alloc]
-                                           initWithType:SIGNATURE_ARGUMENT_SKIP]
-                                          autorelease];
+                    parameter.argument = [[ExpressionSignatureArgument alloc]
+                                          initWithType:SIGNATURE_ARGUMENT_SKIP];
                 } else {
                     parameter.argument = [ExpressionSignature parseTokens:tokens error:error];
                     if (parameter.argument == nil) {
@@ -109,25 +96,25 @@
                     }
                 }
             } else {
-                if ([parameters count] > 0) {
+                if (parameters.count > 0) {
                     *error = [ExpressionSignature errorWithDescriptionFormat:@"Invalid signature parameter at \"%@\"",
                               current.string];
                     return nil;
                 }
                 noArgument = YES;
             }
-            
+
             [parameters addObject:parameter];
         } else {
             break;
         }
     }
-    
-    if ([parameters count] == 0) {
+
+    if (parameters.count == 0) {
         *error = [ExpressionSignature errorWithDescriptionFormat:@"Signature has no parameters"];
         return nil;
     }
-    
+
     current = [tokens nextObject];
     if (current.type == SIGNATURE_TOKEN_CLOSE_BRACKET) {
         return exp;
@@ -143,10 +130,10 @@
 
 - (NSString *)description {
     NSMutableString *d = [NSMutableString string];
-    
+
     [d appendString:@"["];
     if (self.receiver != nil) {
-        [d appendString:[self.receiver description]];
+        [d appendString:(self.receiver).description];
     } else {
         [d appendString:@"?"];
     }
@@ -159,20 +146,20 @@
         }
     }
     [d appendString:@"]"];
-    
+
     return d;
 }
 
 - (NSString *)toPattern {
     NSMutableString *pattern = [NSMutableString string];
-    
+
     [pattern appendFormat:@"\\[\\s*%@", [self.receiver toPattern]];
     if ([self.receiver isKindOfClass:[ExpressionSignatureIdent class]]) {
         [pattern appendString:@"\\s+"];
     } else {
         [pattern appendString:@"\\s*"];
     }
-    
+
     for (ExpressionSignatureSendParameter *parameter in self.parameters) {
         [pattern appendString:parameter.name];
         if (parameter.argument != nil) {
@@ -186,11 +173,5 @@
     return pattern;
 }
 
-- (void)dealloc {
-    self.receiver = nil;
-    self.parameters = nil;
-    
-    [super dealloc];
-}
 
 @end

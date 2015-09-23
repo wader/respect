@@ -23,21 +23,19 @@
     static NSArray *extensions = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        extensions = [[NSArray alloc] initWithObjects:
-                      @"png",
-                      @"jpg",
-                      @"jpeg",
-                      @"tiff",
-                      @"tif",
-                      @"gif",
-                      @"bmp",
-                      @"bmpf",
-                      @"ico",
-                      @"cur",
-                      @"xbm",
-                      nil];
+        extensions = @[@"png",
+                       @"jpg",
+                       @"jpeg",
+                       @"tiff",
+                       @"tif",
+                       @"gif",
+                       @"bmp",
+                       @"bmpf",
+                       @"ico",
+                       @"cur",
+                       @"xbm"];
     });
-    
+
     return extensions;
 }
 
@@ -49,10 +47,10 @@
         for (NSString *ext in [self respect_arrayWithIOSImageExtensionNames]) {
             [extWithDots addObject:[@"." stringByAppendingString:ext]];
         }
-        
-        dotExtensions = [[NSArray arrayWithArray:extWithDots] retain];
+
+        dotExtensions = [NSArray arrayWithArray:extWithDots];
     });
-    
+
     return dotExtensions;
 }
 
@@ -60,9 +58,9 @@
     static NSArray *scales = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        scales = [[NSArray alloc] initWithObjects:@"@2x", nil];
+        scales = @[@"@2x"];
     });
-    
+
     return scales;
 }
 
@@ -70,9 +68,9 @@
     static NSArray *devices = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        devices = [[NSArray alloc] initWithObjects:@"~ipad", @"~iphone", nil];
+        devices = @[@"~ipad", @"~iphone"];
     });
-    
+
     return devices;
 }
 
@@ -80,25 +78,23 @@
     static NSArray *devices = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        devices = [[NSArray alloc] initWithObjects:
-                   @"PortraitUpsideDown",
-                   @"LandscapeLeft",
-                   @"LandscapeRight",
-                   @"Portrait",
-                   @"Landscape",
-                   nil];
+        devices = @[@"PortraitUpsideDown",
+                    @"LandscapeLeft",
+                    @"LandscapeRight",
+                    @"Portrait",
+                    @"Landscape"];
     });
-    
+
     return devices;
 }
 
 - (NSString *)respect_componentsJoinedByWhitespaceQuoteAndEscapeIfNeeded {
     NSMutableArray *quoteAndEscaped = [NSMutableArray array];
-    
+
     for (NSString *component in self) {
         [quoteAndEscaped addObject:[component respect_stringByQuoteAndEscapeIfNeeded]];
     }
-    
+
     return [quoteAndEscaped componentsJoinedByString:@" "];
 }
 

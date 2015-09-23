@@ -18,12 +18,11 @@
 #import "ConfigError.h"
 
 @implementation ConfigError
-+ (id)configErrorWithFile:(NSString *)file
-             textLocation:(TextLocation)textLocation
-                  message:(NSString *)message {
-    return [[[self alloc] initWithFile:file
-                          textLocation:textLocation
-                               message:message]
-            autorelease];
++ (instancetype)configErrorWithFile:(NSString *)file
+                       textLocation:(TextLocation)textLocation
+                            message:(NSString *)message {
+    return [[self alloc] initWithFile:file
+                         textLocation:textLocation
+                              message:message];
 }
 @end

@@ -26,8 +26,7 @@
 
 static void fprintf_nsstring(FILE *stream, NSString *format, va_list va) {
     fprintf(stream, "%s\n",
-            [[[[NSString alloc] initWithFormat:format arguments:va]
-              autorelease]
+            [[[NSString alloc] initWithFormat:format arguments:va]
              cStringUsingEncoding:NSUTF8StringEncoding]);
 }
 
@@ -55,13 +54,12 @@ static void help(const char *argv0) {
 }
 
 int main(int argc,  char *const argv[]) {
-    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
     char *argv0 = argv[0];
     NSString *configPath = nil;
     BOOL parseDefaultConfig = YES;
     BOOL dumpConfig = NO;
     NSString *spFeaturesPath = NULL;
-    
+
     static struct option longopts[] = {
         {"help", no_argument, NULL, 'h'},
         {"config", required_argument, NULL, 'c'},
@@ -70,76 +68,73 @@ int main(int argc,  char *const argv[]) {
         {"spfeatures", required_argument, NULL, 's'},
         {NULL, 0, NULL, 0}
     };
-    
+
     int c;
     while ((c = getopt_long(argc, argv, "hc:nds:", longopts, NULL)) != -1) {
         if (c == 'h') {
             help(argv0);
             return EXIT_SUCCESS;
         } else if (c == 'c') {
-            configPath = [NSString stringWithUTF8String:optarg];
+            configPath = @(optarg);
         } else if (c == 'n') {
             parseDefaultConfig = NO;
         } else if (c == 'd') {
             dumpConfig = YES;
         } else if (c == 's') {
-            spFeaturesPath = [NSString stringWithUTF8String:optarg];
+            spFeaturesPath = @(optarg);
         } else {
             return EXIT_FAILURE;
         }
     }
-    
+
     argc -= optind;
     argv += optind;
-    
+
     // try to get configuration from env
-    NSDictionary *env = [[NSProcessInfo processInfo] environment];
-    NSString *xcodeProjectPath = [env objectForKey:@"PROJECT_FILE_PATH"];
-    NSString *targetName = [env objectForKey:@"TARGET_NAME"];
-    NSString *configurationName = [env objectForKey:@"CONFIGURATION"] ?: @"Release";
+    NSDictionary *env = [NSProcessInfo processInfo].environment;
+    NSString *xcodeProjectPath = env[@"PROJECT_FILE_PATH"];
+    NSString *targetName = env[@"TARGET_NAME"];
+    NSString *configurationName = env[@"CONFIGURATION"] ?: @"Release";
     // assume Xcode if PROJECT_FILE_PATH env was found else CLI
     Class lintReportClass = (xcodeProjectPath != nil ?
                              [ResourceLinterXcodeReport class] :
                              [ResourceLinterCliReport class]);
-    
+
     if (dumpConfig) {
         lintReportClass = [ResourceLinterConfigReport class];
     }
-    
+
     if (argc > 0) {
-        xcodeProjectPath = [NSString stringWithCString:argv[0]
-                                              encoding:NSUTF8StringEncoding];
+        xcodeProjectPath = @(argv[0]);
     } else if (xcodeProjectPath == nil) {
         help(argv0);
         return EXIT_FAILURE;
     }
-    
+
     if (argc > 1) {
-        targetName = [NSString stringWithCString:argv[1]
-                                        encoding:NSUTF8StringEncoding];
+        targetName = @(argv[1]);
     }
-    
+
     if (argc > 2) {
-        configurationName = [NSString stringWithCString:argv[2]
-                                               encoding:NSUTF8StringEncoding];
+        configurationName = @(argv[2]);
     }
-    
+
     NSError *error = nil;
     PBXProject *pbxProject = [PBXProject pbxProjectFromPath:xcodeProjectPath
                                                       error:&error];
     if (pbxProject == nil) {
-        print_error(@"Failed to read %@: %@", xcodeProjectPath, [error localizedDescription]);
+        print_error(@"Failed to read %@: %@", xcodeProjectPath, error.localizedDescription);
         return EXIT_FAILURE;
     }
-    
+
     NSArray *nativeTargetNames = [pbxProject nativeTargetNames];
     if (targetName == nil) {
-        if ([nativeTargetNames count] == 0) {
+        if (nativeTargetNames.count == 0) {
             print_error(@"No native targets found in project file.");
             return EXIT_FAILURE;
         }
-        
-        targetName = [nativeTargetNames objectAtIndex:0];
+
+        targetName = nativeTargetNames[0];
     } else {
         if (![nativeTargetNames containsObject:targetName]) {
             print_error(@"No native target named \"%@\" found.", targetName);
@@ -148,7 +143,7 @@ int main(int argc,  char *const argv[]) {
             return EXIT_FAILURE;
         }
     }
-    
+
     PBXNativeTarget *nativeTarget = [pbxProject nativeTargetNamed:targetName];
     XCBuildConfiguration *buildConfiguration = [nativeTarget configurationNamed:configurationName];
     if (buildConfiguration == nil) {
@@ -159,8 +154,8 @@ int main(int argc,  char *const argv[]) {
                     [configurationNames componentsJoinedByString:@", "]);
         return EXIT_FAILURE;
     }
-    
-    
+
+
     // prepare sets up fallback build environment used if a variable can't be found in
     // the normal environment which normally is based on the current process environment.
     // this it to support running from CLI where Xcode has not exported things for us.
@@ -169,36 +164,27 @@ int main(int argc,  char *const argv[]) {
                                nativeTarget:nativeTarget
                          buildConfiguration:buildConfiguration
                                       error:&error]) {
-        print_error(@"%@: %@", xcodeProjectPath, [error localizedDescription]);
+        print_error(@"%@: %@", xcodeProjectPath, error.localizedDescription);
         return EXIT_FAILURE;
     }
-    
-    ResourceLinterXcodeProjectSource *projectSource = [[[ResourceLinterXcodeProjectSource alloc]
-                                                        initWithPBXProject:pbxProject
-                                                        nativeTarget:nativeTarget
-                                                        buildConfiguration:buildConfiguration]
-                                                       autorelease];
+
+    ResourceLinterXcodeProjectSource *projectSource = [[ResourceLinterXcodeProjectSource alloc]
+                                                       initWithPBXProject:pbxProject
+                                                       nativeTarget:nativeTarget
+                                                       buildConfiguration:buildConfiguration];
     if (spFeaturesPath != nil) {
         [projectSource addSpotifyFeaturesAtPath:spFeaturesPath];
     }
-    
-    ResourceLinter *linter = [[[ResourceLinter alloc]
-                               initWithResourceLinterSource:projectSource
-                               configPath:configPath
-                               parseDefaultConfig:parseDefaultConfig]
-                              autorelease];
-    
-    ResourceLinterAbstractReport *lintReport = [[[lintReportClass alloc]
-                                                 initWithLinter:linter]
-                                                autorelease];
-    
-    fprintf(stdout, "%s", [lintReport.outputBuffer UTF8String]);
-    
-    // as we should not have any side effects we can safly skip to drain the
-    // autorelease pool and by that save some time by not calling release
-    // and dealloc on autoreleased objects
-    //[pool drain];
-    (void)pool;
+
+    ResourceLinter *linter = [[ResourceLinter alloc]
+                              initWithResourceLinterSource:projectSource
+                              configPath:configPath
+                              parseDefaultConfig:parseDefaultConfig];
+
+    ResourceLinterAbstractReport *lintReport = [[lintReportClass alloc]
+                                                initWithLinter:linter];
+
+    fprintf(stdout, "%s", (lintReport.outputBuffer).UTF8String);
     
     return EXIT_SUCCESS;
 }

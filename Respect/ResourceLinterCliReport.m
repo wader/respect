@@ -30,14 +30,14 @@
     if (self == nil) {
         return nil;
     }
-    
+
     [self addLine:
      @"Report for project %@ target %@ using build configuration %@",
      [self.linter.linterSource projectName],
      [self.linter.linterSource targetName],
      [self.linter.linterSource configurationName]];
-    
-    if ([self.linter.lintErrors count] > 0) {
+
+    if ((self.linter.lintErrors).count > 0) {
         [self addLine:@"Lint errors:"];
         for (LintError *lintError in self.linter.lintErrors) {
             [self addLine:
@@ -46,8 +46,8 @@
              lintError.message];
         }
     }
-    
-    if ([self.linter.configErrors count] > 0) {
+
+    if ((self.linter.configErrors).count > 0) {
         [self addLine:@"Config errors:"];
         for (ConfigError *configError in self.linter.configErrors) {
             [self addLine:
@@ -57,8 +57,8 @@
              configError.message];
         }
     }
-    
-    if ([self.linter.missingReferences count] > 0) {
+
+    if ((self.linter.missingReferences).count > 0) {
         [self addLine:@"Missing resources:"];
         for (ResourceReference *resourceRef in self.linter.missingReferences) {
             [self addLine:
@@ -74,15 +74,15 @@
               resourceRef.missingResourceHint]];
         }
     }
-    
-    if ([self.linter.unusedResources count] > 0) {
+
+    if ((self.linter.unusedResources).count > 0) {
         [self addLine:@"Unused resources:"];
         for (BundleResource *bundleRes in self.linter.unusedResources) {
             [self addLine:@"  %@", bundleRes.path];
         }
     }
-    
-    if ([self.linter.lintWarnings count] > 0) {
+
+    if ((self.linter.lintWarnings).count > 0) {
         [self addLine:@"Resource warnings:"];
         for (LintWarning *lintWarning in self.linter.lintWarnings) {
             [self addLine:@"  %@%@: %@",
@@ -92,32 +92,32 @@
              lintWarning.message];
         }
     }
-    
-    if ([self.linter.lintErrors count] +
-        [self.linter.configErrors count] +
-        [self.linter.missingReferences count] +
-        [self.linter.unusedResources count] +
-        [self.linter.lintWarnings count] > 0) {
+
+    if ((self.linter.lintErrors).count +
+        (self.linter.configErrors).count +
+        (self.linter.missingReferences).count +
+        (self.linter.unusedResources).count +
+        (self.linter.lintWarnings).count > 0) {
         [self addLine:@""];
     } else {
         [self addLine:@"No issues found."];
     }
-    
+
     [self addLine:@"%ld source files scanned",
-     [[self.linter.linterSource sourceTextFiles] count]];
+     [self.linter.linterSource sourceTextFiles].count];
     [self addLine:@"%ld resources, %ld unused (%ld ignored)",
-     [self.linter.bundleResources count],
-     [self.linter.unusedResources count],
-     [self.linter.unusedResourcesIgnored count]];
+     (self.linter.bundleResources).count,
+     (self.linter.unusedResources).count,
+     (self.linter.unusedResourcesIgnored).count];
     [self addLine:@"%ld references, %ld missing (%ld ignored)",
-     [self.linter.resourceReferences count],
-     [self.linter.missingReferences count],
-     [self.linter.missingReferencesIgnored count]];
+     (self.linter.resourceReferences).count,
+     (self.linter.missingReferences).count,
+     (self.linter.missingReferencesIgnored).count];
     [self addLine:@"%ld errors (%ld ignored), %ld warnings (%ld ignored)",
-     [self.linter.lintErrors count],
-     [self.linter.lintErrorsIgnored count],
-     [self.linter.lintWarnings count],
-     [self.linter.lintWarningsIgnored count]];
+     (self.linter.lintErrors).count,
+     (self.linter.lintErrorsIgnored).count,
+     (self.linter.lintWarnings).count,
+     (self.linter.lintWarningsIgnored).count];
     
     return self;
 }

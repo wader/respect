@@ -27,23 +27,12 @@ NSString * const ImageNamedOptionsIphone = @"~iphone";
 NSString * const ImageNamedOptionsIpad = @"~ipad";
 
 @interface ImageNamedOptions ()
-@property(nonatomic, retain, readwrite) NSMutableOrderedSet *scales;
-@property(nonatomic, retain, readwrite) NSMutableOrderedSet *devices;
-@property(nonatomic, retain, readwrite) NSMutableOrderedSet *exts;
+@property(nonatomic, strong, readwrite) NSMutableOrderedSet *scales;
+@property(nonatomic, strong, readwrite) NSMutableOrderedSet *devices;
+@property(nonatomic, strong, readwrite) NSMutableOrderedSet *exts;
 @end
 
 @implementation ImageNamedOptions
-@synthesize scales = _scales;
-@synthesize devices = _devices;
-@synthesize exts = _exts;
-
-- (void)dealloc {
-    self.scales = nil;
-    self.devices = nil;
-    self.exts = nil;
-    
-    [super dealloc];
-}
 
 + (NSOrderedSet *)scaleOptions {
     static dispatch_once_t onceToken;
@@ -90,8 +79,7 @@ NSString * const ImageNamedOptionsIpad = @"~ipad";
     static dispatch_once_t onceToken;
     static NSOrderedSet *options = nil;
     dispatch_once(&onceToken, ^{
-        NSMutableOrderedSet *optionsUnion = [[[self scaleOptions] mutableCopy]
-                                             autorelease];
+        NSMutableOrderedSet *optionsUnion = [[self scaleOptions] mutableCopy];
         [optionsUnion unionOrderedSet:[self deviceOptions]];
         [optionsUnion unionOrderedSet:[self extOptions]];
         options = [[NSOrderedSet alloc] initWithOrderedSet:optionsUnion];
@@ -101,7 +89,7 @@ NSString * const ImageNamedOptionsIpad = @"~ipad";
 }
 
 + (NSOrderedSet *)unknownOptionsFromOptions:(NSOrderedSet *)options {
-    NSMutableOrderedSet *unknownOptions = [[options mutableCopy] autorelease];
+    NSMutableOrderedSet *unknownOptions = [options mutableCopy];
     [unknownOptions minusOrderedSet:[self scaleOptions]];
     [unknownOptions minusOrderedSet:[self deviceOptions]];
     [unknownOptions minusOrderedSet:[self extOptions]];
@@ -110,12 +98,12 @@ NSString * const ImageNamedOptionsIpad = @"~ipad";
 }
 
 - (void)applyOptions:(NSOrderedSet *)options {
-    NSMutableOrderedSet *scaleOptions = [[[[self class] scaleOptions] mutableCopy] autorelease];
-    NSMutableOrderedSet *deviceOptions = [[[[self class] deviceOptions] mutableCopy] autorelease];
-    NSMutableOrderedSet *extOptions = [[[[self class] extOptions] mutableCopy] autorelease];
+    NSMutableOrderedSet *scaleOptions = [[[self class] scaleOptions] mutableCopy];
+    NSMutableOrderedSet *deviceOptions = [[[self class] deviceOptions] mutableCopy];
+    NSMutableOrderedSet *extOptions = [[[self class] extOptions] mutableCopy];
     
     [scaleOptions intersectOrderedSet:options];
-    if ([scaleOptions count] > 0) {
+    if (scaleOptions.count > 0) {
         self.scales = [NSMutableOrderedSet orderedSet];
         if ([scaleOptions containsObject:ImageNamedOptions1x]) {
             [self.scales addObject:@""];
@@ -129,7 +117,7 @@ NSString * const ImageNamedOptionsIpad = @"~ipad";
     }
     
     [deviceOptions intersectOrderedSet:options];
-    if ([deviceOptions count] > 0) {
+    if (deviceOptions.count > 0) {
         self.devices = [NSMutableOrderedSet orderedSet];
         if ([deviceOptions containsObject:ImageNamedOptionsAny]) {
             [self.devices addObject:@""];
@@ -143,7 +131,7 @@ NSString * const ImageNamedOptionsIpad = @"~ipad";
     }
     
     [extOptions intersectOrderedSet:options];
-    if ([extOptions count] > 0) {
+    if (extOptions.count > 0) {
         self.exts = [NSMutableOrderedSet orderedSet];
         for (NSString *ext in extOptions) {
             [self.exts addObject:[@"." stringByAppendingString:ext]];

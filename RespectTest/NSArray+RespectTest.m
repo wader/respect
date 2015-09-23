@@ -21,13 +21,13 @@
 @implementation NSArray_RespectTest
 
 - (void)test_respect_ComponentsJoinedByWhitespaceQuoteAndEscapeIfNeeded {
-    NSArray *t1 = [NSArray arrayWithObjects:@"a", nil];
-    NSArray *t2 = [NSArray arrayWithObjects:@"a", @"b", nil];
-    NSArray *t3 = [NSArray arrayWithObjects:@"a", @" ", @"c", nil];
-    NSArray *t4 = [NSArray arrayWithObjects:@"a", @"\"", @"c", nil];
-    NSArray *t5 = [NSArray arrayWithObjects:@"a", @"\\", @"c", nil];
-    NSArray *t6 = [NSArray arrayWithObjects:@"a", @" \\\"", @"c", nil];
-    
+    NSArray *t1 = @[@"a"];
+    NSArray *t2 = @[@"a", @"b"];
+    NSArray *t3 = @[@"a", @" ", @"c"];
+    NSArray *t4 = @[@"a", @"\"", @"c"];
+    NSArray *t5 = @[@"a", @"\\", @"c"];
+    NSArray *t6 = @[@"a", @" \\\"", @"c"];
+
     XCTAssertEqualObjects([t1 respect_componentsJoinedByWhitespaceQuoteAndEscapeIfNeeded], @"a");
     XCTAssertEqualObjects([t2 respect_componentsJoinedByWhitespaceQuoteAndEscapeIfNeeded], @"a b");
     XCTAssertEqualObjects([t3 respect_componentsJoinedByWhitespaceQuoteAndEscapeIfNeeded], @"a \" \" c");

@@ -18,12 +18,13 @@
 @interface TextFile : NSObject
 @property(nonatomic, copy, readonly) NSString *path;
 @property(nonatomic, copy, readonly) NSString *text;
-@property(nonatomic, retain, readonly) NSString *whitedoutCommentsText;
-@property(nonatomic, retain, readonly) NSArray *lineRanges;
+@property(nonatomic, strong, readonly) NSString *whitedoutCommentsText;
+@property(nonatomic, strong, readonly) NSArray *lineRanges;
 
-+ (id)textFileWithText:(NSString *)text path:(NSString *)path;
-+ (id)textFileWithContentOfFile:(NSString *)file;
++ (instancetype)textFileWithText:(NSString *)text path:(NSString *)path;
++ (instancetype)textFileWithContentOfFile:(NSString *)file;
 
-- (id)initWithContentOfFile:(NSString *)file;
-- (id)initWithText:(NSString *)text path:(NSString *)path;
+- (instancetype)init NS_UNAVAILABLE;
+- (instancetype)initWithContentOfFile:(NSString *)file;
+- (instancetype)initWithText:(NSString *)text path:(NSString *)path NS_DESIGNATED_INITIALIZER;
 @end

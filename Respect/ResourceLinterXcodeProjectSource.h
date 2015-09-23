@@ -19,9 +19,10 @@
 #import "PBXProject.h"
 
 @interface ResourceLinterXcodeProjectSource : NSObject <ResourceLinterSource>
-- (id)initWithPBXProject:(PBXProject *)pbxProject
-            nativeTarget:(PBXNativeTarget *)nativeTarget
-      buildConfiguration:(XCBuildConfiguration *)buildConfiguration;
+- (instancetype)init NS_UNAVAILABLE;
+- (instancetype)initWithPBXProject:(PBXProject *)pbxProject
+                      nativeTarget:(PBXNativeTarget *)nativeTarget
+                buildConfiguration:(XCBuildConfiguration *)buildConfiguration NS_DESIGNATED_INITIALIZER;
 
 - (void)addSpotifyFeaturesAtPath:(NSString *)featuresPath;
 @end

@@ -24,35 +24,33 @@
     NSError *error = nil;
     PBXProject *pbxProject = [PBXProject
                               pbxProjectFromPath:
-                              [[[NSBundle bundleForClass:[self class]] resourcePath]
+                              [[NSBundle bundleForClass:[self class]].resourcePath
                                stringByAppendingPathComponent:@"RespectTestProject/RespectTestProject.xcodeproj"]
                               error:&error];
     XCTAssertNotNil(pbxProject, @"");
-    
-    NSArray *expectedTagets = [NSArray arrayWithObjects:
-                               @"RespectTestProject",
-                               @"TestConditions",
-                               @"TestMatchers",
-                               @"TestIgnore",
-                               @"TestComments",
-                               @"TestIOSDefault",
-                               @"TestImage",
-                               @"TestInfoPlist",
-                               @"TestBuildConfig",
-                               @"TestCasesensitive",
-                               @"TestError",
-                               @"TestFolderReference",
-                               @"TestXib",
-                               @"TestImageDefault",
-                               @"TestXCConfig",
-                               @"TestCoreData",
-                               nil];
-    NSArray *expectedConfigurations = [NSArray arrayWithObjects:@"Debug", @"Release", nil];
-    
+
+    NSArray *expectedTagets = @[@"RespectTestProject",
+                                @"TestConditions",
+                                @"TestMatchers",
+                                @"TestIgnore",
+                                @"TestComments",
+                                @"TestIOSDefault",
+                                @"TestImage",
+                                @"TestInfoPlist",
+                                @"TestBuildConfig",
+                                @"TestCasesensitive",
+                                @"TestError",
+                                @"TestFolderReference",
+                                @"TestXib",
+                                @"TestImageDefault",
+                                @"TestXCConfig",
+                                @"TestCoreData"];
+    NSArray *expectedConfigurations = @[@"Debug", @"Release"];
+
     XCTAssertEqualObjects([pbxProject nativeTargetNames], expectedTagets);
-    
+
     PBXNativeTarget *nativeTarget = [pbxProject nativeTargetNamed:@"RespectTestProject"];
-    
+
     XCTAssertEqualObjects([nativeTarget configurationNames], expectedConfigurations);
 }
 

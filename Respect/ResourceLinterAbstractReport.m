@@ -18,37 +18,28 @@
 #import "ResourceLinterAbstractReport.h"
 
 @interface ResourceLinterAbstractReport ()
-@property(nonatomic, retain, readwrite) ResourceLinter *linter;
-@property(nonatomic, retain, readwrite) NSMutableString *outputBuffer;
+@property(nonatomic, strong, readwrite) ResourceLinter *linter;
+@property(nonatomic, strong, readwrite) NSMutableString *outputBuffer;
 @end
 
 @implementation ResourceLinterAbstractReport
-@synthesize linter = _linter;
-@synthesize outputBuffer = _outputBuffer;
 
-- (id)initWithLinter:(ResourceLinter *)linter {
+- (instancetype)initWithLinter:(ResourceLinter *)linter {
     self = [super init];
     if (self == nil) {
         return nil;
     }
-    
+
     self.linter = linter;
     self.outputBuffer = [NSMutableString string];
-    
+
     return self;
 }
 
-- (void)dealloc {
-    self.linter = nil;
-    self.outputBuffer = nil;
-    
-    [super dealloc];
-}
 
 - (void)addLine:(NSString *)format arguments:(va_list)va {
-    [self.outputBuffer appendString:[[[NSString alloc] initWithFormat:format
-                                                            arguments:va]
-                                     autorelease]];
+    [self.outputBuffer appendString:[[NSString alloc] initWithFormat:format
+                                                           arguments:va]];
     [self.outputBuffer appendString:@"\n"];
 }
 

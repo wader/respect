@@ -32,7 +32,7 @@
 // TODO: image suggest smartness?
 
 @interface NibAction ()
-@property(nonatomic, retain, readwrite) ImageNamedFinder *imageNamedFinder;
+@property(nonatomic, strong, readwrite) ImageNamedFinder *imageNamedFinder;
 @end
 
 @implementation NibAction
@@ -41,11 +41,6 @@
     return @"Nib";
 }
 
-- (void)dealloc {
-    self.imageNamedFinder = nil;
-    
-    [super dealloc];
-}
 
 - (void)parseResourceReferencesInXib:(NSString *)path {
     NSData *xibContent = [NSData dataWithContentsOfFile:path];
@@ -56,9 +51,8 @@
         return;
     }
     
-    NSXMLDocument *dom = [[[NSXMLDocument alloc]
-                           initWithData:xibContent options:0 error:NULL]
-                          autorelease];
+    NSXMLDocument *dom = [[NSXMLDocument alloc]
+                           initWithData:xibContent options:0 error:NULL];
     if (dom == nil) {
         [self.linter.lintErrors addObject:
          [LintError lintErrorWithFile:path
@@ -67,7 +61,7 @@
     }
     
     if (self.imageNamedFinder == nil) {
-        self.imageNamedFinder = [[[ImageNamedFinder alloc] init] autorelease];
+        self.imageNamedFinder = [[ImageNamedFinder alloc] init];
         
         NSOrderedSet *defaultOptions = [self.linter defaultConfigValueForName:[[ImageAction class] name]];
         if (defaultOptions != nil) {
@@ -78,22 +72,21 @@
     for(NSXMLNode *node in [dom.rootElement nodesForXPath:@"//string[@key='NSResourceName']"
                                                     error:NULL]) {
         NSArray *resourcePaths = [self.imageNamedFinder
-                                  pathsForName:[node stringValue]
+                                  pathsForName:node.stringValue
                                   usingFileExistsBlock:^BOOL(NSString *path) {
-                                      return [self.linter.bundleResources objectForKey:path] != nil;
+                                      return self.linter.bundleResources[path] != nil;
                                   }];
         
         for (NSString *resourcePath in resourcePaths) {
-            ResourceReference *resourceRef = [[[ResourceReference alloc]
+            ResourceReference *resourceRef = [[ResourceReference alloc]
                                                initWithResourcePath:resourcePath
                                                referencePath:path
                                                referenceLocation:MakeTextLineLocation(1)
                                                missingResourceHint:
-                                               [self actionMissingResourceHint:resourcePath]]
-                                              autorelease];
+                                               [self actionMissingResourceHint:resourcePath]];
             [self.linter.resourceReferences addObject:resourceRef];
             
-            BundleResource *bundleRes = [self.linter.bundleResources objectForKey:resourcePath];
+            BundleResource *bundleRes = self.linter.bundleResources[resourcePath];
             if (bundleRes == nil) {
                 continue;
             }
@@ -107,8 +100,8 @@
 - (NSArray *)actionResourcePaths:(NSString *)resourcePath {
     NSString *baseNibName = resourcePath;
     
-    if ([[baseNibName pathExtension] isEqualToString:@"nib"]) {
-        baseNibName = [baseNibName stringByDeletingPathExtension];
+    if ([baseNibName.pathExtension isEqualToString:@"nib"]) {
+        baseNibName = baseNibName.stringByDeletingPathExtension;
     }
     
     NSArray *deviceNames = [[NSArray respect_arrayWithIOSImageDeviceNames]
@@ -124,13 +117,13 @@
             NSString *possibleNibPath = [NSString stringWithFormat:@"%@%@%@.nib",
                                          prefix, baseNibName, deviceName];
             
-            if ([self.linter.bundleResources objectForKey:possibleNibPath]) {
+            if (self.linter.bundleResources[possibleNibPath]) {
                 [foundNibPaths addObject:possibleNibPath];
             }
         }
     }
     
-    if ([foundNibPaths count] == 0) {
+    if (foundNibPaths.count == 0) {
         [foundNibPaths addObject:resourcePath];
     }
     

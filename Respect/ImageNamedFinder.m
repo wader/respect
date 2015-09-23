@@ -21,8 +21,8 @@
 
 
 @interface ImageNamedFinder ()
-@property(nonatomic, retain, readwrite) ImageNamedOptions *options;
-@property(nonatomic, retain, readwrite) ImageNamedOptions *wildcardOptions;
+@property(nonatomic, strong, readwrite) ImageNamedOptions *options;
+@property(nonatomic, strong, readwrite) ImageNamedOptions *wildcardOptions;
 @end
 
 @implementation ImageNamedFinder
@@ -33,19 +33,13 @@
         return nil;
     }
     
-    self.options = [[[ImageNamedOptions alloc] init] autorelease];
-    self.wildcardOptions = [[[ImageNamedOptions alloc] init] autorelease];
+    self.options = [[ImageNamedOptions alloc] init];
+    self.wildcardOptions = [[ImageNamedOptions alloc] init];
     [self.wildcardOptions applyOptions:[ImageNamedOptions allOptions]];
     
     return self;
 }
 
-- (void)dealloc {
-    self.options = nil;
-    self.wildcardOptions = nil;
-    
-    [super dealloc];
-}
 
 + (void)dumpPrefix:(NSString *)prefix
               name:(NSString *)name
@@ -135,32 +129,32 @@
                       scales:foundScales devices:foundDevices exts:foundExts];
     
     // image that must exist are the union of limits and found
-    NSMutableOrderedSet *mustScales = [[foundScales mutableCopy] autorelease];
+    NSMutableOrderedSet *mustScales = [foundScales mutableCopy];
     if (limitScales != nil) {
         [mustScales unionOrderedSet:limitScales];
     }
     
-    NSMutableOrderedSet *mustDevices = [[foundDevices mutableCopy] autorelease];
+    NSMutableOrderedSet *mustDevices = [foundDevices mutableCopy];
     if (limitDevices != nil) {
         [mustDevices unionOrderedSet:limitDevices];
     }
     
-    NSMutableOrderedSet *mustExts = [[foundExts mutableCopy] autorelease];
+    NSMutableOrderedSet *mustExts = [foundExts mutableCopy];
     if (limitExts != nil) {
         [mustExts unionOrderedSet:limitExts];
     }
     
     // if we have at least one must make sure to add empty string to the non-musts
-    if ([mustScales count] +
-        [mustDevices count] +
-        [mustExts count] > 0) {
-        if ([mustScales count] == 0) {
+    if (mustScales.count +
+        mustDevices.count +
+        mustExts.count > 0) {
+        if (mustScales.count == 0) {
             [mustScales addObject:@""];
         }
-        if ([mustDevices count] == 0) {
+        if (mustDevices.count == 0) {
             [mustDevices addObject:@""];
         }
-        if ([mustExts count] == 0) {
+        if (mustExts.count == 0) {
             [mustExts addObject:@""];
         }
     }
@@ -178,7 +172,7 @@
         }
     }
     
-    return [resourcePaths array];
+    return resourcePaths.array;
 }
 
 @end

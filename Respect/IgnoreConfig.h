@@ -25,11 +25,12 @@
 #import "TextLocation.h"
 
 @interface IgnoreConfig : NSObject
-- (id)initWithLinter:(ResourceLinter *)linter
-                file:(NSString *)file
-        textLocation:(TextLocation)textLocation
-                type:(NSString *)type
-      argumentString:(NSString *)argumentString;
+- (instancetype)init NS_UNAVAILABLE;
+- (instancetype)initWithLinter:(ResourceLinter *)linter
+                          file:(NSString *)file
+                  textLocation:(TextLocation)textLocation
+                          type:(NSString *)type
+                argumentString:(NSString *)argumentString NS_DESIGNATED_INITIALIZER;
 - (BOOL)matchesString:(NSString *)string;
 - (NSArray *)configLines;
 @end

@@ -23,56 +23,44 @@
 #import <objc/runtime.h>
 
 @interface PBXUnarchiver ()
-@property(nonatomic, retain, readwrite) NSDictionary *objects;
-@property(nonatomic, retain, readwrite) NSString *rootObjectId;
-@property(nonatomic, retain, readwrite) NSMutableDictionary *objectIdMap;
+@property(nonatomic, strong, readwrite) NSDictionary *objects;
+@property(nonatomic, strong, readwrite) NSString *rootObjectId;
+@property(nonatomic, strong, readwrite) NSMutableDictionary *objectIdMap;
 @end
 
 @implementation PBXUnarchiver
-@synthesize allowedClasses = _allowedClasses;
-@synthesize objects = _objects;
-@synthesize rootObjectId = _rootObjectId;
-@synthesize objectIdMap = _objectIdMap;
 
 - (id)initWithFile:(NSString *)path {
     self = [super init];
     if (self == nil) {
         return nil;
     }
-    
+
     NSDictionary *pbxDict = [NSDictionary dictionaryWithContentsOfFile:path];
     if (pbxDict == nil) {
         return nil;
     }
-    
-    self.rootObjectId = [pbxDict objectForKey:@"rootObject"];
-    self.objects = [pbxDict objectForKey:@"objects"];
+
+    self.rootObjectId = pbxDict[@"rootObject"];
+    self.objects = pbxDict[@"objects"];
     self.objectIdMap = [NSMutableDictionary dictionary];
-    
+
     return self;
 }
 
-- (void)dealloc {
-    self.allowedClasses = nil;
-    self.objects = nil;
-    self.rootObjectId = nil;
-    self.objectIdMap = nil;
-    
-    [super dealloc];
-}
 
 - (id)decodeValue:(id)value {
     if ([value isKindOfClass:[NSString class]]) {
-        id object = [self.objectIdMap objectForKey:value];
+        id object = self.objectIdMap[value];
         if (object != nil) {
             return object;
-        } else if ([self.objects objectForKey:value]) {
-            object = [self decodeObject:[self.objects objectForKey:value]];
+        } else if (self.objects[value]) {
+            object = [self decodeObject:self.objects[value]];
             if (object == nil) {
                 return nil;
             }
-            [self.objectIdMap setObject:object forKey:value];
-            
+            self.objectIdMap[value] = object;
+
             return object;
         } else {
             return value;
@@ -84,25 +72,25 @@
             if (decodedObject == nil) {
                 continue;
             }
-            
+
             [decodedArray addObject:decodedObject];
         }
-        
+
         return decodedArray;
     } else if ([value isKindOfClass:[NSDictionary class]]) {
         NSMutableDictionary *decodedDict = [NSMutableDictionary dictionary];
         for (id key in value) {
-            id decodedObject = [self decodeValue:[value objectForKey:key]];
+            id decodedObject = [self decodeValue:value[key]];
             if (decodedObject == nil) {
                 continue;
             }
-            
-            [decodedDict setObject:decodedObject forKey:key];
+
+            decodedDict[key] = decodedObject;
         }
-        
+
         return decodedDict;
     }
-    
+
     return nil;
 }
 
@@ -110,33 +98,33 @@
     if (objectDict == nil || ![objectDict isKindOfClass:[NSDictionary class]]) {
         return nil;
     }
-    
-    NSString *objectIsa = [objectDict objectForKey:@"isa"];
+
+    NSString *objectIsa = objectDict[@"isa"];
     if (objectIsa == nil || ![objectIsa isKindOfClass:[NSString class]]) {
         return nil;
     }
-    
+
     Class objectClass = NSClassFromString(objectIsa);
     if (objectClass == nil) {
         return nil;
     }
-    
+
     if (self.allowedClasses != nil &&
         ![self.allowedClasses containsObject:objectClass]) {
         return nil;
     }
-    
-    id objectInstance = [[[objectClass alloc] init] autorelease];
-    
+
+    id objectInstance = [[objectClass alloc] init];
+
     for (NSString *key in objectDict) {
-        if (class_getProperty(objectClass, [key UTF8String]) == NULL) {
+        if (class_getProperty(objectClass, key.UTF8String) == NULL) {
             continue;
         }
-        
-        [objectInstance setValue:[self decodeValue:[objectDict objectForKey:key]]
+
+        [objectInstance setValue:[self decodeValue:objectDict[key]]
                           forKey:key];
     }
-    
+
     return objectInstance;
 }
 

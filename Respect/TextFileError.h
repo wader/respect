@@ -23,7 +23,8 @@
 @property(nonatomic, assign, readonly) TextLocation textLocation;
 @property(nonatomic, copy, readonly) NSString *message;
 
-- (id)initWithFile:(NSString *)file
-      textLocation:(TextLocation)textLocation
-           message:(NSString *)message;
+- (instancetype)init NS_UNAVAILABLE;
+- (instancetype)initWithFile:(NSString *)file
+                textLocation:(TextLocation)textLocation
+                     message:(NSString *)message NS_DESIGNATED_INITIALIZER;
 @end

@@ -27,14 +27,13 @@
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         // \n should work for both \r\n and \n line breaks
-        newlineCharacterSet = [[NSCharacterSet
-                                characterSetWithCharactersInString:@"\n"]
-                               retain];
+        newlineCharacterSet = [NSCharacterSet
+                               characterSetWithCharactersInString:@"\n"];
     });
-    
+
     NSMutableArray *lineRanges = [NSMutableArray array];
-    NSRange searchRange = NSMakeRange(0, [self length]);
-    
+    NSRange searchRange = NSMakeRange(0, self.length);
+
     // about twice as fast as using NSStringEnumerationByLines/enumerateSubstringsInRange
     for (;;) {
         NSRange lineEndRange = [self rangeOfCharacterFromSet:newlineCharacterSet
@@ -43,19 +42,19 @@
         if (lineEndRange.location == NSNotFound) {
             break;
         }
-        
+
         NSRange lineRange = NSMakeRange(searchRange.location,
                                         NSMaxRange(lineEndRange) - searchRange.location);
         searchRange.location = NSMaxRange(lineEndRange);
-        searchRange.length = [self length] - searchRange.location;
-        
+        searchRange.length = self.length - searchRange.location;
+
         [lineRanges addObject:[NSValue valueWithRange:lineRange]];
     }
-    
+
     if (searchRange.length > 0) {
         [lineRanges addObject:[NSValue valueWithRange:searchRange]];
     }
-    
+
     return lineRanges;
 }
 @end

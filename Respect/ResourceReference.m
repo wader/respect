@@ -24,42 +24,36 @@
 @property(nonatomic, copy, readwrite) NSString *referencePath;
 @property(nonatomic, assign, readwrite) TextLocation referenceLocation;
 @property(nonatomic, copy, readwrite) NSString *referenceHint;
-@property(nonatomic, retain, readwrite) NSMutableArray *bundleResources;
+@property(nonatomic, strong, readwrite) NSMutableArray *bundleResources;
 @property(nonatomic, copy, readwrite) NSString *missingResourceHint;
 @end
 
 @implementation ResourceReference
-@synthesize resourcePath = _resourcePath;
-@synthesize referencePath = _referencePath;
-@synthesize referenceHint = _referenceHint;
-@synthesize referenceLocation = _referenceLocation;
-@synthesize bundleResources = _bundleResources;
-@synthesize missingResourceHint = _missingResourceHint;
 
-- (id)initWithResourcePath:(NSString *)resourcePath
-             referencePath:(NSString *)referencePath
-         referenceLocation:(TextLocation)referenceLocation
-             referenceHint:(NSString *)referenceHint
-       missingResourceHint:(NSString *)missingResourceHint {
+- (instancetype)initWithResourcePath:(NSString *)resourcePath
+                       referencePath:(NSString *)referencePath
+                   referenceLocation:(TextLocation)referenceLocation
+                       referenceHint:(NSString *)referenceHint
+                 missingResourceHint:(NSString *)missingResourceHint {
     self = [super init];
     if (self == nil) {
         return nil;
     }
-    
+
     self.resourcePath = resourcePath;
     self.referencePath = referencePath;
     self.referenceHint = referenceHint;
     self.referenceLocation = referenceLocation;
     self.bundleResources = [NSMutableArray array];
     self.missingResourceHint = missingResourceHint;
-    
+
     return self;
 }
 
-- (id)initWithResourcePath:(NSString *)resourcePath
-             referencePath:(NSString *)referencePath
-         referenceLocation:(TextLocation)referenceLocation
-       missingResourceHint:(NSString *)missingResourceHint {
+- (instancetype)initWithResourcePath:(NSString *)resourcePath
+                       referencePath:(NSString *)referencePath
+                   referenceLocation:(TextLocation)referenceLocation
+                 missingResourceHint:(NSString *)missingResourceHint {
     return [self initWithResourcePath:resourcePath
                         referencePath:referencePath
                     referenceLocation:referenceLocation
@@ -67,14 +61,5 @@
                   missingResourceHint:missingResourceHint];
 }
 
-- (void)dealloc {
-    self.resourcePath = nil;
-    self.referencePath = nil;
-    self.referenceHint = nil;
-    self.bundleResources = nil;
-    self.missingResourceHint = nil;
-    
-    [super dealloc];
-}
 
 @end

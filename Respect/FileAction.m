@@ -24,14 +24,10 @@
 
 @interface FileAction ()
 @property(nonatomic, assign, readwrite) BOOL hasError;
-@property(nonatomic, retain, readwrite) NSArray *resourcePathTemplates;
+@property(nonatomic, strong, readwrite) NSArray *resourcePathTemplates;
 @end
 
 @implementation FileAction
-@synthesize condition = _condition;
-@synthesize resourcePathTemplates = _resourcePathTemplates;
-@synthesize permutationsPattern = _permutationsPattern;
-@synthesize hasError = _hasError;
 
 + (NSString *)name {
     return @"File";
@@ -80,18 +76,18 @@
          [ConfigError configErrorWithFile:file
                              textLocation:textLocation
                                   message:@"Unbalanced quotes"]];
-    } else if ([components count] == 0 ||
-               [[components objectAtIndex:0] length] == 0) {
+    } else if (components.count == 0 ||
+               [components[0] length] == 0) {
         self.hasError = YES;
         [linter.configErrors addObject:
          [ConfigError configErrorWithFile:file
                              textLocation:textLocation
                                   message:@"No arguments"]];
     } else {
-        argPermutationsPattern = [components objectAtIndex:0];
+        argPermutationsPattern = components[0];
         argOptions = [NSMutableOrderedSet orderedSetWithArray:
                       [components subarrayWithRange:
-                       NSMakeRange(1, [components count]-1)]];
+                       NSMakeRange(1, components.count-1)]];
     }
     
     self = [self initWithLinter:linter
@@ -109,12 +105,6 @@
     return self;
 }
 
-- (void)dealloc {
-    self.resourcePathTemplates = nil;
-    self.permutationsPattern = nil;
-    
-    [super dealloc];
-}
 
 - (NSString *)conditionName {
     if (self.condition == FileReferenceConditionAll) {
@@ -134,7 +124,7 @@
                                              @"all", @"any", @"optional", nil];
     [conditionOptions intersectOrderedSet:options];
     
-    if ([conditionOptions count] == 1) {
+    if (conditionOptions.count == 1) {
         if ([conditionOptions containsObject:@"all"]) {
             self.condition = FileReferenceConditionAll;
         } else if ([conditionOptions containsObject:@"any"]) {
@@ -144,7 +134,7 @@
         } else {
             NSAssert(0, @"");
         }
-    } else if ([conditionOptions count] > 1) {
+    } else if (conditionOptions.count > 1) {
         self.hasError = YES;
         [self.linter.configErrors addObject:
          [ConfigError configErrorWithFile:self.file
@@ -152,27 +142,26 @@
                                   message:@"Only one of all, any or optional can be specified"]];
     }
     
-    NSMutableOrderedSet *unknownOptions = [[options mutableCopy] autorelease];
+    NSMutableOrderedSet *unknownOptions = [options mutableCopy];
     [unknownOptions minusOrderedSet:conditionOptions];
     
-    if ([unknownOptions count] > 0) {
+    if (unknownOptions.count > 0) {
         self.hasError = YES;
         [self.linter.configErrors addObject:
          [ConfigError configErrorWithFile:self.file
                              textLocation:self.textLocation
                                   message:[NSString stringWithFormat:@"Unknown options %@",
-                                           [[unknownOptions array]
+                                           [unknownOptions.array
                                             componentsJoinedByString:@", "]]]];
     }
 }
 
 - (NSArray *)actionResourcePaths:(NSString *)resourcePath {
-    return [NSArray arrayWithObject:resourcePath];
+    return @[resourcePath];
 }
 
 - (NSString *)actionMissingResourceHint:(NSString *)resourcePath {
-    BundleResource *bundlRef =  [self.linter.lowercaseBundleResources objectForKey:
-                                 [resourcePath lowercaseString]];
+    BundleResource *bundlRef =  self.linter.lowercaseBundleResources[resourcePath.lowercaseString];
     if (bundlRef == nil) {
         return nil;
     }
@@ -198,16 +187,15 @@
                                   [pathTemplate respect_stringByReplacingParameters:parameters.parameters]];
         
         for (NSString *resourcePath in resourcePaths) {
-            BundleResource *bundleRes = [self.linter.bundleResources objectForKey:resourcePath];
+            BundleResource *bundleRes = self.linter.bundleResources[resourcePath];
             ResourceReference *resourceRef = nil;
             
             if (bundleRes == nil) {
-                resourceRef = [[[ResourceReference alloc]
+                resourceRef = [[ResourceReference alloc]
                                 initWithResourcePath:resourcePath
                                 referencePath:parameters.path
                                 referenceLocation:parameters.textLocation
-                                missingResourceHint:[self actionMissingResourceHint:resourcePath]]
-                               autorelease];
+                                missingResourceHint:[self actionMissingResourceHint:resourcePath]];
                 
                 [missingRefs addObject:resourceRef];
                 
@@ -216,12 +204,11 @@
             
             resourcePathsMatchCount++;
             
-            resourceRef = [[[ResourceReference alloc]
+            resourceRef = [[ResourceReference alloc]
                             initWithResourcePath:resourcePath
                             referencePath:parameters.path
                             referenceLocation:parameters.textLocation
-                            missingResourceHint:nil]
-                           autorelease];
+                            missingResourceHint:nil];
             
             [bundleRes.resourceReferences addObject:resourceRef];
             [resourceRef.bundleResources addObject:bundleRes];
@@ -231,7 +218,7 @@
             [self actionForMatchedBundleResource:bundleRes];
         }
         
-        if ([resourcePaths count] == resourcePathsMatchCount) {
+        if (resourcePaths.count == resourcePathsMatchCount) {
             templatesMatchCount++;
         }
     }
@@ -252,8 +239,7 @@
 }
 
 - (NSArray *)configLines {
-    return [NSArray arrayWithObject:
-            [NSString stringWithFormat:@"@Lint%@: %@ %@",
+    return @[[NSString stringWithFormat:@"@Lint%@: %@ %@",
              [[self class] name],
              [self.permutationsPattern respect_stringByQuoteAndEscapeIfNeeded],
              [self conditionName]]];

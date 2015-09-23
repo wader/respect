@@ -19,36 +19,29 @@
 #import "ExpressionSignatureToken.h"
 
 @implementation ExpressionSignatureIdent
-@synthesize name = _name;
 
 + (id<ExpressionSignature>)parseTokens:(PeekableEnumerator *)tokens
                                  error:(NSError **)error {
     ExpressionSignatureToken *token = [tokens nextObject];
-    
+
     if (token.type == SIGNATURE_TOKEN_IDENT) {
-        return [[[ExpressionSignatureIdent alloc] initWithName:token.string]
-                autorelease];
+        return [[ExpressionSignatureIdent alloc] initWithName:token.string];
     }
-    
+
     return nil;
 }
 
-- (id)initWithName:(NSString *)name {
+- (instancetype)initWithName:(NSString *)name {
     self = [super init];
     if (self == nil) {
         return nil;
     }
-    
+
     self.name = name;
-    
+
     return self;
 }
 
-- (void)dealloc {
-    self.name = nil;
-    
-    [super dealloc];
-}
 
 - (NSString *)toPattern {
     // TODO: [0-9A-Za-z_]? \u?

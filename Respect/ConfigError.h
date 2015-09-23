@@ -18,7 +18,7 @@
 #import "TextFileError.h"
 
 @interface ConfigError : TextFileError
-+ (id)configErrorWithFile:(NSString *)file
-             textLocation:(TextLocation)textLocation
-                  message:(NSString *)message;
++ (instancetype)configErrorWithFile:(NSString *)file
+                       textLocation:(TextLocation)textLocation
+                            message:(NSString *)message;
 @end

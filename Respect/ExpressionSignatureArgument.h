@@ -17,14 +17,15 @@
 
 #import "ExpressionSignature.h"
 
-typedef enum {
+typedef NS_ENUM(NSInteger, ExpressionSignatureArgumentType) {
     SIGNATURE_ARGUMENT_STRING,
     SIGNATURE_ARGUMENT_NAME,
     SIGNATURE_ARGUMENT_SKIP
-} ExpressionSignatureArgumentType;
+};
 
 @interface ExpressionSignatureArgument : NSObject<ExpressionSignature>
 @property(nonatomic, assign, readwrite) ExpressionSignatureArgumentType type;
 
-- (id)initWithType:(ExpressionSignatureArgumentType)type;
+- (instancetype)init NS_UNAVAILABLE;
+- (instancetype)initWithType:(ExpressionSignatureArgumentType)type NS_DESIGNATED_INITIALIZER;
 @end
