@@ -575,6 +575,19 @@ static NSError *makePBXError(NSString *format, ...) {
 @end
 
 
+@implementation XCVersionGroup
+
+- (BOOL)isValid:(NSError **)error {
+	if (![super isValid:error]) {
+		return NO;
+	}
+
+	return [self.currentVersion isValid:error];
+}
+
+@end
+
+
 @implementation PBXProject
 
 + (PBXProject *)pbxProjectFromPath:(NSString *)path

@@ -160,6 +160,11 @@ extern NSString * const PBXProjectErrorDomain;
 @end
 
 
+@interface XCVersionGroup : PBXGroup
+@property(nonatomic, retain, readonly) PBXNode *currentVersion;
+@end
+
+
 // abstract class, does not exist in PBX files
 @interface PBXBuildPhase : NSObject
 @property(nonatomic, strong, readonly) NSArray *files;
